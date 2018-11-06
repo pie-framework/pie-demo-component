@@ -1,0 +1,45 @@
+{
+  "name": "pie-demo",
+  "version": "0.0.1",
+  "description": "PIE Demo Component",
+  "module": "dist/esm/index.js",
+  "main": "dist/index.js",
+  "types": "dist/types/components.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "stencil build",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "serve": "serve",
+    "cy:run": "cypress run",
+    "cypress:test": "start-server-and-test serve http://localhost:5000 cy:run"
+  },
+  "dependencies": {
+    "@types/jest": "^23.3.9",
+    "ts-jest": "^23.10.4"
+  },
+  "devDependencies": {
+    "@stencil/core": "~0.15.1",
+    "@types/puppeteer": "1.9.1",
+    "cypress": "^3.1.1",
+    "jest": "23.6.0",
+    "jest-cli": "23.6.0",
+    "puppeteer": "1.8.0",
+    "serve": "^10.0.2",
+    "start-server-and-test": "^1.7.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ionic-team/stencil-component-starter.git"
+  },
+  "author": "Ionic Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ionic-team/stencil"
+  },
+  "homepage": "https://github.com/ionic-team/stencil"
+}
