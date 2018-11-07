@@ -1,4 +1,4 @@
-import { PieDemo } from './pie-demo';
+import { PieDemo } from '../pie-demo';
 
 describe('pie-demo', () => {
   it('builds', () => {

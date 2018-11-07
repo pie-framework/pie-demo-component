@@ -13,17 +13,47 @@ import '@stencil/core';
 export namespace Components {
 
   interface PieDemo {
-    'config': string;
+    /**
+    * Include an editor in the view
+    */
     'editor': boolean;
+    /**
+    * The model for the pie.
+    */
+    'model': string;
+    /**
+    * The PIE npm package to demo. e.g. `@pie-elements/multiple-choice`
+    */
     'pie': string;
+    /**
+    * Include control panel for adjusting player settings.
+    */
     'playerControls': boolean;
+    /**
+    * Include an item preview in the view
+    */
     'preview': boolean;
   }
   interface PieDemoAttributes extends StencilHTMLAttributes {
-    'config'?: string;
+    /**
+    * Include an editor in the view
+    */
     'editor'?: boolean;
+    /**
+    * The model for the pie.
+    */
+    'model'?: string;
+    /**
+    * The PIE npm package to demo. e.g. `@pie-elements/multiple-choice`
+    */
     'pie'?: string;
+    /**
+    * Include control panel for adjusting player settings.
+    */
     'playerControls'?: boolean;
+    /**
+    * Include an item preview in the view
+    */
     'preview'?: boolean;
   }
 }
