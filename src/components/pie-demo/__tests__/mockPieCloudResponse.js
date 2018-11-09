@@ -5,12 +5,24 @@
 class MockElement extends HTMLElement {
   constructor() {
     super();
-    console.log('constructing mock el');
-    const shadow = this.attachShadow({ mode: 'open' });
-    const name = this.getAttribute('name');
-    const helloEl = document.createElement('div');
-    helloEl.textContent = "hello element" + name;
-    shadow.appendChild(helloEl);
+    // console.log('constructing mock el');
+    // const shadow = this.attachShadow({ mode: 'open' });
+    // const name = this.getAttribute('name');
+    // const helloEl = document.createElement('div');
+    // helloEl.textContent = "hello element" + name;
+    // shadow.appendChild(helloEl);
+  }
+  set model(val) {
+    console.log('model setter on mock el with ' + val);
+    if (val) {
+      console.log('adding model attr ');
+      this.setAttribute('model', 'true');
+    } else {
+      this.removeAttribute('model');
+    }
+  }
+  get model() {
+    return this.hasAttribute('model');
   }
 }
 
@@ -26,11 +38,24 @@ class MockConfig extends HTMLElement {
   }
 }
 
+const controller = {
+  model: (config, session, env) => {
+    console.log('controller.model() called with  config' + config);
+    return {model:true}
+  },
+  outcome: (config, session, env) => {
+    console.log('controller.outcome() called with  config' + config);
+  }
+}
+
+
+
 window['pie'] = {
   default: {
-    '@pie-elements/multiple-choice': {
+    '@pie-element/multiple-choice': {
       Element: MockElement,
-      Config: MockConfig
+      Configure: MockConfig,
+      controller
     }
   }
 };

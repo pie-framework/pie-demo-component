@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
@@ -7,9 +8,79 @@
   <script src="/build/pie-demo.js"></script>
 
 </head>
+
 <body>
 
-  <pie-demo editor="true" pie="@pie-elements/multiple-choice"></pie-demo>
+  <pie-demo id="demo" editor="true" pie="@pie-element/multiple-choice"></pie-demo>
+
+  <script>
+    const model = {
+      id: '1',
+      element: 'multiple-choice',
+      prompt: 'Which of these northern European countries are EU members?',
+      choiceMode: 'checkbox',
+      keyMode: 'numbers',
+      choices: [
+        {
+          correct: true,
+          value: 'sweden',
+          label: 'Sweden',
+          feedback: {
+            type: 'none',
+            value: ''
+          }
+        },
+        {
+          value: 'iceland',
+          label: 'Iceland',
+          feedback: {
+            type: 'none',
+            value: ''
+          }
+        },
+        {
+          value: 'norway',
+          label: 'Norway',
+          feedback: {
+            type: 'none',
+            value:
+              ''
+          }
+        },
+        {
+          correct: true,
+          value: 'finland',
+          label: 'Finland',
+          feedback: {
+            type: 'none',
+            value: ''
+          }
+        }
+      ],
+      partialScoring: false,
+      partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
+          that is correctly unchecked will be worth 1 point.
+          The maximum points is the total number of answer choices.`,
+      configure: {
+        /**
+         * These are the configurable options
+         */
+        /*promptLabel : 'Item Stem',
+        responseTypeLabel: 'Type of Answer',
+        choicesLabel: 'Answer Choice',
+        addChoiceButtonLabel: 'Add New Choice',
+        enableSelectChoiceLabel: false,
+        enableSelectResponseType: false,
+        enableAddChoice: false,
+        enableAddFeedBack: false,
+        enableDeleteChoice: false*/
+      }
+    }
+
+    const pieDemo = document.getElementById("demo");
+    pieDemo.model = model;
+  </script>
 
 </body>
+
 </html>

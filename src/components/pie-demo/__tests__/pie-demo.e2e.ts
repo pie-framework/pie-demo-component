@@ -1,4 +1,6 @@
-import { newE2EPage, E2EElement } from '@stencil/core/testing';
+import { newE2EPage, E2EElement, E2EPage } from '@stencil/core/testing';
+import {model} from './config.js';
+
 const fs = require('fs');
 
 const mockPieCloudResponseContent  = fs.readFileSync(__dirname + '/mockPieCloudResponse.js');
@@ -20,44 +22,79 @@ const setupInterceptPieCloud = (page, match):Promise<void> => {
 }
 
 describe('pie-demo', () => {
+
+  let page: E2EPage, pieDemo:E2EElement;
+  const pie = '@pie-element/multiple-choice';
+  beforeEach(async () => {
+    page = await newE2EPage();
+    await page.setContent('<pie-demo></pie-demo>');
+    pieDemo = await page.find('pie-demo');
+  });
+
+
   it('renders', async () => {
     
-    const page = await newE2EPage();
-    await page.setContent('<pie-demo></pie-demo>');
-    const element = await page.find('pie-demo');
-    expect(element).toHaveClass('hydrated');
+    // const page = await newE2EPage();
+    // await page.setContent('<pie-demo></pie-demo>');
+    // const element = await page.find('pie-demo');
+    expect(pieDemo).toHaveClass('hydrated');
   });
 
   it('is in loading mode until element loaded', async () => {
-    const page = await newE2EPage();
-    await page.setContent('<pie-demo></pie-demo>');
-    // >>> for shadowroot
-    const loading = await page.find('pie-demo >>> #loading');
+    // const page = await newE2EPage();
+    // await page.setContent('<pie-demo></pie-demo>');
+
+    // TODO use >>> for shadowroot e.g. `pie-demo >>> #loading`, but shadow
+    // is disabled currently as it breaks css for MUI.
+    const loading = await page.find('pie-demo #loading');
     expect(loading.textContent).toEqual(`Loading...`);
 
   });
 
+
   it('loads the script and registers', async () => {
-    const pie = '@pie-elements/multiple-choice';
-    const page = await newE2EPage();
+    // const pie = '@pie-element/multiple-choice';
+    // const page = await newE2EPage();
 
     await setupInterceptPieCloud(page, pie);
     
-    await page.setContent('<pie-demo></pie-demo>');
-    const comp = await page.find('pie-demo');
-    comp.setProperty('pie', pie);
+    // await page.setContent('<pie-demo></pie-demo>');
+    // const comp = await page.find('pie-demo');
+    pieDemo.setProperty('pie', pie);
     await page.waitForChanges();
-
+    
     expect(
-      await comp.getProperty('pie')
+      await pieDemo.getProperty('pie')
       ).toEqual(pie);
 
     const pieScript = await page.find('script#multiple-choice');
-    console.log(`pieScript src = ${pieScript.getAttribute("src")}`)
     expect(pieScript).toBeDefined();
 
 
     // await page.waitForEvent("made-up-event");
+    
+  });
+
+  it('loads the model and renders the element', async () => {
+    await setupInterceptPieCloud(page, pie);
+    
+    // await page.setContent('<pie-demo></pie-demo>');
+    // const comp = await page.find('pie-demo');
+    pieDemo.setProperty('pie', pie);
+    await page.waitForChanges();
+    const pieElement = await page.waitForSelector('pie-demo multiple-choice');
+    expect(pieElement).toBeDefined();
+    // (pieDemo as any).model = model('1', "multiple-choice");
+    pieDemo.setProperty('model', model('1', "multiple-choice"));
+    // console.log('setting model');
+    // pieElement.model = model('1', "multiple-choice");
+    // console.log('after setting model');
+    await page.waitForChanges();
+    console.log('getting model attribuet');
+    const modelSet = await page.$eval('pie-demo multiple-choice', (el) => el.getAttribute('model'));
+    console.log('after getting model attr ' + JSON.stringify(modelSet));
+    // console.log('pieElement' + pieElement.);
+    expect(modelSet).toBeTruthy();
   });
 
   // it('renders changes to the name data', async () => {

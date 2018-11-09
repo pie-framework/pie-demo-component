@@ -20,9 +20,9 @@ export namespace Components {
     /**
     * The model for the pie.
     */
-    'model': string;
+    'model': Object;
     /**
-    * The PIE npm package to demo. e.g. `@pie-elements/multiple-choice`
+    * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
     */
     'pie': string;
     /**
@@ -42,9 +42,9 @@ export namespace Components {
     /**
     * The model for the pie.
     */
-    'model'?: string;
+    'model'?: Object;
     /**
-    * The PIE npm package to demo. e.g. `@pie-elements/multiple-choice`
+    * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
     */
     'pie'?: string;
     /**
