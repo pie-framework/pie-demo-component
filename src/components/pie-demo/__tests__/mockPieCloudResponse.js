@@ -29,7 +29,6 @@ class MockElement extends HTMLElement {
 class MockConfig extends HTMLElement {
   constructor() {
     super();
-    console.log('constructing mock config');
     const shadow = this.attachShadow({ mode: 'open' });
     const name = this.getAttribute('name');
     const helloEl = document.createElement('div');
@@ -40,11 +39,9 @@ class MockConfig extends HTMLElement {
 
 const controller = {
   model: (config, session, env) => {
-    console.log('controller.model() called with  config' + config);
     return {model:true}
   },
   outcome: (config, session, env) => {
-    console.log('controller.outcome() called with  config' + config);
   }
 }
 

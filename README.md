@@ -4,6 +4,13 @@
 
 A Custom Element for demonstrating a PIE interaction designed for use with the pie-cloud packaging service.
 
+```html
+<pie-demo
+  >
+
+</pie-demo>
+```
+
 ## Setup
 
     npm install
@@ -12,5 +19,4 @@ A Custom Element for demonstrating a PIE interaction designed for use with the p
 ## Testing
 
 
-
-Using cypress to test the pie-loader util as jest/jsdom poses problems 
+   npm run test
