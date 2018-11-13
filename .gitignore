@@ -24,3 +24,4 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 .env
 cypress/videos/
+package-lock.json

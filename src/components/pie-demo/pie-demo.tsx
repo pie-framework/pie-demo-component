@@ -44,7 +44,9 @@ export class PieDemo {
   /**
    * The model for the pie.
    */
-  @Prop({ mutable: true }) model: Object;
+  @Prop() model: Object;
+
+  @State() configModel: Object;
 
   @State() state: ViewState = ViewState.LOADING;
 
@@ -62,6 +64,10 @@ export class PieDemo {
 
   @State() toggled: boolean = this.preview;
 
+  @State() env: Object = {mode: 'gather'};
+
+  @State() session: Object = {};
+
   // @Element() private element: HTMLElement
 
   togglePreview() {
@@ -74,13 +80,12 @@ export class PieDemo {
     this.package = newPie;
     this.pieName = newPie.substr(newPie.lastIndexOf('/') + 1, newPie.length).split('@')[0];
 
-    customElements.whenDefined(this.pieName).then(() => {
+    customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
-      if (this.model) this.updateModel(this.model);
+      this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
-      console.log('ready ... , set controller as ' + this.pieController);
       
     });
 
@@ -89,11 +94,28 @@ export class PieDemo {
 
   @Watch('model')
   async updateModel(newModel) {
-    console.log('model watch triggered');
-    if (this.pieController && this.pieElement) {
-      this.pieElementModel =  await this.pieController.model(newModel || {}, {}, {});
-      this.pieElement.model = this.pieElementModel;
-    }
+    console.log('model property updated');
+    this.configModel = newModel;
+  }
+
+  @Watch('configModel')
+  async watchConfigModel(newModel) {
+    if (this.configElement) this.configElement.model = newModel;
+    this.updatePieModelFromController(newModel, this.session, this.env);
+  }
+
+  async updatePieModelFromController(model, session, env) {
+    if (this.pieController) {
+      this.pieElementModel =  await this.pieController.model(model, session, env);
+      if (this.pieElement) {
+        this.pieElement.model = this.pieElementModel;
+      }
+    } 
+  }
+  
+  @Watch('pieElementModel')
+  watchPieElementModel(newModel) {
+    this.pieElement.model = newModel;
   }
 
   componentWillLoad() {
@@ -111,15 +133,16 @@ export class PieDemo {
   @Watch('configElement')
   wachConfigElement(newEl: PieElement) {
     newEl && newEl.addEventListener('model.updated', (event: CustomEvent) => {
-      this.model = event.detail && event.detail.update;
+      console.log('model.updated');
+      this.configModel = event.detail && event.detail.update;
+      this.updatePieModelFromController(this.configModel, this.session, this.env);
     });
   } 
 
-
-  // configModelUpdated(event: CustomEvent) {
-  //   console.log('Received the custom model.updated event: ', event.detail);
-  //   this.model = event.detail && event.detail.update;
-  // }
+  setMode(event) {
+    this.env['mode'] = event.target.value; 
+    this.updatePieModelFromController(this.configModel, this.session, this.env);
+  }
 
   render() {
     switch (this.state) {
@@ -135,6 +158,14 @@ export class PieDemo {
           <div class="root">
             <span class="control-bar">
               <span class="bar"> </span>
+              <div>
+              <select onInput={(event) => this.setMode(event)}>
+                <option value="gather" selected={this.env['mode'] === 'gather'}>Gather</option>
+                <option value="view" selected={this.env['mode'] === 'view'}>View</option>
+                <option value="evaluate" selected={this.env['mode'] === 'evaluate'}>Evaluate</option>
+
+              </select>
+              </div>
               <span>
                 <button 
                   class="toggle-button"
@@ -151,11 +182,14 @@ export class PieDemo {
               <Tagname
                 id="render"
                 ref={el => (this.pieElement = el as PieElement)}
-                model={this.model}
+                model={this.pieElementModel}
                 session={{}}
                 style={{ "display": this.toggled ? 'block' : 'none' }}
               />
-              <div class="divider" />
+              <div 
+              class="divider" 
+              style={{ "display": this.toggled ? 'block' : 'none' }}
+              />
               <ConfigTag
                 id="configure"
                 ref={el => (this.configElement = el as PieElement)}
