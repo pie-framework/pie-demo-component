@@ -6,6 +6,8 @@ A Custom Element for demonstrating a PIE interaction designed for use with the p
 
 ```html
 <pie-demo
+   editor="true" 
+   pie="@pie-element/multiple-choice"
   >
 
 </pie-demo>
@@ -16,7 +18,27 @@ A Custom Element for demonstrating a PIE interaction designed for use with the p
     npm install
 
 
-## Testing
+
+## Development 
+
+### Testing
+
+Run e2e and unit tests:
+
+    npm run test
+
+### Local Devt
+
+Launch the local `index.html` in hot-module-reload server:
+
+    npm run start    
 
 
-   npm run test
+
+## Notes
+
+When running `npm start` the HMR will attampt to re-define the custom element and get an already defined error. Need to refresh the page.
+
+TODO
+
+make script loading optional (but still define custome elements from pre-loaded)

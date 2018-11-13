@@ -1,1 +1,38 @@
-
+.control-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: bold;
+  color: grey;
+  border-bottom: solid 1px lightgrey;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#configure {
+  flex: 1 0 0;
+}
+#render {
+  flex: 1 0 0;
+}
+.root {
+  border: green;
+}
+.config-holder {
+  display: flex;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.divider {
+  width: 1px;
+  border-right: solid 1px lightgrey;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.toggle-button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: lightgrey;
+}

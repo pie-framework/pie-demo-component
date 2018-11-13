@@ -12,7 +12,8 @@ export function loadCloudPies(
     const keys = Object.keys(elements);
     for (const key in keys) {
       const elementName = keys[key];
-      const npmPackage = elements[elementName];
+      const npmPackage:string = elements[elementName];
+      const packageWithoutVersion =  npmPackage.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
       const script = doc.createElement('script');
       const onloadFn = (_package => {
         return () => {
@@ -21,7 +22,7 @@ export function loadCloudPies(
           customElements.define(elementName, pie.Element);
           customElements.define(elementName + '-config', pie.Configure);
         };
-      })(npmPackage);
+      })(packageWithoutVersion);
       script.id = elementName;
       script.onload = onloadFn;
       script.src = base_url + npmPackage + '/editor.js';
