@@ -70,7 +70,7 @@ export class PieDemo {
 
   // @Element() private element: HTMLElement
 
-  togglePreview() {
+  toggleEditor() {
     this.toggled = !this.toggled;
   }
 
@@ -169,11 +169,11 @@ export class PieDemo {
               <span>
                 <button 
                   class="toggle-button"
-                  onClick={ () => this.togglePreview()}>
+                  onClick={ () => this.toggleEditor()}>
                   {this.toggled ? (
-                    <span>Hide Preview</span>
+                    <span>Hide Editor</span>
                   ) : (
-                    <span>Show Preview</span>
+                    <span>Show Editor</span>
                   )}
                 </button>
               </span>
@@ -184,16 +184,15 @@ export class PieDemo {
                 ref={el => (this.pieElement = el as PieElement)}
                 model={this.pieElementModel}
                 session={{}}
-                style={{ "display": this.toggled ? 'block' : 'none' }}
               />
               <div 
               class="divider" 
-              style={{ "display": this.toggled ? 'block' : 'none' }}
               />
               <ConfigTag
                 id="configure"
                 ref={el => (this.configElement = el as PieElement)}
                 model={this.model}
+                style={{ "display": this.toggled ? 'block' : 'none' }}
                 session={{}}
               />
             </div>
