@@ -64,7 +64,7 @@ export class PieDemo {
 
   @State() toggled: boolean = this.preview;
 
-  @State() env: Object = {mode: 'gather'};
+  @State() env: Object = { mode: 'gather' };
 
   @State() session: Object = {};
 
@@ -115,7 +115,9 @@ export class PieDemo {
   
   @Watch('pieElementModel')
   watchPieElementModel(newModel) {
-    this.pieElement.model = newModel;
+    if (this.pieElement) {
+      this.pieElement.model = newModel;
+    }
   }
 
   componentWillLoad() {
@@ -181,9 +183,12 @@ export class PieDemo {
             <div class="config-holder">
               <Tagname
                 id="render"
-                ref={el => (this.pieElement = el as PieElement)}
+                ref={el => {
+                  console.log('Setare');
+                  (this.pieElement = el as PieElement)
+                }}
                 model={this.pieElementModel}
-                session={{}}
+                session={this.session}
               />
               <div 
               class="divider" 
@@ -193,7 +198,7 @@ export class PieDemo {
                 ref={el => (this.configElement = el as PieElement)}
                 model={this.model}
                 style={{ "display": this.toggled ? 'block' : 'none' }}
-                session={{}}
+                session={this.session}
               />
             </div>
           </div>
