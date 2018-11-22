@@ -1,5 +1,6 @@
 import { Component, Prop, Watch, State } from '@stencil/core';
 import { loadCloudPies } from '../../util/PieCloud';
+import classnames from 'classnames';
 
 enum ViewState {
   LOADING,
@@ -27,6 +28,10 @@ export class PieDemo {
    * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
    */
   @Prop() pie: string;
+  /**
+   * Tells the component if it needs to load the elements or not
+   */
+  @Prop() load: boolean = true;
   /**
    * Include an editor in the view
    */
@@ -70,6 +75,13 @@ export class PieDemo {
 
   // @Element() private element: HTMLElement
 
+  /**
+   * Some functionality
+   */
+  @Prop() loadPies: Function = (elements) => {
+    loadCloudPies(elements, document);
+  };
+
   toggleEditor() {
     this.toggled = !this.toggled;
   }
@@ -80,22 +92,30 @@ export class PieDemo {
     this.package = newPie;
     this.pieName = newPie.substr(newPie.lastIndexOf('/') + 1, newPie.length).split('@')[0];
 
+    if (this.pieName.indexOf('-') < 0) {
+      this.pieName = `x-${this.pieName}`
+    }
+
     customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
-      
+
     });
 
-    loadCloudPies({ [this.pieName]: this.package }, document);
+    if (this.load) {
+      loadCloudPies({ [this.pieName]: this.package }, document);
+    }
   }
 
   @Watch('model')
   async updateModel(newModel) {
-    console.log('model property updated');
-    this.configModel = newModel;
+    if (window['pie']) {
+      console.log('model property updated');
+      this.configModel = newModel;
+    }
   }
 
   @Watch('configModel')
@@ -141,9 +161,30 @@ export class PieDemo {
     });
   } 
 
-  setMode(event) {
-    this.env['mode'] = event.target.value; 
+  setMode(mode) {
+    this.env['mode'] = mode;
     this.updatePieModelFromController(this.configModel, this.session, this.env);
+  }
+
+  customCheckBox({ label, checked, value }) {
+    return (
+      <label
+        class="custom-checkbox"
+        onClick={() => this.setMode(value)}
+      >
+        <span class={
+          classnames(
+            "circle-container",
+            {
+              'full': checked
+            }
+          )
+        }>
+        <i data-value={value} class="circle" />
+        </span>
+        <span>{label}</span>
+      </label>
+    );
   }
 
   render() {
@@ -159,47 +200,81 @@ export class PieDemo {
         return (
           <div class="root">
             <span class="control-bar">
-              <span class="bar"> </span>
-              <div>
-              <select onInput={(event) => this.setMode(event)}>
-                <option value="gather" selected={this.env['mode'] === 'gather'}>Gather</option>
-                <option value="view" selected={this.env['mode'] === 'view'}>View</option>
-                <option value="evaluate" selected={this.env['mode'] === 'evaluate'}>Evaluate</option>
-
-              </select>
+              <div
+                class={
+                  classnames(
+                    'authoring-header',
+                    {
+                      'collapsed': !this.toggled
+                    }
+                  )
+                }
+              >
+                <h4>
+                  Authoring View
+                </h4>
+                <i
+                  class={
+                    classnames(
+                      'fa',
+                      {
+                        'fa-caret-left': this.toggled,
+                        'fa-caret-right': !this.toggled
+                      }
+                    )
+                  }
+                  onClick={() => this.toggleEditor()}
+                />
               </div>
-              <span>
-                <button 
-                  class="toggle-button"
-                  onClick={ () => this.toggleEditor()}>
-                  {this.toggled ? (
-                    <span>Hide Editor</span>
-                  ) : (
-                    <span>Show Editor</span>
-                  )}
-                </button>
-              </span>
+              <div class="student-view-header">
+                <h4>
+                  Student View
+                </h4>
+              </div>
             </span>
             <div class="config-holder">
-              <Tagname
-                id="render"
-                ref={el => {
-                  console.log('Setare');
-                  (this.pieElement = el as PieElement)
-                }}
-                model={this.pieElementModel}
-                session={this.session}
-              />
-              <div 
-              class="divider" 
-              />
-              <ConfigTag
-                id="configure"
-                ref={el => (this.configElement = el as PieElement)}
-                model={this.model}
+              <div
+                class="authoring-holder"
                 style={{ "display": this.toggled ? 'block' : 'none' }}
-                session={this.session}
-              />
+              >
+                <ConfigTag
+                  id="configure"
+                  ref={el => (this.configElement = el as PieElement)}
+                  model={this.model}
+                  session={this.session}
+                />
+              </div>
+              <div class="student-view-holder">
+                <div class="mode-config">
+                  <h5>Mode</h5>
+                  <div class="modes-holder">
+                    {this.customCheckBox({
+                      label: 'Gather',
+                      checked: this.env[ 'mode' ] === 'gather',
+                      value: 'gather'
+                    })}
+                    {this.customCheckBox({
+                      label: 'View',
+                      checked: this.env[ 'mode' ] === 'view',
+                      value: 'view'
+                    })}
+                    {this.customCheckBox({
+                      label: 'Evaluate',
+                      checked: this.env[ 'mode' ] === 'evaluate',
+                      value: 'evaluate'
+                    })}
+                  </div>
+                </div>
+                <Tagname
+                  id="render"
+                  ref={el => {
+                    console.log('Setare');
+                    (this.pieElement = el as PieElement)
+                  }}
+                  model={this.pieElementModel}
+                  session={this.session}
+                />
+              </div>
             </div>
           </div>
         );

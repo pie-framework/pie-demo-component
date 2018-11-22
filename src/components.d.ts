@@ -18,6 +18,14 @@ export namespace Components {
     */
     'editor': boolean;
     /**
+    * Tells the component if it needs to load the elements or not
+    */
+    'load': boolean;
+    /**
+    * Some functionality
+    */
+    'loadPies': Function;
+    /**
     * The model for the pie.
     */
     'model': Object;
@@ -39,6 +47,14 @@ export namespace Components {
     * Include an editor in the view
     */
     'editor'?: boolean;
+    /**
+    * Tells the component if it needs to load the elements or not
+    */
+    'load'?: boolean;
+    /**
+    * Some functionality
+    */
+    'loadPies'?: Function;
     /**
     * The model for the pie.
     */

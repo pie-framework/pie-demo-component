@@ -17,7 +17,8 @@
     "serve": "serve"
   },
   "dependencies": {
-    "@stencil/core": "~0.15.1"
+    "@stencil/core": "~0.15.1",
+    "classnames": "^2.2.6"
   },
   "devDependencies": {
     "@types/jest": "23.3.9",
