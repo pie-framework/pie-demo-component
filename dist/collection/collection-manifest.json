@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "tag": "pie-demo",
+      "dependencies": [],
+      "componentClass": "PieDemo",
+      "componentPath": "components/pie-demo/pie-demo.js",
+      "styles": {
+        "$": {
+          "stylePaths": [
+            "components/pie-demo/pie-demo.css"
+          ]
+        }
+      },
+      "props": [
+        {
+          "name": "editor",
+          "type": "Boolean",
+          "attr": "editor"
+        },
+        {
+          "name": "load",
+          "type": "Boolean",
+          "attr": "load"
+        },
+        {
+          "name": "loadPies",
+          "attr": "load-pies"
+        },
+        {
+          "name": "model",
+          "attr": "model",
+          "watch": [
+            "updateModel"
+          ]
+        },
+        {
+          "name": "pie",
+          "type": "String",
+          "attr": "pie",
+          "watch": [
+            "watchPie"
+          ]
+        },
+        {
+          "name": "playerControls",
+          "type": "Boolean",
+          "attr": "player-controls"
+        },
+        {
+          "name": "preview",
+          "type": "Boolean",
+          "attr": "preview"
+        }
+      ],
+      "states": [
+        {
+          "name": "configElement"
+        },
+        {
+          "name": "configModel"
+        },
+        {
+          "name": "env"
+        },
+        {
+          "name": "package"
+        },
+        {
+          "name": "pieController"
+        },
+        {
+          "name": "pieElement"
+        },
+        {
+          "name": "pieElementModel"
+        },
+        {
+          "name": "pieName"
+        },
+        {
+          "name": "session"
+        },
+        {
+          "name": "state"
+        },
+        {
+          "name": "toggled"
+        }
+      ]
+    }
+  ],
+  "collections": [],
+  "compiler": {
+    "name": "@stencil/core",
+    "version": "0.15.2",
+    "typescriptVersion": "2.9.2"
+  },
+  "bundles": []
+}
