@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "PIE Demo Component",
   "module": "dist/esm/index.js",
-  "main": "dist/index.js",
+  "main": "dist/pie-demo.js",
+  "browser": "dist/pie-demo.js",
   "types": "dist/types/components.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "files": [
@@ -11,6 +12,7 @@
   ],
   "scripts": {
     "build": "stencil build",
+    "prepublish": "npm run build",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",

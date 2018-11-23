@@ -10,5 +10,6 @@ export const config: Config = {
       type: 'www',
       serviceWorker: null
     }
-  ]
+  ],
+  bundles: [ { components: [ 'pie-demo' ] } ]
 };
