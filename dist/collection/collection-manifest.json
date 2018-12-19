@@ -55,6 +55,9 @@
       ],
       "states": [
         {
+          "name": "collapsed"
+        },
+        {
           "name": "configElement"
         },
         {
@@ -83,9 +86,6 @@
         },
         {
           "name": "state"
-        },
-        {
-          "name": "toggled"
         }
       ]
     }

@@ -1,54 +1,158 @@
 @import url("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+*:not(i) {
+    font-family: Roboto, serif !important;
+}
+
+.root {
+    background-color: #3f51b5;
+    height: 100%;
+}
 
 .control-bar {
+    background: #fff;
     color: grey;
     display: flex;
     font-size: 16px;
     font-weight: bold;
+    height: 74px;
     justify-content: space-between;
     width: 100%;
 }
 
+.control-bar .collapse-icon {
+    cursor: pointer;
+}
+
 .control-bar .authoring-header {
-    border-bottom: solid 1px #DB563B;
+    align-items: center;
+    display: flex;
     flex: 1;
-    margin-right: 30px;
+    justify-content: center;
     position: relative;
+    border-right: 2px solid #ebebeb;
 }
 
+.control-bar .authoring-header .collapse-icon {
+    margin-left: 22px;
+}
+
+.control-bar .student-view-header h4,
+.control-bar .authoring-header h4 {
+    color: rgba(0, 0, 0, 0.87);
+    flex: 1;
+    font-size: 16px;
+    letter-spacing: 3px;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.control-bar .student-view-header.collapsed,
 .control-bar .authoring-header.collapsed {
-    max-width: 20px;
+    max-width: 56px;
 }
 
-.control-bar .authoring-header.collapsed h4 {
+.control-bar .authoring-header.collapsed h4,
+.control-bar .student-view-header.collapsed h4 {
     display: none;
 }
 
-.control-bar .authoring-header i {
-    position: absolute;
-    top: 0;
-    right: 0;
+.control-bar .authoring-header.collapsed i,
+.control-bar .student-view-header.collapsed i {
+    margin: 0;
+}
+
+.control-bar .student-view-header.collapsed .center-content {
+    display: none;
 }
 
 .control-bar .student-view-header {
-    border-bottom: solid 1px #DB563B;
+    align-items: center;
+    display: flex;
+    justify-content: center;
     flex: 1 0 0;
 }
 
-.authoring-holder {
-    flex: 1 0 0;
-    margin-right: 30px;
+.control-bar .student-view-header h4 {
+    margin-bottom: 10px;
 }
 
-.root {
-    border: green;
+.control-bar .student-view-header .collapse-icon {
+    margin-right: 22px;
+}
+
+.control-bar .student-view-header .center-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.control-bar .student-view-header .center-content .mode-config {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.control-bar .student-view-header .center-content .mode-config h5 {
+    margin: 0 18px 0 0;
+}
+
+.control-bar .student-view-header .center-content .mode-config .modes-holder {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.control-bar .student-view-header .center-content .mode-config .modes-holder > * {
+    margin-right: 18px;
 }
 
 .config-holder {
+    background-color: #3f51b5;
     display: flex;
+    height: 100%;
     padding-bottom: 20px;
-    padding-top: 20px;
     width: 100%;
+}
+
+.config-holder .collapsed-panel {
+    justify-content: center;
+    background: #fff;
+    display: flex;
+    color: #707070;
+    max-width: 56px;
+    flex: 1;
+}
+
+.config-holder .collapsed-panel span {
+    line-height: 1.83;
+    text-orientation: upright;
+    text-transform: uppercase;
+    writing-mode: tb-rl;
+}
+
+.config-holder .authoring-holder {
+    border: 16px solid #3f51b5;
+    background: #fff;
+    border-radius: 20px;
+    display: table;
+    flex: 1 0 0;
+    padding: 16px;
+}
+
+.config-holder .authoring-holder.collapsed {
+    max-width: 56px;
 }
 
 .toggle-button {
@@ -58,24 +162,20 @@
     outline: none;
 }
 
+.divider {
+    background: #2336a0;
+    height: 100%;
+    width: 2px;
+}
+
 .config-holder .student-view-holder {
-    display: flex;
+    background: #fff;
+    border: 16px solid #3f51b5;
+    border-radius: 20px;
+    display: table;
     flex: 1 0 0;
     flex-direction: column;
-}
-
-.config-holder .student-view-holder .mode-config {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.config-holder .student-view-holder .mode-config .modes-holder {
-    align-items: center;
-    display: flex;
-    flex: 1;
-    justify-content: space-around;
+    padding: 16px;
 }
 
 .custom-checkbox {
@@ -83,28 +183,12 @@
     align-items: center;
 }
 
-.custom-checkbox .circle-container {
-    border: 3px solid rgba(0, 0, 0, 0.54);
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-    height: 12px;
-    padding: 3px;
-    width: 12px;
+.custom-checkbox i {
+    color: #3f51b5;
+    margin-right: 8px;
 }
 
-.custom-checkbox .circle {
-    background: transparent;
-    border-radius: 50%;
-    display: block;
-    height: 100%;
-    width: 100%;
-}
-
-.custom-checkbox .circle-container.full .circle {
-    background: #f50057;
-}
-
-.custom-checkbox .circle-container.full {
-    border-color: #f50057;
+/* Overrides */
+[class*=MuiCheckbox-checked] {
+    color: green !important;
 }

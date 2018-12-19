@@ -7,7 +7,7 @@
 export function loadCloudPies(
   elements, 
   doc,
-  base_url = 'https://pits-dot-kds-production-216220.appspot.com/bundles/') {
+  base_url = 'https://pits-dot-pie-dev-221718.appspot.com/bundles/') {
     const head = doc.getElementsByTagName('head')[0];
     const keys = Object.keys(elements);
 

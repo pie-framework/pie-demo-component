@@ -8,20 +8,91 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 export class PieDemo {
     constructor() {
+        /**
+         * Tells the component if it needs to load the elements or not
+         */
         this.load = true;
+        /**
+         * Include an editor in the view
+         */
         this.editor = true;
+        /**
+         * Include an item preview in the view
+         */
         this.preview = true;
+        /**
+         * Include control panel for adjusting player settings.
+         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
-        this.toggled = this.preview;
         this.env = { mode: 'gather' };
         this.session = {};
+        // @Element() private element: HTMLElement
+        /**
+         * Some functionality
+         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
+        this.renderControlBar = () => {
+            return (h("span", { class: "control-bar" },
+                h("div", { class: classnames('authoring-header', {
+                        'collapsed': this.collapsed === 'authoring'
+                    }) },
+                    h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('student') }, "format_indent_increase"),
+                    h("h4", null, "Authoring View")),
+                h("div", { class: classnames('student-view-header', {
+                        'collapsed': this.collapsed === 'student'
+                    }) },
+                    h("div", { class: "center-content" },
+                        h("h4", null, "Student View"),
+                        h("div", { class: "mode-config" },
+                            h("h5", null, "Mode"),
+                            h("div", { class: "modes-holder" },
+                                this.customCheckBox({
+                                    label: 'Gather',
+                                    checked: this.env['mode'] === 'gather',
+                                    value: 'gather'
+                                }),
+                                this.customCheckBox({
+                                    label: 'View',
+                                    checked: this.env['mode'] === 'view',
+                                    value: 'view'
+                                }),
+                                this.customCheckBox({
+                                    label: 'Evaluate',
+                                    checked: this.env['mode'] === 'evaluate',
+                                    value: 'evaluate'
+                                })))),
+                    h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('authoring') }, "format_indent_decrease"))));
+        };
+        this.renderCollapsedPanel = (title) => {
+            return (h("div", { class: "collapsed-panel" },
+                h("span", null, title)));
+        };
+        this.renderAuthoringHolder = () => {
+            const ConfigTag = this.pieName + '-config';
+            if (this.collapsed === 'authoring') {
+                return this.renderCollapsedPanel('Authoring View');
+            }
+            return (h("div", { class: classnames('authoring-holder', {
+                    'collapsed': this.collapsed === 'authoring'
+                }) },
+                h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })));
+        };
+        this.renderStudentHolder = () => {
+            const TagName = this.pieName + '';
+            if (this.collapsed === 'student') {
+                return this.renderCollapsedPanel('Student View');
+            }
+            return (h("div", { class: classnames('student-view-holder', {
+                    'collapsed': this.collapsed === 'student'
+                }) },
+                h(TagName, { id: "render", ref: el => el && (this.pieElement = el), model: this.pieElementModel, session: this.session })));
+        };
     }
-    toggleEditor() {
-        this.toggled = !this.toggled;
+    collapsePanel(name) {
+        this.collapsed = this.collapsed === name ? null : name;
     }
     watchPie(newPie) {
         console.log('pie-watch triggered');
@@ -31,6 +102,7 @@ export class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
+            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
@@ -87,10 +159,7 @@ export class PieDemo {
     }
     customCheckBox({ label, checked, value }) {
         return (h("label", { class: "custom-checkbox", onClick: () => this.setMode(value) },
-            h("span", { class: classnames("circle-container", {
-                    'full': checked
-                }) },
-                h("i", { "data-value": value, class: "circle" })),
+            h("i", { class: "material-icons" }, checked ? 'radio_button_checked' : 'radio_button_unchecked'),
             h("span", null, label)));
     }
     render() {
@@ -101,50 +170,19 @@ export class PieDemo {
                 return h("div", { id: "error" }, "Error...");
             case ViewState.READY:
                 console.log('rendering');
-                const Tagname = this.pieName;
-                const ConfigTag = this.pieName + '-config';
                 return (h("div", { class: "root" },
-                    h("span", { class: "control-bar" },
-                        h("div", { class: classnames('authoring-header', {
-                                'collapsed': !this.toggled
-                            }) },
-                            h("h4", null, "Authoring View"),
-                            h("i", { class: classnames('fa', {
-                                    'fa-caret-left': this.toggled,
-                                    'fa-caret-right': !this.toggled
-                                }), onClick: () => this.toggleEditor() })),
-                        h("div", { class: "student-view-header" },
-                            h("h4", null, "Student View"))),
+                    this.renderControlBar(),
                     h("div", { class: "config-holder" },
-                        h("div", { class: "authoring-holder", style: { "display": this.toggled ? 'block' : 'none' } },
-                            h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })),
-                        h("div", { class: "student-view-holder" },
-                            h("div", { class: "mode-config" },
-                                h("h5", null, "Mode"),
-                                h("div", { class: "modes-holder" },
-                                    this.customCheckBox({
-                                        label: 'Gather',
-                                        checked: this.env['mode'] === 'gather',
-                                        value: 'gather'
-                                    }),
-                                    this.customCheckBox({
-                                        label: 'View',
-                                        checked: this.env['mode'] === 'view',
-                                        value: 'view'
-                                    }),
-                                    this.customCheckBox({
-                                        label: 'Evaluate',
-                                        checked: this.env['mode'] === 'evaluate',
-                                        value: 'evaluate'
-                                    }))),
-                            h(Tagname, { id: "render", ref: el => {
-                                    console.log('Setare');
-                                    (this.pieElement = el);
-                                }, model: this.pieElementModel, session: this.session })))));
+                        this.renderAuthoringHolder(),
+                        h("span", { class: "divider" }),
+                        this.renderStudentHolder())));
         }
     }
     static get is() { return "pie-demo"; }
     static get properties() { return {
+        "collapsed": {
+            "state": true
+        },
         "configElement": {
             "state": true,
             "watchCallbacks": ["wachConfigElement"]
@@ -206,9 +244,6 @@ export class PieDemo {
             "state": true
         },
         "state": {
-            "state": true
-        },
-        "toggled": {
             "state": true
         }
     }; }

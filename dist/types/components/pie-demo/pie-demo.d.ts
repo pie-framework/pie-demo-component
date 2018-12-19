@@ -45,14 +45,14 @@ export declare class PieDemo {
     pieElement: PieElement;
     pieElementModel: Object;
     configElement: PieElement;
-    toggled: boolean;
+    collapsed: string;
     env: Object;
     session: Object;
     /**
      * Some functionality
      */
     loadPies: Function;
-    toggleEditor(): void;
+    collapsePanel(name: any): void;
     watchPie(newPie: any): void;
     updateModel(newModel: any): Promise<void>;
     watchConfigModel(newModel: any): Promise<void>;
@@ -67,6 +67,10 @@ export declare class PieDemo {
         checked: any;
         value: any;
     }): JSX.Element;
+    renderControlBar: () => JSX.Element;
+    renderCollapsedPanel: (title: any) => JSX.Element;
+    renderAuthoringHolder: () => JSX.Element;
+    renderStudentHolder: () => JSX.Element;
     render(): JSX.Element;
 }
 export {};

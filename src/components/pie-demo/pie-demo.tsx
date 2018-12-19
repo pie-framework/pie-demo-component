@@ -67,7 +67,7 @@ export class PieDemo {
 
   @State() configElement: PieElement;
 
-  @State() toggled: boolean = this.preview;
+  @State() collapsed: string;
 
   @State() env: Object = { mode: 'gather' };
 
@@ -82,8 +82,8 @@ export class PieDemo {
     loadCloudPies(elements, document);
   };
 
-  toggleEditor() {
-    this.toggled = !this.toggled;
+  collapsePanel(name) {
+    this.collapsed = this.collapsed === name ? null : name;
   }
 
   @Watch('pie')
@@ -172,20 +172,148 @@ export class PieDemo {
         class="custom-checkbox"
         onClick={() => this.setMode(value)}
       >
-        <span class={
-          classnames(
-            "circle-container",
-            {
-              'full': checked
-            }
-          )
-        }>
-        <i data-value={value} class="circle" />
-        </span>
+        <i class="material-icons">
+          {checked ? 'radio_button_checked' : 'radio_button_unchecked'}
+        </i>
         <span>{label}</span>
       </label>
     );
   }
+
+  renderControlBar = () => {
+    return (
+      <span class="control-bar">
+              <div
+                class={
+                  classnames(
+                    'authoring-header',
+                    {
+                      'collapsed': this.collapsed === 'authoring'
+                    }
+                  )
+                }
+              >
+                <i
+                  class="material-icons collapse-icon"
+                  onClick={() => this.collapsePanel('student')}
+                >
+                  format_indent_increase
+                </i>
+                <h4>
+                  Authoring View
+                </h4>
+              </div>
+              <div
+                class={
+                  classnames(
+                    'student-view-header',
+                    {
+                      'collapsed': this.collapsed === 'student'
+                    }
+                  )
+                }
+              >
+                <div class="center-content">
+                  <h4>
+                    Student View
+                  </h4>
+                  <div class="mode-config">
+                    <h5>Mode</h5>
+                    <div class="modes-holder">
+                      {this.customCheckBox({
+                        label: 'Gather',
+                        checked: this.env[ 'mode' ] === 'gather',
+                        value: 'gather'
+                      })}
+                      {this.customCheckBox({
+                        label: 'View',
+                        checked: this.env[ 'mode' ] === 'view',
+                        value: 'view'
+                      })}
+                      {this.customCheckBox({
+                        label: 'Evaluate',
+                        checked: this.env[ 'mode' ] === 'evaluate',
+                        value: 'evaluate'
+                      })}
+                    </div>
+                  </div>
+                </div>
+                <i
+                  class="material-icons collapse-icon"
+                  onClick={() => this.collapsePanel('authoring')}
+                >
+                  format_indent_decrease
+                </i>
+              </div>
+            </span>
+    );
+  };
+
+  renderCollapsedPanel = (title) => {
+    return (
+      <div class="collapsed-panel">
+        <span>
+          {title}
+        </span>
+      </div>
+    );
+  };
+
+  renderAuthoringHolder = () => {
+    const ConfigTag = this.pieName + '-config';
+
+    if (this.collapsed === 'authoring') {
+      return this.renderCollapsedPanel('Authoring View');
+    }
+
+    return (
+      <div
+        class={
+          classnames(
+            'authoring-holder',
+            {
+              'collapsed': this.collapsed === 'authoring'
+            }
+          )
+        }
+      >
+        <ConfigTag
+          id="configure"
+          ref={el => (this.configElement = el as PieElement)}
+          model={this.model}
+          session={this.session}
+        />
+      </div>
+    );
+  };
+
+  renderStudentHolder = () => {
+    const TagName = this.pieName + '';
+
+    if (this.collapsed === 'student') {
+      return this.renderCollapsedPanel('Student View');
+    }
+
+    return (
+      <div
+        class={
+          classnames(
+            'student-view-holder',
+            {
+              'collapsed': this.collapsed === 'student'
+            }
+          )
+        }
+      >
+        <TagName
+          id="render"
+          ref={el => el && (this.pieElement = el as PieElement)}
+          model={this.pieElementModel}
+          session={this.session}
+        />
+      </div>
+    );
+  };
 
   render() {
     switch (this.state) {
@@ -195,86 +323,13 @@ export class PieDemo {
         return <div id="error">Error...</div>;
       case ViewState.READY:
         console.log('rendering');
-        const Tagname = this.pieName;
-        const ConfigTag = this.pieName + '-config';
         return (
           <div class="root">
-            <span class="control-bar">
-              <div
-                class={
-                  classnames(
-                    'authoring-header',
-                    {
-                      'collapsed': !this.toggled
-                    }
-                  )
-                }
-              >
-                <h4>
-                  Authoring View
-                </h4>
-                <i
-                  class={
-                    classnames(
-                      'fa',
-                      {
-                        'fa-caret-left': this.toggled,
-                        'fa-caret-right': !this.toggled
-                      }
-                    )
-                  }
-                  onClick={() => this.toggleEditor()}
-                />
-              </div>
-              <div class="student-view-header">
-                <h4>
-                  Student View
-                </h4>
-              </div>
-            </span>
+            {this.renderControlBar()}
             <div class="config-holder">
-              <div
-                class="authoring-holder"
-                style={{ "display": this.toggled ? 'block' : 'none' }}
-              >
-                <ConfigTag
-                  id="configure"
-                  ref={el => (this.configElement = el as PieElement)}
-                  model={this.model}
-                  session={this.session}
-                />
-              </div>
-              <div class="student-view-holder">
-                <div class="mode-config">
-                  <h5>Mode</h5>
-                  <div class="modes-holder">
-                    {this.customCheckBox({
-                      label: 'Gather',
-                      checked: this.env[ 'mode' ] === 'gather',
-                      value: 'gather'
-                    })}
-                    {this.customCheckBox({
-                      label: 'View',
-                      checked: this.env[ 'mode' ] === 'view',
-                      value: 'view'
-                    })}
-                    {this.customCheckBox({
-                      label: 'Evaluate',
-                      checked: this.env[ 'mode' ] === 'evaluate',
-                      value: 'evaluate'
-                    })}
-                  </div>
-                </div>
-                <Tagname
-                  id="render"
-                  ref={el => {
-                    console.log('Setare');
-                    (this.pieElement = el as PieElement)
-                  }}
-                  model={this.pieElementModel}
-                  session={this.session}
-                />
-              </div>
+              {this.renderAuthoringHolder()}
+              <span class="divider"/>
+              {this.renderStudentHolder()}
             </div>
           </div>
         );
