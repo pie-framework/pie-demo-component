@@ -69,6 +69,8 @@ export class PieDemo {
 
   @State() collapsed: string;
 
+  @State() studSettVisible: boolean = false;
+
   @State() env: Object = { mode: 'gather' };
 
   @State() session: Object = {};
@@ -84,6 +86,10 @@ export class PieDemo {
 
   collapsePanel(name) {
     this.collapsed = this.collapsed === name ? null : name;
+  }
+
+  toggleStudentSettings() {
+    this.studSettVisible = !this.studSettVisible;
   }
 
   @Watch('pie')
@@ -180,76 +186,130 @@ export class PieDemo {
     );
   }
 
-  renderControlBar = () => {
+  renderHeaderTitleInfo({ title, description, options = undefined }) {
     return (
-      <span class="control-bar">
-              <div
-                class={
-                  classnames(
-                    'authoring-header',
-                    {
-                      'collapsed': this.collapsed === 'authoring'
-                    }
-                  )
-                }
-              >
-                <i
-                  class="material-icons collapse-icon"
-                  onClick={() => this.collapsePanel('student')}
-                >
-                  format_indent_increase
+      <div class="header-title">
+        <div class="title-info">
+          <h4>
+            {title}
+          </h4>
+          {
+            options &&
+            options.map((opt) => (
+              <span class="option">
+                <i class="fa fa-circle">
                 </i>
-                <h4>
-                  Authoring View
-                </h4>
-              </div>
-              <div
-                class={
-                  classnames(
-                    'student-view-header',
-                    {
-                      'collapsed': this.collapsed === 'student'
-                    }
-                  )
-                }
-              >
-                <div class="center-content">
-                  <h4>
-                    Student View
-                  </h4>
-                  <div class="mode-config">
-                    <h5>Mode</h5>
-                    <div class="modes-holder">
-                      {this.customCheckBox({
-                        label: 'Gather',
-                        checked: this.env[ 'mode' ] === 'gather',
-                        value: 'gather'
-                      })}
-                      {this.customCheckBox({
-                        label: 'View',
-                        checked: this.env[ 'mode' ] === 'view',
-                        value: 'view'
-                      })}
-                      {this.customCheckBox({
-                        label: 'Evaluate',
-                        checked: this.env[ 'mode' ] === 'evaluate',
-                        value: 'evaluate'
-                      })}
-                    </div>
-                  </div>
-                </div>
-                <i
-                  class="material-icons collapse-icon"
-                  onClick={() => this.collapsePanel('authoring')}
-                >
-                  format_indent_decrease
-                </i>
-              </div>
-            </span>
+                {this.env[opt]}
+              </span>
+            ))
+          }
+        </div>
+        <span>
+          {description}
+        </span>
+      </div>
+    )
+  }
+
+  renderAuthoringHeader() {
+    return (
+      <div
+        class={
+          classnames(
+            'authoring-header',
+            {
+              collapsed: this.collapsed === 'authoring'
+            }
+          )
+        }
+      >
+        {this.renderHeaderTitleInfo({
+          title: 'Authoring View',
+          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+        })}
+        <i
+          class="material-icons collapse-icon"
+          onClick={() => this.collapsePanel('student')}
+        >
+          {this.collapsed === 'student'  ? 'format_indent_decrease' : 'format_indent_increase'}
+        </i>
+      </div>
+    )
+  };
+
+  renderStudentHeader() {
+    return (
+      <div
+        class={
+          classnames(
+            'student-view-header',
+            {
+              collapsed: this.collapsed === 'student',
+              toggled: this.studSettVisible
+            }
+          )
+        }
+      >
+        <div class="topContent">
+          {this.renderHeaderTitleInfo({
+            title: 'Student View',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+            options: [
+              'mode',
+              'mode'
+            ]
+          })}
+          <i
+            class={classnames('material-icons', 'toggle-icon', {
+              toggled: this.studSettVisible
+            })}
+            onClick={() => this.toggleStudentSettings()}
+          >
+            {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
+          </i>
+          <i
+            class="material-icons collapse-icon"
+            onClick={() => this.collapsePanel('authoring')}
+          >
+            {this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease'}
+          </i>
+        </div>
+        <div class="bottomContent">
+          <div class="mode-config">
+            <h5>Mode</h5>
+            <div class="modes-holder">
+              {this.customCheckBox({
+                label: 'Gather',
+                checked: this.env[ 'mode' ] === 'gather',
+                value: 'gather'
+              })}
+              {this.customCheckBox({
+                label: 'View',
+                checked: this.env[ 'mode' ] === 'view',
+                value: 'view'
+              })}
+              {this.customCheckBox({
+                label: 'Evaluate',
+                checked: this.env[ 'mode' ] === 'evaluate',
+                value: 'evaluate'
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderControlBar() {
+    return (
+      <div class="control-bar">
+        {this.renderAuthoringHeader()}
+        {this.renderStudentHeader()}
+      </div>
     );
   };
 
-  renderCollapsedPanel = (title) => {
+  renderCollapsedPanel(title) {
     return (
       <div class="collapsed-panel">
         <span>
@@ -272,7 +332,8 @@ export class PieDemo {
           classnames(
             'authoring-holder',
             {
-              'collapsed': this.collapsed === 'authoring'
+              collapsed: this.collapsed === 'authoring',
+              toggled: this.studSettVisible
             }
           )
         }

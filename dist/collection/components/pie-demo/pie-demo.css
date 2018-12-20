@@ -18,41 +18,76 @@ html, body {
 }
 
 .control-bar {
-    background: #fff;
     color: grey;
     display: flex;
     font-size: 16px;
     font-weight: bold;
-    height: 74px;
     justify-content: space-between;
     width: 100%;
 }
 
 .control-bar .collapse-icon {
     cursor: pointer;
+    margin-right: 22px;
+}
+
+.control-bar .toggle-icon {
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.control-bar .toggle-icon.toggled {
+    color: #f9a825;
 }
 
 .control-bar .authoring-header {
+    background: #fff;
     align-items: center;
     display: flex;
     flex: 1;
+    height: 76px;
     justify-content: center;
     position: relative;
     border-right: 2px solid #ebebeb;
 }
 
-.control-bar .authoring-header .collapse-icon {
-    margin-left: 22px;
+.control-bar .header-title {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin-left: 24px;
 }
 
-.control-bar .student-view-header h4,
-.control-bar .authoring-header h4 {
+.control-bar .header-title .title-info {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.control-bar .header-title .title-info .option {
+    margin-right: 5px;
+    text-transform: uppercase;
+}
+
+.control-bar .header-title .title-info i {
+    font-size: 4px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.control-bar .header-title span {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, 0.56);
+}
+
+.control-bar .header-title .title-info h4,
+.control-bar .header-title .title-info h4 {
     color: rgba(0, 0, 0, 0.87);
-    flex: 1;
     font-size: 16px;
     letter-spacing: 3px;
-    margin: 0;
-    text-align: center;
+    margin: 0 8px 4px 0;
+    text-align: left;
     text-transform: uppercase;
 }
 
@@ -61,8 +96,8 @@ html, body {
     max-width: 56px;
 }
 
-.control-bar .authoring-header.collapsed h4,
-.control-bar .student-view-header.collapsed h4 {
+.control-bar .authoring-header.collapsed .header-title,
+.control-bar .student-view-header.collapsed .header-title {
     display: none;
 }
 
@@ -71,57 +106,69 @@ html, body {
     margin: 0;
 }
 
-.control-bar .student-view-header.collapsed .center-content {
+.control-bar .student-view-header {
+    background: #fff;
+    flex: 1 0 0;
+    height: 76px;
+}
+
+.control-bar .student-view-header .bottomContent {
     display: none;
 }
 
-.control-bar .student-view-header {
+.control-bar .student-view-header.toggled {
+    height: calc(76px + 48px + 78px);
+}
+
+.control-bar .student-view-header.toggled .bottomContent {
+    display: block;
+}
+
+.control-bar .student-view-header.toggled .topContent {
+    height: 76px;
+}
+
+.control-bar .student-view-header .topContent {
     align-items: center;
     display: flex;
     justify-content: center;
-    flex: 1 0 0;
+    height: 100%;
 }
 
-.control-bar .student-view-header h4 {
+.control-bar .student-view-header .topContent h4 {
     margin-bottom: 10px;
 }
 
-.control-bar .student-view-header .collapse-icon {
-    margin-right: 22px;
+.control-bar .student-view-header .bottomContent {
+    height: 48px;
 }
 
-.control-bar .student-view-header .center-content {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.control-bar .student-view-header .center-content .mode-config {
+.control-bar .student-view-header .bottomContent .mode-config {
     align-items: center;
     display: flex;
     justify-content: center;
+    height: 100%;
     width: 100%;
 }
 
-.control-bar .student-view-header .center-content .mode-config h5 {
+.control-bar .student-view-header .bottomContent .mode-config h5 {
     margin: 0 18px 0 0;
 }
 
-.control-bar .student-view-header .center-content .mode-config .modes-holder {
+.control-bar .student-view-header .bottomContent .mode-config .modes-holder {
     align-items: center;
     display: flex;
     justify-content: center;
 }
 
-.control-bar .student-view-header .center-content .mode-config .modes-holder > * {
+.control-bar .student-view-header .bottomContent .mode-config .modes-holder > * {
     margin-right: 18px;
 }
 
 .config-holder {
     background-color: #3f51b5;
     display: flex;
-    height: 100%;
+    height: calc(100% - 94px);
     padding-bottom: 20px;
     width: 100%;
 }
@@ -155,6 +202,11 @@ html, body {
     max-width: 56px;
 }
 
+.config-holder .authoring-holder.toggled {
+    position: relative;
+    top: -126px;
+}
+
 .toggle-button {
     background-color: lightgrey;
     border: none;
@@ -164,7 +216,7 @@ html, body {
 
 .divider {
     background: #2336a0;
-    height: 100%;
+    height: calc(100% + 20px);
     width: 2px;
 }
 

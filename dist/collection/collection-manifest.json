@@ -86,6 +86,9 @@
         },
         {
           "name": "state"
+        },
+        {
+          "name": "studSettVisible"
         }
       ]
     }

@@ -25,6 +25,7 @@ export class PieDemo {
          */
         this.playerControls = true;
         this.state = ViewState.LOADING;
+        this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
         // @Element() private element: HTMLElement
@@ -34,49 +35,14 @@ export class PieDemo {
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
-        this.renderControlBar = () => {
-            return (h("span", { class: "control-bar" },
-                h("div", { class: classnames('authoring-header', {
-                        'collapsed': this.collapsed === 'authoring'
-                    }) },
-                    h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('student') }, "format_indent_increase"),
-                    h("h4", null, "Authoring View")),
-                h("div", { class: classnames('student-view-header', {
-                        'collapsed': this.collapsed === 'student'
-                    }) },
-                    h("div", { class: "center-content" },
-                        h("h4", null, "Student View"),
-                        h("div", { class: "mode-config" },
-                            h("h5", null, "Mode"),
-                            h("div", { class: "modes-holder" },
-                                this.customCheckBox({
-                                    label: 'Gather',
-                                    checked: this.env['mode'] === 'gather',
-                                    value: 'gather'
-                                }),
-                                this.customCheckBox({
-                                    label: 'View',
-                                    checked: this.env['mode'] === 'view',
-                                    value: 'view'
-                                }),
-                                this.customCheckBox({
-                                    label: 'Evaluate',
-                                    checked: this.env['mode'] === 'evaluate',
-                                    value: 'evaluate'
-                                })))),
-                    h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('authoring') }, "format_indent_decrease"))));
-        };
-        this.renderCollapsedPanel = (title) => {
-            return (h("div", { class: "collapsed-panel" },
-                h("span", null, title)));
-        };
         this.renderAuthoringHolder = () => {
             const ConfigTag = this.pieName + '-config';
             if (this.collapsed === 'authoring') {
                 return this.renderCollapsedPanel('Authoring View');
             }
             return (h("div", { class: classnames('authoring-holder', {
-                    'collapsed': this.collapsed === 'authoring'
+                    collapsed: this.collapsed === 'authoring',
+                    toggled: this.studSettVisible
                 }) },
                 h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })));
         };
@@ -93,6 +59,9 @@ export class PieDemo {
     }
     collapsePanel(name) {
         this.collapsed = this.collapsed === name ? null : name;
+    }
+    toggleStudentSettings() {
+        this.studSettVisible = !this.studSettVisible;
     }
     watchPie(newPie) {
         console.log('pie-watch triggered');
@@ -162,6 +131,76 @@ export class PieDemo {
             h("i", { class: "material-icons" }, checked ? 'radio_button_checked' : 'radio_button_unchecked'),
             h("span", null, label)));
     }
+    renderHeaderTitleInfo({ title, description, options = undefined }) {
+        return (h("div", { class: "header-title" },
+            h("div", { class: "title-info" },
+                h("h4", null, title),
+                options &&
+                    options.map((opt) => (h("span", { class: "option" },
+                        h("i", { class: "fa fa-circle" }),
+                        this.env[opt])))),
+            h("span", null, description)));
+    }
+    renderAuthoringHeader() {
+        return (h("div", { class: classnames('authoring-header', {
+                collapsed: this.collapsed === 'authoring'
+            }) },
+            this.renderHeaderTitleInfo({
+                title: 'Authoring View',
+                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+            }),
+            h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('student') }, this.collapsed === 'student' ? 'format_indent_decrease' : 'format_indent_increase')));
+    }
+    ;
+    renderStudentHeader() {
+        return (h("div", { class: classnames('student-view-header', {
+                collapsed: this.collapsed === 'student',
+                toggled: this.studSettVisible
+            }) },
+            h("div", { class: "topContent" },
+                this.renderHeaderTitleInfo({
+                    title: 'Student View',
+                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+                    options: [
+                        'mode',
+                        'mode'
+                    ]
+                }),
+                h("i", { class: classnames('material-icons', 'toggle-icon', {
+                        toggled: this.studSettVisible
+                    }), onClick: () => this.toggleStudentSettings() }, this.studSettVisible ? 'toggle_on' : 'toggle_off'),
+                h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('authoring') }, this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease')),
+            h("div", { class: "bottomContent" },
+                h("div", { class: "mode-config" },
+                    h("h5", null, "Mode"),
+                    h("div", { class: "modes-holder" },
+                        this.customCheckBox({
+                            label: 'Gather',
+                            checked: this.env['mode'] === 'gather',
+                            value: 'gather'
+                        }),
+                        this.customCheckBox({
+                            label: 'View',
+                            checked: this.env['mode'] === 'view',
+                            value: 'view'
+                        }),
+                        this.customCheckBox({
+                            label: 'Evaluate',
+                            checked: this.env['mode'] === 'evaluate',
+                            value: 'evaluate'
+                        }))))));
+    }
+    renderControlBar() {
+        return (h("div", { class: "control-bar" },
+            this.renderAuthoringHeader(),
+            this.renderStudentHeader()));
+    }
+    ;
+    renderCollapsedPanel(title) {
+        return (h("div", { class: "collapsed-panel" },
+            h("span", null, title)));
+    }
+    ;
     render() {
         switch (this.state) {
             case ViewState.LOADING:
@@ -244,6 +283,9 @@ export class PieDemo {
             "state": true
         },
         "state": {
+            "state": true
+        },
+        "studSettVisible": {
             "state": true
         }
     }; }

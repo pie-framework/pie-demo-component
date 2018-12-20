@@ -46,6 +46,7 @@ export declare class PieDemo {
     pieElementModel: Object;
     configElement: PieElement;
     collapsed: string;
+    studSettVisible: boolean;
     env: Object;
     session: Object;
     /**
@@ -53,6 +54,7 @@ export declare class PieDemo {
      */
     loadPies: Function;
     collapsePanel(name: any): void;
+    toggleStudentSettings(): void;
     watchPie(newPie: any): void;
     updateModel(newModel: any): Promise<void>;
     watchConfigModel(newModel: any): Promise<void>;
@@ -67,8 +69,15 @@ export declare class PieDemo {
         checked: any;
         value: any;
     }): JSX.Element;
-    renderControlBar: () => JSX.Element;
-    renderCollapsedPanel: (title: any) => JSX.Element;
+    renderHeaderTitleInfo({ title, description, options }: {
+        title: any;
+        description: any;
+        options?: any;
+    }): JSX.Element;
+    renderAuthoringHeader(): JSX.Element;
+    renderStudentHeader(): JSX.Element;
+    renderControlBar(): JSX.Element;
+    renderCollapsedPanel(title: any): JSX.Element;
     renderAuthoringHolder: () => JSX.Element;
     renderStudentHolder: () => JSX.Element;
     render(): JSX.Element;
