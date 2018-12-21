@@ -1,5 +1,6 @@
-import { loadCloudPies } from '../../util/PieCloud';
+import ResizeObserver from 'resize-observer-polyfill';
 import classnames from 'classnames';
+import { loadCloudPies } from '../../util/PieCloud';
 var ViewState;
 (function (ViewState) {
     ViewState[ViewState["LOADING"] = 0] = "LOADING";
@@ -25,6 +26,9 @@ export class PieDemo {
          */
         this.playerControls = true;
         this.state = ViewState.LOADING;
+        this.studentHeaderWidth = 500;
+        this.tabIndex = 0;
+        this.currentOption = 'option1';
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
@@ -82,10 +86,7 @@ export class PieDemo {
         }
     }
     async updateModel(newModel) {
-        if (window['pie']) {
-            console.log('model property updated');
-            this.configModel = newModel;
-        }
+        this.configModel = newModel;
     }
     async watchConfigModel(newModel) {
         if (this.configElement)
@@ -105,9 +106,20 @@ export class PieDemo {
             this.pieElement.model = newModel;
         }
     }
+    watchResizerObserver() {
+        if (this.studentHeader) {
+            this.resizeObserver.observe(this.studentHeader);
+        }
+        else {
+            this.resizeObserver.unobserve(this.studentHeader);
+        }
+    }
     componentWillLoad() {
         console.log('component will load ... ');
         this.watchPie(this.pie);
+        this.resizeObserver = new ResizeObserver(() => {
+            this.studentHeaderWidth = this.studentHeader.offsetWidth;
+        });
         if (this.model) {
             this.updateModel(this.model);
         }
@@ -126,8 +138,11 @@ export class PieDemo {
         this.env['mode'] = mode;
         this.updatePieModelFromController(this.configModel, this.session, this.env);
     }
-    customCheckBox({ label, checked, value }) {
-        return (h("label", { class: "custom-checkbox", onClick: () => this.setMode(value) },
+    setOption(option) {
+        this.currentOption = option;
+    }
+    customCheckBox({ label, checked, value, action = undefined }) {
+        return (h("label", { class: "custom-checkbox", onClick: () => action.call(this, value) },
             h("i", { class: "material-icons" }, checked ? 'radio_button_checked' : 'radio_button_unchecked'),
             h("span", null, label)));
     }
@@ -152,8 +167,70 @@ export class PieDemo {
             h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('student') }, this.collapsed === 'student' ? 'format_indent_decrease' : 'format_indent_increase')));
     }
     ;
+    renderRoleConfigContainer() {
+        return (h("div", { class: "roles-settings" },
+            h("h5", null, "Role"),
+            h("div", { class: "roles-options" },
+                this.customCheckBox({
+                    label: 'Option 1',
+                    checked: this.currentOption === 'option1',
+                    value: 'option1',
+                    action: this.setOption
+                }),
+                this.customCheckBox({
+                    label: 'Option 2',
+                    checked: this.currentOption === 'option2',
+                    value: 'option2',
+                    action: this.setOption
+                }))));
+    }
+    ;
+    renderModeConfigContainer() {
+        return (h("div", { class: "modes-settings" },
+            h("h5", null, "Mode"),
+            h("div", { class: "modes-options" },
+                this.customCheckBox({
+                    label: 'Gather',
+                    checked: this.env['mode'] === 'gather',
+                    value: 'gather',
+                    action: this.setMode
+                }),
+                this.customCheckBox({
+                    label: 'View',
+                    checked: this.env['mode'] === 'view',
+                    value: 'view',
+                    action: this.setMode
+                }),
+                this.customCheckBox({
+                    label: 'Evaluate',
+                    checked: this.env['mode'] === 'evaluate',
+                    value: 'evaluate',
+                    action: this.setMode
+                }))));
+    }
+    ;
+    renderSettingsContainer() {
+        return (h("div", { class: "settings-tab-container" },
+            this.renderModeConfigContainer(),
+            this.renderRoleConfigContainer()));
+    }
+    ;
+    renderBottomContent() {
+        return (h("div", { class: "tabs-container" },
+            h("div", { class: "tabs" },
+                h("div", { class: classnames('tab', {
+                        selected: this.tabIndex === 0
+                    }), onClick: () => this.tabIndex = 0 }, "Settings"),
+                h("div", { class: classnames('tab', {
+                        selected: this.tabIndex === 1
+                    }), onClick: () => this.tabIndex = 1 }, "OtherTab")),
+            h("span", { class: "selected-line", style: {
+                    left: `${this.tabIndex * 100}px`
+                } }),
+            h("div", { class: "tab-content" }, this.tabIndex === 0 && this.renderSettingsContainer())));
+    }
     renderStudentHeader() {
-        return (h("div", { class: classnames('student-view-header', {
+        return (h("div", { ref: el => (this.studentHeader = el), class: classnames('student-view-header', {
                 collapsed: this.collapsed === 'student',
                 toggled: this.studSettVisible
             }) },
@@ -166,29 +243,13 @@ export class PieDemo {
                         'mode'
                     ]
                 }),
+                this.studentHeaderWidth >= 800 &&
+                    h("span", null, "Toggle Settings"),
                 h("i", { class: classnames('material-icons', 'toggle-icon', {
                         toggled: this.studSettVisible
                     }), onClick: () => this.toggleStudentSettings() }, this.studSettVisible ? 'toggle_on' : 'toggle_off'),
                 h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('authoring') }, this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease')),
-            h("div", { class: "bottomContent" },
-                h("div", { class: "mode-config" },
-                    h("h5", null, "Mode"),
-                    h("div", { class: "modes-holder" },
-                        this.customCheckBox({
-                            label: 'Gather',
-                            checked: this.env['mode'] === 'gather',
-                            value: 'gather'
-                        }),
-                        this.customCheckBox({
-                            label: 'View',
-                            checked: this.env['mode'] === 'view',
-                            value: 'view'
-                        }),
-                        this.customCheckBox({
-                            label: 'Evaluate',
-                            checked: this.env['mode'] === 'evaluate',
-                            value: 'evaluate'
-                        }))))));
+            h("div", { class: "bottomContent" }, this.renderBottomContent())));
     }
     renderControlBar() {
         return (h("div", { class: "control-bar" },
@@ -229,6 +290,9 @@ export class PieDemo {
         "configModel": {
             "state": true,
             "watchCallbacks": ["watchConfigModel"]
+        },
+        "currentOption": {
+            "state": true
         },
         "editor": {
             "type": Boolean,
@@ -279,13 +343,26 @@ export class PieDemo {
             "type": Boolean,
             "attr": "preview"
         },
+        "resizeObserver": {
+            "state": true
+        },
         "session": {
             "state": true
         },
         "state": {
             "state": true
         },
+        "studentHeader": {
+            "state": true,
+            "watchCallbacks": ["watchResizerObserver"]
+        },
+        "studentHeaderWidth": {
+            "state": true
+        },
         "studSettVisible": {
+            "state": true
+        },
+        "tabIndex": {
             "state": true
         }
     }; }

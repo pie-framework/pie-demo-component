@@ -1,6 +1,7 @@
 import { Component, Prop, Watch, State } from '@stencil/core';
-import { loadCloudPies } from '../../util/PieCloud';
+import ResizeObserver from 'resize-observer-polyfill'
 import classnames from 'classnames';
+import { loadCloudPies } from '../../util/PieCloud';
 
 enum ViewState {
   LOADING,
@@ -57,15 +58,25 @@ export class PieDemo {
 
   @State() package: string;
 
+  @State() resizeObserver: any;
+
   @State() pieName: string;
 
   @State() pieController: PieController;
 
   @State() pieElement: PieElement;
 
+  @State() studentHeader: any;
+
+  @State() studentHeaderWidth: number = 500;
+
   @State() pieElementModel: Object;
 
   @State() configElement: PieElement;
+
+  @State() tabIndex: number = 0;
+
+  @State() currentOption: string = 'option1';
 
   @State() collapsed: string;
 
@@ -118,10 +129,7 @@ export class PieDemo {
 
   @Watch('model')
   async updateModel(newModel) {
-    if (window['pie']) {
-      console.log('model property updated');
-      this.configModel = newModel;
-    }
+    this.configModel = newModel;
   }
 
   @Watch('configModel')
@@ -146,9 +154,23 @@ export class PieDemo {
     }
   }
 
+  @Watch('studentHeader')
+  watchResizerObserver() {
+    if (this.studentHeader) {
+      this.resizeObserver.observe(this.studentHeader);
+    } else {
+      this.resizeObserver.unobserve(this.studentHeader);
+    }
+  }
+
   componentWillLoad() {
     console.log('component will load ... ');
     this.watchPie(this.pie);
+
+    this.resizeObserver = new (ResizeObserver as any)(() => {
+      this.studentHeaderWidth = this.studentHeader.offsetWidth;
+    });
+
     if (this.model) {
       this.updateModel(this.model);
     }
@@ -172,11 +194,15 @@ export class PieDemo {
     this.updatePieModelFromController(this.configModel, this.session, this.env);
   }
 
-  customCheckBox({ label, checked, value }) {
+  setOption(option) {
+    this.currentOption = option;
+  }
+
+  customCheckBox({ label, checked, value, action = undefined }) {
     return (
       <label
         class="custom-checkbox"
-        onClick={() => this.setMode(value)}
+        onClick={() => action.call(this, value)}
       >
         <i class="material-icons">
           {checked ? 'radio_button_checked' : 'radio_button_unchecked'}
@@ -237,9 +263,101 @@ export class PieDemo {
     )
   };
 
+  renderRoleConfigContainer() {
+    return (
+      <div class="roles-settings">
+        <h5>Role</h5>
+        <div class="roles-options">
+          {this.customCheckBox({
+            label: 'Option 1',
+            checked: this.currentOption === 'option1',
+            value: 'option1',
+            action: this.setOption
+          })}
+          {this.customCheckBox({
+            label: 'Option 2',
+            checked: this.currentOption === 'option2',
+            value: 'option2',
+            action: this.setOption
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  renderModeConfigContainer() {
+    return (
+      <div class="modes-settings">
+        <h5>Mode</h5>
+        <div class="modes-options">
+          {this.customCheckBox({
+            label: 'Gather',
+            checked: this.env[ 'mode' ] === 'gather',
+            value: 'gather',
+            action: this.setMode
+          })}
+          {this.customCheckBox({
+            label: 'View',
+            checked: this.env[ 'mode' ] === 'view',
+            value: 'view',
+            action: this.setMode
+          })}
+          {this.customCheckBox({
+            label: 'Evaluate',
+            checked: this.env[ 'mode' ] === 'evaluate',
+            value: 'evaluate',
+            action: this.setMode
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  renderSettingsContainer() {
+    return (
+      <div class="settings-tab-container">
+        {this.renderModeConfigContainer()}
+        {this.renderRoleConfigContainer()}
+      </div>
+    );
+  };
+
+  renderBottomContent() {
+    return (
+      <div class="tabs-container">
+        <div class="tabs">
+          <div
+            class={classnames('tab', {
+              selected: this.tabIndex === 0
+            })}
+            onClick={() => this.tabIndex = 0}
+          >
+            Settings
+          </div>
+          <div
+            class={classnames('tab', {
+              selected: this.tabIndex === 1
+            })}
+            onClick={() => this.tabIndex = 1}
+          >
+            OtherTab
+          </div>
+        </div>
+        <span class="selected-line" style={{
+          left: `${this.tabIndex * 100}px`
+        }}>
+        </span>
+        <div class="tab-content">
+          {this.tabIndex === 0 && this.renderSettingsContainer()}
+        </div>
+      </div>
+    )
+  }
+
   renderStudentHeader() {
     return (
       <div
+        ref={el => (this.studentHeader = el as any)}
         class={
           classnames(
             'student-view-header',
@@ -259,6 +377,12 @@ export class PieDemo {
               'mode'
             ]
           })}
+          {
+            this.studentHeaderWidth >= 800 &&
+            <span>
+              Toggle Settings
+            </span>
+          }
           <i
             class={classnames('material-icons', 'toggle-icon', {
               toggled: this.studSettVisible
@@ -275,26 +399,7 @@ export class PieDemo {
           </i>
         </div>
         <div class="bottomContent">
-          <div class="mode-config">
-            <h5>Mode</h5>
-            <div class="modes-holder">
-              {this.customCheckBox({
-                label: 'Gather',
-                checked: this.env[ 'mode' ] === 'gather',
-                value: 'gather'
-              })}
-              {this.customCheckBox({
-                label: 'View',
-                checked: this.env[ 'mode' ] === 'view',
-                value: 'view'
-              })}
-              {this.customCheckBox({
-                label: 'Evaluate',
-                checked: this.env[ 'mode' ] === 'evaluate',
-                value: 'evaluate'
-              })}
-            </div>
-          </div>
+          {this.renderBottomContent()}
         </div>
       </div>
     )

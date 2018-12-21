@@ -40,11 +40,16 @@ export declare class PieDemo {
     configModel: Object;
     state: ViewState;
     package: string;
+    resizeObserver: any;
     pieName: string;
     pieController: PieController;
     pieElement: PieElement;
+    studentHeader: any;
+    studentHeaderWidth: number;
     pieElementModel: Object;
     configElement: PieElement;
+    tabIndex: number;
+    currentOption: string;
     collapsed: string;
     studSettVisible: boolean;
     env: Object;
@@ -60,14 +65,17 @@ export declare class PieDemo {
     watchConfigModel(newModel: any): Promise<void>;
     updatePieModelFromController(model: any, session: any, env: any): Promise<void>;
     watchPieElementModel(newModel: any): void;
+    watchResizerObserver(): void;
     componentWillLoad(): void;
     componentWillUpdate(): void;
     wachConfigElement(newEl: PieElement): void;
     setMode(mode: any): void;
-    customCheckBox({ label, checked, value }: {
+    setOption(option: any): void;
+    customCheckBox({ label, checked, value, action }: {
         label: any;
         checked: any;
         value: any;
+        action?: any;
     }): JSX.Element;
     renderHeaderTitleInfo({ title, description, options }: {
         title: any;
@@ -75,6 +83,10 @@ export declare class PieDemo {
         options?: any;
     }): JSX.Element;
     renderAuthoringHeader(): JSX.Element;
+    renderRoleConfigContainer(): JSX.Element;
+    renderModeConfigContainer(): JSX.Element;
+    renderSettingsContainer(): JSX.Element;
+    renderBottomContent(): JSX.Element;
     renderStudentHeader(): JSX.Element;
     renderControlBar(): JSX.Element;
     renderCollapsedPanel(title: any): JSX.Element;
