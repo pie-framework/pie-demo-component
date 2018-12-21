@@ -1,6 +1,6 @@
 {
   "name": "pie-demo",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "PIE Demo Component",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
