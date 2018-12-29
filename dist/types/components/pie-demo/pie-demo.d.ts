@@ -60,6 +60,7 @@ export declare class PieDemo {
     loadPies: Function;
     collapsePanel(name: any): void;
     toggleStudentSettings(): void;
+    isToggled(): boolean;
     watchPie(newPie: any): void;
     updateModel(newModel: any): Promise<void>;
     watchConfigModel(newModel: any): Promise<void>;
@@ -89,7 +90,7 @@ export declare class PieDemo {
     renderBottomContent(): JSX.Element;
     renderStudentHeader(): JSX.Element;
     renderControlBar(): JSX.Element;
-    renderCollapsedPanel(title: any): JSX.Element;
+    renderCollapsedPanel(title: any, toggled?: any): JSX.Element;
     renderAuthoringHolder: () => JSX.Element;
     renderStudentHolder: () => JSX.Element;
     render(): JSX.Element;

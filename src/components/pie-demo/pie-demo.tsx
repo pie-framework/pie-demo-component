@@ -103,6 +103,10 @@ export class PieDemo {
     this.studSettVisible = !this.studSettVisible;
   }
 
+  isToggled() {
+    return this.studSettVisible && this.collapsed !== 'student';
+  }
+
   @Watch('pie')
   watchPie(newPie) {
     console.log('pie-watch triggered');
@@ -225,7 +229,7 @@ export class PieDemo {
               <span class="option">
                 <i class="fa fa-circle">
                 </i>
-                {this.env[opt]}
+                {opt}
               </span>
             ))
           }
@@ -363,7 +367,7 @@ export class PieDemo {
             'student-view-header',
             {
               collapsed: this.collapsed === 'student',
-              toggled: this.studSettVisible
+              toggled: this.isToggled()
             }
           )
         }
@@ -373,8 +377,8 @@ export class PieDemo {
             title: 'Student View',
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
             options: [
-              'mode',
-              'mode'
+              this.env['mode'],
+              this.currentOption
             ]
           })}
           {
@@ -385,7 +389,7 @@ export class PieDemo {
           }
           <i
             class={classnames('material-icons', 'toggle-icon', {
-              toggled: this.studSettVisible
+              toggled: this.isToggled()
             })}
             onClick={() => this.toggleStudentSettings()}
           >
@@ -414,9 +418,11 @@ export class PieDemo {
     );
   };
 
-  renderCollapsedPanel(title) {
+  renderCollapsedPanel(title, toggled = undefined) {
     return (
-      <div class="collapsed-panel">
+      <div class={classnames('collapsed-panel', {
+        toggled: toggled
+      })}>
         <span>
           {title}
         </span>
@@ -428,7 +434,7 @@ export class PieDemo {
     const ConfigTag = this.pieName + '-config';
 
     if (this.collapsed === 'authoring') {
-      return this.renderCollapsedPanel('Authoring View');
+      return this.renderCollapsedPanel('Authoring View', this.isToggled());
     }
 
     return (
@@ -438,7 +444,7 @@ export class PieDemo {
             'authoring-holder',
             {
               collapsed: this.collapsed === 'authoring',
-              toggled: this.studSettVisible
+              toggled: this.isToggled()
             }
           )
         }

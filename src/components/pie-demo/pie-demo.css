@@ -14,6 +14,8 @@ html, body {
 
 .root {
     background-color: #3f51b5;
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
@@ -224,8 +226,7 @@ html, body {
 .config-holder {
     background-color: #3f51b5;
     display: flex;
-    height: calc(100% - 94px);
-    padding-bottom: 20px;
+    flex: 1;
     width: 100%;
 }
 
@@ -236,6 +237,12 @@ html, body {
     color: #707070;
     max-width: 56px;
     flex: 1;
+}
+
+.config-holder .collapsed-panel.toggled {
+    height: calc(100% + 134px);
+    position: relative;
+    top: -134px;
 }
 
 .config-holder .collapsed-panel span {
@@ -272,8 +279,8 @@ html, body {
 
 .divider {
     background: #2336a0;
-    height: calc(100% + 20px);
-    width: 2px;
+    flex: 1;
+    max-width: 2px !important;
 }
 
 .config-holder .student-view-holder {

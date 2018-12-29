@@ -9,9 +9,21 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 export class PieDemo {
     constructor() {
+        /**
+         * Tells the component if it needs to load the elements or not
+         */
         this.load = true;
+        /**
+         * Include an editor in the view
+         */
         this.editor = true;
+        /**
+         * Include an item preview in the view
+         */
         this.preview = true;
+        /**
+         * Include control panel for adjusting player settings.
+         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
         this.studentHeaderWidth = 500;
@@ -20,17 +32,21 @@ export class PieDemo {
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
+        // @Element() private element: HTMLElement
+        /**
+         * Some functionality
+         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
         this.renderAuthoringHolder = () => {
             const ConfigTag = this.pieName + '-config';
             if (this.collapsed === 'authoring') {
-                return this.renderCollapsedPanel('Authoring View');
+                return this.renderCollapsedPanel('Authoring View', this.isToggled());
             }
             return (h("div", { class: classnames('authoring-holder', {
                     collapsed: this.collapsed === 'authoring',
-                    toggled: this.studSettVisible
+                    toggled: this.isToggled()
                 }) },
                 h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })));
         };
@@ -51,6 +67,9 @@ export class PieDemo {
     toggleStudentSettings() {
         this.studSettVisible = !this.studSettVisible;
     }
+    isToggled() {
+        return this.studSettVisible && this.collapsed !== 'student';
+    }
     watchPie(newPie) {
         console.log('pie-watch triggered');
         this.package = newPie;
@@ -59,6 +78,7 @@ export class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
+            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
@@ -136,7 +156,7 @@ export class PieDemo {
                 options &&
                     options.map((opt) => (h("span", { class: "option" },
                         h("i", { class: "fa fa-circle" }),
-                        this.env[opt])))),
+                        opt)))),
             h("span", null, description)));
     }
     renderAuthoringHeader() {
@@ -215,21 +235,21 @@ export class PieDemo {
     renderStudentHeader() {
         return (h("div", { ref: el => (this.studentHeader = el), class: classnames('student-view-header', {
                 collapsed: this.collapsed === 'student',
-                toggled: this.studSettVisible
+                toggled: this.isToggled()
             }) },
             h("div", { class: "topContent" },
                 this.renderHeaderTitleInfo({
                     title: 'Student View',
                     description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
                     options: [
-                        'mode',
-                        'mode'
+                        this.env['mode'],
+                        this.currentOption
                     ]
                 }),
                 this.studentHeaderWidth >= 800 &&
                     h("span", null, "Toggle Settings"),
                 h("i", { class: classnames('material-icons', 'toggle-icon', {
-                        toggled: this.studSettVisible
+                        toggled: this.isToggled()
                     }), onClick: () => this.toggleStudentSettings() }, this.studSettVisible ? 'toggle_on' : 'toggle_off'),
                 h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('authoring') }, this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease')),
             h("div", { class: "bottomContent" }, this.renderBottomContent())));
@@ -240,8 +260,10 @@ export class PieDemo {
             this.renderStudentHeader()));
     }
     ;
-    renderCollapsedPanel(title) {
-        return (h("div", { class: "collapsed-panel" },
+    renderCollapsedPanel(title, toggled = undefined) {
+        return (h("div", { class: classnames('collapsed-panel', {
+                toggled: toggled
+            }) },
             h("span", null, title)));
     }
     ;
