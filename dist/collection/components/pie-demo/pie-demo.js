@@ -165,7 +165,7 @@ export class PieDemo {
             }) },
             this.renderHeaderTitleInfo({
                 title: 'Authoring View',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+                description: 'The view an author sees when configuring this interaction.'
             }),
             h("i", { class: "material-icons collapse-icon", onClick: () => this.collapsePanel('student') }, this.collapsed === 'student' ? 'format_indent_decrease' : 'format_indent_increase')));
     }
@@ -175,15 +175,15 @@ export class PieDemo {
             h("h5", null, "Role"),
             h("div", { class: "roles-options" },
                 this.customCheckBox({
-                    label: 'Option 1',
-                    checked: this.currentOption === 'option1',
-                    value: 'option1',
+                    label: 'Student',
+                    checked: this.currentOption === 'student',
+                    value: 'student',
                     action: this.setOption
                 }),
                 this.customCheckBox({
-                    label: 'Option 2',
-                    checked: this.currentOption === 'option2',
-                    value: 'option2',
+                    label: 'Instructor',
+                    checked: this.currentOption === 'instructor',
+                    value: 'instructor',
                     action: this.setOption
                 }))));
     }
@@ -226,7 +226,7 @@ export class PieDemo {
                     }), onClick: () => this.tabIndex = 0 }, "Settings"),
                 h("div", { class: classnames('tab', {
                         selected: this.tabIndex === 1
-                    }), onClick: () => this.tabIndex = 1 }, "OtherTab")),
+                    }), onClick: () => this.tabIndex = 1 }, "Embed")),
             h("span", { class: "selected-line", style: {
                     left: `${this.tabIndex * 100}px`
                 } }),
@@ -239,8 +239,8 @@ export class PieDemo {
             }) },
             h("div", { class: "topContent" },
                 this.renderHeaderTitleInfo({
-                    title: 'Student View',
-                    description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+                    title: 'Student view',
+                    description: 'The view a student (or instructor) sees when entering or reviewing the interaction.',
                     options: [
                         this.env['mode'],
                         this.currentOption

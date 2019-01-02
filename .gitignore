@@ -1,5 +1,5 @@
 www/
-
+dist/
 *~
 *.sw[mnpcod]
 *.log

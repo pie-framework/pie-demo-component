@@ -255,7 +255,7 @@ export class PieDemo {
       >
         {this.renderHeaderTitleInfo({
           title: 'Authoring View',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+          description: 'The view an author sees when configuring this interaction.'
         })}
         <i
           class="material-icons collapse-icon"
@@ -273,15 +273,15 @@ export class PieDemo {
         <h5>Role</h5>
         <div class="roles-options">
           {this.customCheckBox({
-            label: 'Option 1',
-            checked: this.currentOption === 'option1',
-            value: 'option1',
+            label: 'Student',
+            checked: this.currentOption === 'student',
+            value: 'student',
             action: this.setOption
           })}
           {this.customCheckBox({
-            label: 'Option 2',
-            checked: this.currentOption === 'option2',
-            value: 'option2',
+            label: 'Instructor',
+            checked: this.currentOption === 'instructor',
+            value: 'instructor',
             action: this.setOption
           })}
         </div>
@@ -344,7 +344,7 @@ export class PieDemo {
             })}
             onClick={() => this.tabIndex = 1}
           >
-            OtherTab
+            Embed
           </div>
         </div>
         <span class="selected-line" style={{
@@ -374,8 +374,8 @@ export class PieDemo {
       >
         <div class="topContent">
           {this.renderHeaderTitleInfo({
-            title: 'Student View',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+            title: 'Student view',
+            description: 'The view a student (or instructor) sees when entering or reviewing the interaction.',
             options: [
               this.env['mode'],
               this.currentOption
