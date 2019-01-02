@@ -1,3 +1,9 @@
+/**
+ *
+ * @param {Object<string,string>} elements elements to load from pie cloud service
+ * @param {HTMLDocument} doc - the document to load the scripts
+ * @param {string} base_url - default base url for cloud service
+ */
 export function loadCloudPies(elements, doc, base_url = 'https://pits-dot-pie-dev-221718.appspot.com/bundles/') {
     const head = doc.getElementsByTagName('head')[0];
     const keys = Object.keys(elements);

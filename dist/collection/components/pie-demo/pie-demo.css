@@ -16,6 +16,7 @@ html, body {
     background-color: #3f51b5;
     display: flex;
     flex-direction: column;
+    max-height: 100%;
     height: 100%;
 }
 
@@ -24,6 +25,7 @@ html, body {
     display: flex;
     font-size: 16px;
     font-weight: bold;
+    min-height: 76px;
     justify-content: space-between;
     width: 100%;
 }
@@ -195,14 +197,16 @@ html, body {
     background-color: #fafafa;
     align-items: flex-start;
     display: flex;
-    justify-content: flex-start;
+    flex-wrap: wrap;
     height: 100%;
+    justify-content: flex-start;
+    padding-left: 20px;
     width: 100%;
 }
 
 .control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings,
 .control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings {
-    padding: 16px 24px;
+    align-self: center;
 }
 
 .control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings h5,
@@ -227,7 +231,32 @@ html, body {
     background-color: #3f51b5;
     display: flex;
     flex: 1;
+    height: 100%;
     width: 100%;
+}
+
+.config-holder .element-holder {
+    position: absolute;
+    top: 76px;
+    left: 0;
+    width: 96%;
+    overflow: scroll;
+
+    border: 16px solid #3f51b5;
+    flex: 1;
+    height: calc(100% - 108px);
+}
+
+.config-holder .element-holder.toggled {
+    top: 210px;
+}
+
+.config-holder .element-parent {
+    background: #fff;
+    border-radius: 4px;
+    /*max-height: calc(100% - 100px);*/
+    overflow: scroll;
+    padding: 20px;
 }
 
 .config-holder .collapsed-panel {
@@ -239,12 +268,6 @@ html, body {
     flex: 1;
 }
 
-.config-holder .collapsed-panel.toggled {
-    height: calc(100% + 134px);
-    position: relative;
-    top: -134px;
-}
-
 .config-holder .collapsed-panel span {
     line-height: 1.83;
     text-orientation: upright;
@@ -253,21 +276,15 @@ html, body {
 }
 
 .config-holder .authoring-holder {
-    border: 16px solid #3f51b5;
-    background: #fff;
-    border-radius: 20px;
-    display: table;
+    /*background: #fff;*/
+    display: flex;
+    flex-direction: column;
     flex: 1 0 0;
-    padding: 16px;
+    position: relative;
 }
 
 .config-holder .authoring-holder.collapsed {
     max-width: 56px;
-}
-
-.config-holder .authoring-holder.toggled {
-    position: relative;
-    top: -134px;
 }
 
 .toggle-button {
@@ -281,16 +298,18 @@ html, body {
     background: #2336a0;
     flex: 1;
     max-width: 2px !important;
+    z-index: 9;
 }
 
 .config-holder .student-view-holder {
-    background: #fff;
-    border: 16px solid #3f51b5;
-    border-radius: 20px;
-    display: table;
+    display: flex;
     flex: 1 0 0;
     flex-direction: column;
-    padding: 16px;
+    position: relative;
+}
+
+.config-holder .student-view-holder.collapsed {
+    max-width: 56px;
 }
 
 .custom-checkbox {

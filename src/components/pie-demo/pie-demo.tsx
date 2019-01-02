@@ -432,10 +432,7 @@ export class PieDemo {
 
   renderAuthoringHolder = () => {
     const ConfigTag = this.pieName + '-config';
-
-    if (this.collapsed === 'authoring') {
-      return this.renderCollapsedPanel('Authoring View', this.isToggled());
-    }
+    const isCollapsed = this.collapsed === 'authoring';
 
     return (
       <div
@@ -449,22 +446,30 @@ export class PieDemo {
           )
         }
       >
-        <ConfigTag
-          id="configure"
-          ref={el => (this.configElement = el as PieElement)}
-          model={this.model}
-          session={this.session}
-        />
+        <div class="control-bar">
+          {this.renderAuthoringHeader()}
+        </div>
+        {isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled())}
+        {
+          !isCollapsed &&
+          <div class="element-holder">
+            <div class="element-parent">
+              <ConfigTag
+                id="configure"
+                ref={el => (this.configElement = el as PieElement)}
+                model={this.model}
+                session={this.session}
+              />
+            </div>
+          </div>
+        }
       </div>
     );
   };
 
   renderStudentHolder = () => {
     const TagName = this.pieName + '';
-
-    if (this.collapsed === 'student') {
-      return this.renderCollapsedPanel('Student View');
-    }
+    const isCollapsed = this.collapsed === 'student';
 
     return (
       <div
@@ -477,12 +482,27 @@ export class PieDemo {
           )
         }
       >
-        <TagName
-          id="render"
-          ref={el => el && (this.pieElement = el as PieElement)}
-          model={this.pieElementModel}
-          session={this.session}
-        />
+        <div class="control-bar">
+          {this.renderStudentHeader()}
+        </div>
+        {
+          isCollapsed && this.renderCollapsedPanel('Student View')
+        }
+        {
+          !isCollapsed &&
+          <div class={classnames('element-holder', {
+            toggled: this.studSettVisible
+          })}>
+            <div class="element-parent">
+              <TagName
+                id="render"
+                ref={el => el && (this.pieElement = el as PieElement)}
+                model={this.pieElementModel}
+                session={this.session}
+              />
+            </div>
+          </div>
+        }
       </div>
     );
   };
@@ -497,7 +517,6 @@ export class PieDemo {
         console.log('rendering');
         return (
           <div class="root">
-            {this.renderControlBar()}
             <div class="config-holder">
               {this.renderAuthoringHolder()}
               <span class="divider"/>

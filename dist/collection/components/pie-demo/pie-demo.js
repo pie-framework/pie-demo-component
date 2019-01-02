@@ -9,9 +9,21 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 export class PieDemo {
     constructor() {
+        /**
+         * Tells the component if it needs to load the elements or not
+         */
         this.load = true;
+        /**
+         * Include an editor in the view
+         */
         this.editor = true;
+        /**
+         * Include an item preview in the view
+         */
         this.preview = true;
+        /**
+         * Include control panel for adjusting player settings.
+         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
         this.studentHeaderWidth = 500;
@@ -20,29 +32,41 @@ export class PieDemo {
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
+        // @Element() private element: HTMLElement
+        /**
+         * Some functionality
+         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
         this.renderAuthoringHolder = () => {
             const ConfigTag = this.pieName + '-config';
-            if (this.collapsed === 'authoring') {
-                return this.renderCollapsedPanel('Authoring View', this.isToggled());
-            }
+            const isCollapsed = this.collapsed === 'authoring';
             return (h("div", { class: classnames('authoring-holder', {
                     collapsed: this.collapsed === 'authoring',
                     toggled: this.isToggled()
                 }) },
-                h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })));
+                h("div", { class: "control-bar" }, this.renderAuthoringHeader()),
+                isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled()),
+                !isCollapsed &&
+                    h("div", { class: "element-holder" },
+                        h("div", { class: "element-parent" },
+                            h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })))));
         };
         this.renderStudentHolder = () => {
             const TagName = this.pieName + '';
-            if (this.collapsed === 'student') {
-                return this.renderCollapsedPanel('Student View');
-            }
+            const isCollapsed = this.collapsed === 'student';
             return (h("div", { class: classnames('student-view-holder', {
                     'collapsed': this.collapsed === 'student'
                 }) },
-                h(TagName, { id: "render", ref: el => el && (this.pieElement = el), model: this.pieElementModel, session: this.session })));
+                h("div", { class: "control-bar" }, this.renderStudentHeader()),
+                isCollapsed && this.renderCollapsedPanel('Student View'),
+                !isCollapsed &&
+                    h("div", { class: classnames('element-holder', {
+                            toggled: this.studSettVisible
+                        }) },
+                        h("div", { class: "element-parent" },
+                            h(TagName, { id: "render", ref: el => el && (this.pieElement = el), model: this.pieElementModel, session: this.session })))));
         };
     }
     collapsePanel(name) {
@@ -62,6 +86,7 @@ export class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
+            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
@@ -259,7 +284,6 @@ export class PieDemo {
             case ViewState.READY:
                 console.log('rendering');
                 return (h("div", { class: "root" },
-                    this.renderControlBar(),
                     h("div", { class: "config-holder" },
                         this.renderAuthoringHolder(),
                         h("span", { class: "divider" }),
