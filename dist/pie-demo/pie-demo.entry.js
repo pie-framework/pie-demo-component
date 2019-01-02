@@ -1113,7 +1113,7 @@ class PieDemo {
         this.updatePieModelFromController(newModel, this.session, this.env);
     }
     async updatePieModelFromController(model, session, env) {
-        if (this.pieController) {
+        if (this.pieController && this.pieController.model) {
             this.pieElementModel = await this.pieController.model(model, session, env);
             if (this.pieElement) {
                 this.pieElement.model = this.pieElementModel;

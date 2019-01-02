@@ -143,7 +143,7 @@ export class PieDemo {
   }
 
   async updatePieModelFromController(model, session, env) {
-    if (this.pieController) {
+    if (this.pieController && this.pieController.model) {
       this.pieElementModel =  await this.pieController.model(model, session, env);
       if (this.pieElement) {
         this.pieElement.model = this.pieElementModel;
