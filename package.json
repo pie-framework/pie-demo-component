@@ -1,6 +1,6 @@
 {
   "name": "pie-demo",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
@@ -21,6 +21,7 @@
   "dependencies": {
     "@stencil/core": "~0.15.1",
     "classnames": "^2.2.6",
+    "lodash": "^4.17.11",
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {

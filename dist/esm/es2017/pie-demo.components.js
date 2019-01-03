@@ -1,2 +1,0 @@
-// PieDemo: Host Data, ES Module/es2017 Target
-export const PieDemo = ["pie-demo","jlzvpcy0",1,[["collapsed",16],["configElement",16],["configModel",16],["currentOption",16],["editor",1,0,1,4],["env",16],["load",1,0,1,4],["loadPies",1],["model",1],["package",16],["pie",1,0,1,2],["pieController",16],["pieElement",16],["pieElementModel",16],["pieName",16],["playerControls",1,0,"player-controls",4],["preview",1,0,1,4],["resizeObserver",16],["session",16],["state",16],["studSettVisible",16],["studentHeader",16],["studentHeaderWidth",16],["tabIndex",16]]];

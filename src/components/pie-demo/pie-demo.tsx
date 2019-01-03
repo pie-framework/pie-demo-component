@@ -150,6 +150,13 @@ export class PieDemo {
       }
     } 
   }
+
+  @Watch('pieElement')
+  watchPieElement(pieElement) {
+    if (pieElement && !pieElement.model) {
+      pieElement.model = this.model;
+    }
+  }
   
   @Watch('pieElementModel')
   watchPieElementModel(newModel) {
@@ -159,11 +166,11 @@ export class PieDemo {
   }
 
   @Watch('studentHeader')
-  watchResizerObserver() {
-    if (this.studentHeader) {
-      this.resizeObserver.observe(this.studentHeader);
+  watchResizerObserver(current, previous) {
+    if (current) {
+      this.resizeObserver.observe(current);
     } else {
-      this.resizeObserver.unobserve(this.studentHeader);
+      this.resizeObserver.unobserve(previous);
     }
   }
 
@@ -178,10 +185,6 @@ export class PieDemo {
     if (this.model) {
       this.updateModel(this.model);
     }
-  }
-
-  componentWillUpdate() {
-    console.log('component will update ... ');
   }
 
   @Watch('configElement')

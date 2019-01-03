@@ -1,3 +1,12 @@
+import isFunction from 'lodash/isFunction';
+
+const getEmptyConfigure = () => class extends HTMLElement{
+
+  set model(_) {
+
+  }
+};
+
 /**
  * 
  * @param {Object<string,string>} elements elements to load from pie cloud service
@@ -28,6 +37,10 @@ export function loadCloudPies(
 
             if (!customElements.get(elName)) {
               customElements.define(elName, pie.Element);
+
+              // This fixes some cases where the pie build service fails
+              pie.Configure = isFunction(pie.Configure) ? pie.Configure : getEmptyConfigure();
+
               customElements.define(elName + '-config', pie.Configure);
             }
           });

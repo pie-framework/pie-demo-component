@@ -9,9 +9,21 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 export class PieDemo {
     constructor() {
+        /**
+         * Tells the component if it needs to load the elements or not
+         */
         this.load = true;
+        /**
+         * Include an editor in the view
+         */
         this.editor = true;
+        /**
+         * Include an item preview in the view
+         */
         this.preview = true;
+        /**
+         * Include control panel for adjusting player settings.
+         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
         this.studentHeaderWidth = 500;
@@ -20,6 +32,10 @@ export class PieDemo {
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
+        // @Element() private element: HTMLElement
+        /**
+         * Some functionality
+         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
@@ -70,6 +86,7 @@ export class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
+            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
@@ -95,17 +112,22 @@ export class PieDemo {
             }
         }
     }
+    watchPieElement(pieElement) {
+        if (pieElement && !pieElement.model) {
+            pieElement.model = this.model;
+        }
+    }
     watchPieElementModel(newModel) {
         if (this.pieElement) {
             this.pieElement.model = newModel;
         }
     }
-    watchResizerObserver() {
-        if (this.studentHeader) {
-            this.resizeObserver.observe(this.studentHeader);
+    watchResizerObserver(current, previous) {
+        if (current) {
+            this.resizeObserver.observe(current);
         }
         else {
-            this.resizeObserver.unobserve(this.studentHeader);
+            this.resizeObserver.unobserve(previous);
         }
     }
     componentWillLoad() {
@@ -117,9 +139,6 @@ export class PieDemo {
         if (this.model) {
             this.updateModel(this.model);
         }
-    }
-    componentWillUpdate() {
-        console.log('component will update ... ');
     }
     wachConfigElement(newEl) {
         newEl && newEl.addEventListener('model.updated', (event) => {
@@ -321,7 +340,8 @@ export class PieDemo {
             "state": true
         },
         "pieElement": {
-            "state": true
+            "state": true,
+            "watchCallbacks": ["watchPieElement"]
         },
         "pieElementModel": {
             "state": true,

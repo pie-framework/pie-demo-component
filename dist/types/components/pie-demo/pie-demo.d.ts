@@ -65,10 +65,10 @@ export declare class PieDemo {
     updateModel(newModel: any): Promise<void>;
     watchConfigModel(newModel: any): Promise<void>;
     updatePieModelFromController(model: any, session: any, env: any): Promise<void>;
+    watchPieElement(pieElement: any): void;
     watchPieElementModel(newModel: any): void;
-    watchResizerObserver(): void;
+    watchResizerObserver(current: any, previous: any): void;
     componentWillLoad(): void;
-    componentWillUpdate(): void;
     wachConfigElement(newEl: PieElement): void;
     setMode(mode: any): void;
     setOption(option: any): void;

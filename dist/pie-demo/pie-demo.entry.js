@@ -1,5 +1,5 @@
 /*! Built with http://stenciljs.com */
-import { h } from '../pie-demo.core.js';
+const { h } = window.PieDemo;
 
 /**
  * A collection of shims that provide minimal functionality of the ES6 collections.
@@ -928,6 +928,8 @@ var index = (function () {
     return ResizeObserver;
 })();
 
+var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
@@ -981,6 +983,193 @@ var classnames = createCommonjsModule(function (module) {
 }());
 });
 
+/** Detect free variable `global` from Node.js. */
+var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+
+var _freeGlobal = freeGlobal;
+
+/** Detect free variable `self`. */
+var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root = _freeGlobal || freeSelf || Function('return this')();
+
+var _root = root;
+
+/** Built-in value references. */
+var Symbol = _root.Symbol;
+
+var _Symbol = Symbol;
+
+/** Used for built-in method references. */
+var objectProto = Object.prototype;
+
+/** Used to check objects for own properties. */
+var hasOwnProperty = objectProto.hasOwnProperty;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString = objectProto.toString;
+
+/** Built-in value references. */
+var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
+
+/**
+ * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the raw `toStringTag`.
+ */
+function getRawTag(value) {
+  var isOwn = hasOwnProperty.call(value, symToStringTag),
+      tag = value[symToStringTag];
+
+  try {
+    value[symToStringTag] = undefined;
+  } catch (e) {}
+
+  var result = nativeObjectToString.call(value);
+  {
+    if (isOwn) {
+      value[symToStringTag] = tag;
+    } else {
+      delete value[symToStringTag];
+    }
+  }
+  return result;
+}
+
+var _getRawTag = getRawTag;
+
+/** Used for built-in method references. */
+var objectProto$1 = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var nativeObjectToString$1 = objectProto$1.toString;
+
+/**
+ * Converts `value` to a string using `Object.prototype.toString`.
+ *
+ * @private
+ * @param {*} value The value to convert.
+ * @returns {string} Returns the converted string.
+ */
+function objectToString(value) {
+  return nativeObjectToString$1.call(value);
+}
+
+var _objectToString = objectToString;
+
+/** `Object#toString` result references. */
+var nullTag = '[object Null]',
+    undefinedTag = '[object Undefined]';
+
+/** Built-in value references. */
+var symToStringTag$1 = _Symbol ? _Symbol.toStringTag : undefined;
+
+/**
+ * The base implementation of `getTag` without fallbacks for buggy environments.
+ *
+ * @private
+ * @param {*} value The value to query.
+ * @returns {string} Returns the `toStringTag`.
+ */
+function baseGetTag(value) {
+  if (value == null) {
+    return value === undefined ? undefinedTag : nullTag;
+  }
+  return (symToStringTag$1 && symToStringTag$1 in Object(value))
+    ? _getRawTag(value)
+    : _objectToString(value);
+}
+
+var _baseGetTag = baseGetTag;
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
+}
+
+var isObject_1 = isObject;
+
+/** `Object#toString` result references. */
+var asyncTag = '[object AsyncFunction]',
+    funcTag = '[object Function]',
+    genTag = '[object GeneratorFunction]',
+    proxyTag = '[object Proxy]';
+
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+ * @example
+ *
+ * _.isFunction(_);
+ * // => true
+ *
+ * _.isFunction(/abc/);
+ * // => false
+ */
+function isFunction(value) {
+  if (!isObject_1(value)) {
+    return false;
+  }
+  // The use of `Object#toString` avoids issues with the `typeof` operator
+  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+  var tag = _baseGetTag(value);
+  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+}
+
+var isFunction_1 = isFunction;
+
+const getEmptyConfigure = () => class extends HTMLElement {
+    set model(_) {
+    }
+};
+/**
+ *
+ * @param {Object<string,string>} elements elements to load from pie cloud service
+ * @param {HTMLDocument} doc - the document to load the scripts
+ * @param {string} base_url - default base url for cloud service
+ */
 function loadCloudPies(elements, doc, base_url = 'https://pits-dot-pie-dev-221718.appspot.com/bundles/') {
     const head = doc.getElementsByTagName('head')[0];
     const keys = Object.keys(elements);
@@ -999,6 +1188,8 @@ function loadCloudPies(elements, doc, base_url = 'https://pits-dot-pie-dev-22171
                     console.log('defining elements');
                     if (!customElements.get(elName)) {
                         customElements.define(elName, pie.Element);
+                        // This fixes some cases where the pie build service fails
+                        pie.Configure = isFunction_1(pie.Configure) ? pie.Configure : getEmptyConfigure();
                         customElements.define(elName + '-config', pie.Configure);
                     }
                 });
@@ -1019,9 +1210,21 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 class PieDemo {
     constructor() {
+        /**
+         * Tells the component if it needs to load the elements or not
+         */
         this.load = true;
+        /**
+         * Include an editor in the view
+         */
         this.editor = true;
+        /**
+         * Include an item preview in the view
+         */
         this.preview = true;
+        /**
+         * Include control panel for adjusting player settings.
+         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
         this.studentHeaderWidth = 500;
@@ -1030,6 +1233,10 @@ class PieDemo {
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
+        // @Element() private element: HTMLElement
+        /**
+         * Some functionality
+         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
@@ -1080,6 +1287,7 @@ class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
+            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
@@ -1105,17 +1313,22 @@ class PieDemo {
             }
         }
     }
+    watchPieElement(pieElement) {
+        if (pieElement && !pieElement.model) {
+            pieElement.model = this.model;
+        }
+    }
     watchPieElementModel(newModel) {
         if (this.pieElement) {
             this.pieElement.model = newModel;
         }
     }
-    watchResizerObserver() {
-        if (this.studentHeader) {
-            this.resizeObserver.observe(this.studentHeader);
+    watchResizerObserver(current, previous) {
+        if (current) {
+            this.resizeObserver.observe(current);
         }
         else {
-            this.resizeObserver.unobserve(this.studentHeader);
+            this.resizeObserver.unobserve(previous);
         }
     }
     componentWillLoad() {
@@ -1127,9 +1340,6 @@ class PieDemo {
         if (this.model) {
             this.updateModel(this.model);
         }
-    }
-    componentWillUpdate() {
-        console.log('component will update ... ');
     }
     wachConfigElement(newEl) {
         newEl && newEl.addEventListener('model.updated', (event) => {
@@ -1331,7 +1541,8 @@ class PieDemo {
             "state": true
         },
         "pieElement": {
-            "state": true
+            "state": true,
+            "watchCallbacks": ["watchPieElement"]
         },
         "pieElementModel": {
             "state": true,
@@ -1371,7 +1582,7 @@ class PieDemo {
             "state": true
         }
     }; }
-    static get style() { return "\@import url(\"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css\");\@import url(\"https://fonts.googleapis.com/css?family=Roboto\");\@import url(\"https://fonts.googleapis.com/icon?family=Material+Icons\");body,html{height:100%;margin:0;padding:0}:not(i){font-family:Roboto,serif!important}.root{background-color:#3f51b5;-ms-flex-direction:column;flex-direction:column;max-height:100%;height:100%}.control-bar,.root{display:-ms-flexbox;display:flex}.control-bar{color:grey;font-size:16px;font-weight:700;min-height:76px;-ms-flex-pack:justify;justify-content:space-between;width:100%}.control-bar .collapse-icon{cursor:pointer;margin-right:22px}.control-bar .toggle-icon{cursor:pointer;margin-right:20px}.control-bar .toggle-icon.toggled{color:#f9a825}.control-bar .authoring-header{background:#fff;-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;height:76px;-ms-flex-pack:center;justify-content:center;position:relative;border-right:2px solid #ebebeb}.control-bar .header-title{display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;-ms-flex-direction:column;flex-direction:column;margin-left:24px}.control-bar .header-title .title-info{display:-ms-flexbox;display:flex;-ms-flex-pack:start;justify-content:flex-start}.control-bar .header-title .title-info .option{margin-right:5px;text-transform:uppercase}.control-bar .header-title .title-info i{font-size:4px;margin-right:5px;vertical-align:middle}.control-bar .header-title span{font-size:12px;font-weight:300;line-height:1.5;color:rgba(0,0,0,.56)}.control-bar .header-title .title-info h4{color:rgba(0,0,0,.87);font-size:16px;letter-spacing:3px;margin:0 8px 4px 0;text-align:left;text-transform:uppercase}.control-bar .authoring-header.collapsed,.control-bar .student-view-header.collapsed{max-width:56px}.control-bar .authoring-header.collapsed .header-title,.control-bar .student-view-header.collapsed .header-title{display:none}.control-bar .authoring-header.collapsed i,.control-bar .student-view-header.collapsed i{margin:0}.control-bar .student-view-header.collapsed .toggle-icon{display:none}.control-bar .student-view-header{background:#fff;-ms-flex:1 0 0px;flex:1 0 0;height:76px}.control-bar .student-view-header .bottomContent{display:none}.control-bar .student-view-header .bottomContent .tabs-container{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;position:relative}.control-bar .student-view-header .bottomContent .tabs-container .tabs{border-bottom:4px solid #eee;display:-ms-flexbox;display:flex;-ms-flex-direction:row;flex-direction:row;height:48px;-ms-flex-pack:start;justify-content:flex-start}.control-bar .student-view-header .bottomContent .tabs-container .tabs .tab{cursor:pointer;min-width:100px;height:48px;line-height:48px;text-align:center}.control-bar .student-view-header .bottomContent .tabs-container .selected-line{background-color:#3f51b5;bottom:4px;height:4px;position:absolute;top:48px;-webkit-transition:all .3s cubic-bezier(.4,0,.2,1) 0ms;transition:all .3s cubic-bezier(.4,0,.2,1) 0ms;width:100px}.control-bar .student-view-header .bottomContent .tabs-container .tab-content{height:78px}.control-bar .student-view-header.toggled{height:210px}.control-bar .student-view-header.toggled .bottomContent{display:block;height:134px}.control-bar .student-view-header.toggled .topContent{height:76px}.control-bar .student-view-header .topContent{-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center;height:100%}.control-bar .student-view-header .topContent span{font-size:12px;margin-right:10px}.control-bar .student-view-header .topContent h4{margin-bottom:10px}.control-bar .student-view-header .bottomContent{height:126px}.control-bar .student-view-header .bottomContent .settings-tab-container{background-color:#fafafa;-ms-flex-align:start;align-items:flex-start;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;height:100%;-ms-flex-pack:start;justify-content:flex-start;padding-left:20px;width:100%}.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings,.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings{-ms-flex-item-align:center;align-self:center}.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings h5,.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings h5{font-size:12px;margin:0 0 8px 0}.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options,.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options{-ms-flex-align:center;align-items:center;display:-ms-flexbox;display:flex;-ms-flex-pack:center;justify-content:center}.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options>*,.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options>*{margin-right:18px}.config-holder{background-color:#3f51b5;display:-ms-flexbox;display:flex;-ms-flex:1;flex:1;height:100%;width:100%}.config-holder .element-holder{position:absolute;top:76px;left:0;width:96%;overflow:scroll;border:16px solid #3f51b5;-ms-flex:1;flex:1;height:calc(100% - 108px)}.config-holder .element-holder.toggled{top:210px}.config-holder .element-parent{background:#fff;border-radius:4px;overflow:scroll;padding:20px}.config-holder .collapsed-panel{-ms-flex-pack:center;justify-content:center;background:#fff;display:-ms-flexbox;display:flex;color:#707070;max-width:56px;-ms-flex:1;flex:1}.config-holder .collapsed-panel span{line-height:1.83;text-orientation:upright;text-transform:uppercase;-webkit-writing-mode:tb-rl;-ms-writing-mode:tb-rl;writing-mode:tb-rl}.config-holder .authoring-holder{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column;-ms-flex:1 0 0px;flex:1 0 0;position:relative}.config-holder .authoring-holder.collapsed{max-width:56px}.toggle-button{background-color:#d3d3d3;border:none;cursor:pointer;outline:none}.divider{background:#2336a0;-ms-flex:1;flex:1;max-width:2px!important;z-index:9}.config-holder .student-view-holder{display:-ms-flexbox;display:flex;-ms-flex:1 0 0px;flex:1 0 0;-ms-flex-direction:column;flex-direction:column;position:relative}.config-holder .student-view-holder.collapsed{max-width:56px}.custom-checkbox{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-align:center;align-items:center}.custom-checkbox i{color:#3f51b5;margin-right:8px}[class*=MuiCheckbox-checked]{color:green!important}"; }
+    static get style() { return "\@import url(\"https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css\");\n\@import url('https://fonts.googleapis.com/css?family=Roboto');\n\@import url('https://fonts.googleapis.com/icon?family=Material+Icons');\n\nhtml, body {\n    height: 100%;\n    margin: 0;\n    padding: 0;\n}\n\n*:not(i) {\n    font-family: Roboto, serif !important;\n}\n\n.root {\n    background-color: #3f51b5;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-direction: column;\n    flex-direction: column;\n    max-height: 100%;\n    height: 100%;\n}\n\n.control-bar {\n    color: grey;\n    display: -ms-flexbox;\n    display: flex;\n    font-size: 16px;\n    font-weight: bold;\n    min-height: 76px;\n    -ms-flex-pack: justify;\n    justify-content: space-between;\n    width: 100%;\n}\n\n.control-bar .collapse-icon {\n    cursor: pointer;\n    margin-right: 22px;\n}\n\n.control-bar .toggle-icon {\n    cursor: pointer;\n    margin-right: 20px;\n}\n\n.control-bar .toggle-icon.toggled {\n    color: #f9a825;\n}\n\n.control-bar .authoring-header {\n    background: #fff;\n    -ms-flex-align: center;\n    align-items: center;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex: 1;\n    flex: 1;\n    height: 76px;\n    -ms-flex-pack: center;\n    justify-content: center;\n    position: relative;\n    border-right: 2px solid #ebebeb;\n}\n\n.control-bar .header-title {\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex: 1;\n    flex: 1;\n    -ms-flex-direction: column;\n    flex-direction: column;\n    margin-left: 24px;\n}\n\n.control-bar .header-title .title-info {\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-pack: start;\n    justify-content: flex-start;\n}\n\n.control-bar .header-title .title-info .option {\n    margin-right: 5px;\n    text-transform: uppercase;\n}\n\n.control-bar .header-title .title-info i {\n    font-size: 4px;\n    margin-right: 5px;\n    vertical-align: middle;\n}\n\n.control-bar .header-title span {\n    font-size: 12px;\n    font-weight: 300;\n    line-height: 1.5;\n    color: rgba(0, 0, 0, 0.56);\n}\n\n.control-bar .header-title .title-info h4,\n.control-bar .header-title .title-info h4 {\n    color: rgba(0, 0, 0, 0.87);\n    font-size: 16px;\n    letter-spacing: 3px;\n    margin: 0 8px 4px 0;\n    text-align: left;\n    text-transform: uppercase;\n}\n\n.control-bar .student-view-header.collapsed,\n.control-bar .authoring-header.collapsed {\n    max-width: 56px;\n}\n\n.control-bar .authoring-header.collapsed .header-title,\n.control-bar .student-view-header.collapsed .header-title {\n    display: none;\n}\n\n.control-bar .authoring-header.collapsed i,\n.control-bar .student-view-header.collapsed i {\n    margin: 0;\n}\n\n.control-bar .student-view-header.collapsed .toggle-icon {\n    display: none;\n}\n\n.control-bar .student-view-header {\n    background: #fff;\n    -ms-flex: 1 0 0px;\n    flex: 1 0 0;\n    height: 76px;\n}\n\n.control-bar .student-view-header .bottomContent {\n    display: none;\n}\n\n.control-bar .student-view-header .bottomContent .tabs-container {\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-direction: column;\n    flex-direction: column;\n    position: relative;\n}\n\n.control-bar .student-view-header .bottomContent .tabs-container .tabs {\n    border-bottom: 4px solid #eeeeee;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-direction: row;\n    flex-direction: row;\n    height: 48px;\n    -ms-flex-pack: start;\n    justify-content: flex-start;\n}\n\n.control-bar .student-view-header .bottomContent .tabs-container .tabs .tab {\n    cursor: pointer;\n    min-width: 100px;\n    height: 48px;\n    line-height: 48px;\n    text-align: center;\n}\n\n.control-bar .student-view-header .bottomContent .tabs-container .selected-line {\n    background-color: #3f51b5;\n    bottom: 4px;\n    height: 4px;\n    position: absolute;\n    top: 48px;\n    -webkit-transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\n    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;\n    width: 100px;\n}\n\n.control-bar .student-view-header .bottomContent .tabs-container .tab-content {\n    height: 78px;\n}\n\n.control-bar .student-view-header.toggled {\n    height: 210px;\n}\n\n.control-bar .student-view-header.toggled .bottomContent {\n    display: block;\n    height: 134px;\n}\n\n.control-bar .student-view-header.toggled .topContent {\n    height: 76px;\n}\n\n.control-bar .student-view-header .topContent {\n    -ms-flex-align: center;\n    align-items: center;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-pack: center;\n    justify-content: center;\n    height: 100%;\n}\n\n.control-bar .student-view-header .topContent span {\n    font-size: 12px;\n    margin-right: 10px;\n}\n\n.control-bar .student-view-header .topContent h4 {\n    margin-bottom: 10px;\n}\n\n.control-bar .student-view-header .bottomContent {\n    height: 126px;\n}\n\n.control-bar .student-view-header .bottomContent .settings-tab-container {\n    background-color: #fafafa;\n    -ms-flex-align: start;\n    align-items: flex-start;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-wrap: wrap;\n    flex-wrap: wrap;\n    height: 100%;\n    -ms-flex-pack: start;\n    justify-content: flex-start;\n    padding-left: 20px;\n    width: 100%;\n}\n\n.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings,\n.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings {\n    -ms-flex-item-align: center;\n    align-self: center;\n}\n\n.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings h5,\n.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings h5 {\n    font-size: 12px;\n    margin: 0 0 8px 0;\n}\n\n.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options,\n.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options {\n    -ms-flex-align: center;\n    align-items: center;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-pack: center;\n    justify-content: center;\n}\n\n.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options > *,\n.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options > * {\n    margin-right: 18px;\n}\n\n.config-holder {\n    background-color: #3f51b5;\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex: 1;\n    flex: 1;\n    height: 100%;\n    width: 100%;\n}\n\n.config-holder .element-holder {\n    position: absolute;\n    top: 76px;\n    left: 0;\n    width: 96%;\n    overflow: scroll;\n\n    border: 16px solid #3f51b5;\n    -ms-flex: 1;\n    flex: 1;\n    height: calc(100% - 108px);\n}\n\n.config-holder .element-holder.toggled {\n    top: 210px;\n}\n\n.config-holder .element-parent {\n    background: #fff;\n    border-radius: 4px;\n    /*max-height: calc(100% - 100px);*/\n    overflow: scroll;\n    padding: 20px;\n}\n\n.config-holder .collapsed-panel {\n    -ms-flex-pack: center;\n    justify-content: center;\n    background: #fff;\n    display: -ms-flexbox;\n    display: flex;\n    color: #707070;\n    max-width: 56px;\n    -ms-flex: 1;\n    flex: 1;\n}\n\n.config-holder .collapsed-panel span {\n    line-height: 1.83;\n    text-orientation: upright;\n    text-transform: uppercase;\n    -webkit-writing-mode: tb-rl;\n    -ms-writing-mode: tb-rl;\n    writing-mode: tb-rl;\n}\n\n.config-holder .authoring-holder {\n    /*background: #fff;*/\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex-direction: column;\n    flex-direction: column;\n    -ms-flex: 1 0 0px;\n    flex: 1 0 0;\n    position: relative;\n}\n\n.config-holder .authoring-holder.collapsed {\n    max-width: 56px;\n}\n\n.toggle-button {\n    background-color: lightgrey;\n    border: none;\n    cursor: pointer;\n    outline: none;\n}\n\n.divider {\n    background: #2336a0;\n    -ms-flex: 1;\n    flex: 1;\n    max-width: 2px !important;\n    z-index: 9;\n}\n\n.config-holder .student-view-holder {\n    display: -ms-flexbox;\n    display: flex;\n    -ms-flex: 1 0 0px;\n    flex: 1 0 0;\n    -ms-flex-direction: column;\n    flex-direction: column;\n    position: relative;\n}\n\n.config-holder .student-view-holder.collapsed {\n    max-width: 56px;\n}\n\n.custom-checkbox {\n    display: -ms-inline-flexbox;\n    display: inline-flex;\n    -ms-flex-align: center;\n    align-items: center;\n}\n\n.custom-checkbox i {\n    color: #3f51b5;\n    margin-right: 8px;\n}\n\n/* Overrides */\n[class*=MuiCheckbox-checked] {\n    color: green !important;\n}"; }
 }
 
 export { PieDemo };
