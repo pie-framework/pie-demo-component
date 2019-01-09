@@ -9,21 +9,9 @@ var ViewState;
 })(ViewState || (ViewState = {}));
 export class PieDemo {
     constructor() {
-        /**
-         * Tells the component if it needs to load the elements or not
-         */
         this.load = true;
-        /**
-         * Include an editor in the view
-         */
         this.editor = true;
-        /**
-         * Include an item preview in the view
-         */
         this.preview = true;
-        /**
-         * Include control panel for adjusting player settings.
-         */
         this.playerControls = true;
         this.state = ViewState.LOADING;
         this.minHeightAuthoring = 'initial';
@@ -33,10 +21,6 @@ export class PieDemo {
         this.studSettVisible = false;
         this.env = { mode: 'gather' };
         this.session = {};
-        // @Element() private element: HTMLElement
-        /**
-         * Some functionality
-         */
         this.loadPies = (elements) => {
             loadCloudPies(elements, document);
         };
@@ -89,7 +73,6 @@ export class PieDemo {
             this.pieName = `x-${this.pieName}`;
         }
         customElements.whenDefined(this.pieName).then(async () => {
-            // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
             const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
             this.pieController = window['pie'].default[packageWithoutVersion].controller;
             this.updatePieModelFromController(this.model, this.session, this.env);
