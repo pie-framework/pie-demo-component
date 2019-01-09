@@ -1708,12 +1708,12 @@ function initComponentLoaded(plt, elm, hydratedCssClass, perf, instance, onReady
   // all is good, this component has been told it's time to finish loading
   // it's possible that we've already decided to destroy this element
   // check if this element has any actively loading child elements
-  if (plt.instanceMap.get(elm) && !plt.isDisconnectedMap.has(elm) && (!elm['s-ld'] || !elm['s-ld'].length)) {
+  if ((instance = plt.instanceMap.get(elm)) && !plt.isDisconnectedMap.has(elm) && (!elm['s-ld'] || !elm['s-ld'].length)) {
     // cool, so at this point this element isn't already being destroyed
     // and it does not have any child elements that are still loading
     // all of this element's children have loaded (if any)
     plt.isCmpReady.set(elm, true);
-    if (!plt.isCmpLoaded.has(elm)) {
+    if (!(hasCmpLoaded = plt.isCmpLoaded.has(elm))) {
       false;
       // remember that this component has loaded
       // isCmpLoaded map is useful to know if we should fire
@@ -1734,7 +1734,11 @@ function initComponentLoaded(plt, elm, hydratedCssClass, perf, instance, onReady
         plt.onReadyCallbacksMap.delete(elm);
       }
       false;
-      false;
+      if ((true, hasCmpLoaded) && instance.componentDidUpdate) {
+        false;
+        instance.componentDidUpdate();
+        false;
+      }
     } catch (e) {
       plt.onError(e, 4 /* DidLoadError */ , elm);
     }
@@ -2128,4 +2132,4 @@ function createPlatformMain(namespace, Context, win, doc, resourcesUrl, hydrated
 
 // esm build which uses es module imports and dynamic imports
 createPlatformMain(namespace, Context, window, document, resourcesUrl, hydratedCssClass, components);
-})(window,document,{},"PieDemo","hydrated",[["pie-demo","pie-demo",1,[["collapsed",16],["configElement",16],["configModel",16],["currentOption",16],["editor",1,0,1,4],["env",16],["load",1,0,1,4],["loadPies",1],["model",1],["package",16],["pie",1,0,1,2],["pieController",16],["pieElement",16],["pieElementModel",16],["pieName",16],["playerControls",1,0,"player-controls",4],["preview",1,0,1,4],["resizeObserver",16],["session",16],["state",16],["studSettVisible",16],["studentHeader",16],["studentHeaderWidth",16],["tabIndex",16]]]]);
+})(window,document,{},"PieDemo","hydrated",[["pie-demo","pie-demo",1,[["collapsed",16],["configElement",16],["configModel",16],["currentOption",16],["editor",1,0,1,4],["elementParent1",16],["elementParent2",16],["env",16],["load",1,0,1,4],["loadPies",1],["minHeightAuthoring",16],["model",1],["mutationObserver",16],["package",16],["pie",1,0,1,2],["pieController",16],["pieElement",16],["pieElementModel",16],["pieName",16],["playerControls",1,0,"player-controls",4],["preview",1,0,1,4],["resizeObserver",16],["session",16],["state",16],["studSettVisible",16],["studentHeader",16],["studentHeaderWidth",16],["tabIndex",16]]]]);

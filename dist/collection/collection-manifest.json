@@ -67,7 +67,19 @@
           "name": "currentOption"
         },
         {
+          "name": "elementParent1"
+        },
+        {
+          "name": "elementParent2"
+        },
+        {
           "name": "env"
+        },
+        {
+          "name": "minHeightAuthoring"
+        },
+        {
+          "name": "mutationObserver"
         },
         {
           "name": "package"

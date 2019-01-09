@@ -26,6 +26,7 @@ export class PieDemo {
          */
         this.playerControls = true;
         this.state = ViewState.LOADING;
+        this.minHeightAuthoring = 'initial';
         this.studentHeaderWidth = 500;
         this.tabIndex = 0;
         this.currentOption = 'option1';
@@ -49,7 +50,7 @@ export class PieDemo {
                 h("div", { class: "control-bar" }, this.renderAuthoringHeader()),
                 isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled()),
                 !isCollapsed &&
-                    h("div", { class: "element-holder" },
+                    h("div", { ref: el => el && (this.elementParent1 = el), class: "element-holder" },
                         h("div", { class: "element-parent" },
                             h(ConfigTag, { id: "configure", ref: el => (this.configElement = el), model: this.model, session: this.session })))));
         };
@@ -65,7 +66,9 @@ export class PieDemo {
                     h("div", { class: classnames('element-holder', {
                             toggled: this.studSettVisible
                         }) },
-                        h("div", { class: "element-parent" },
+                        h("div", { ref: el => el && (this.elementParent2 = el), class: "element-parent", style: {
+                                minHeight: `${this.minHeightAuthoring}px`
+                            } },
                             h(TagName, { id: "render", ref: el => el && (this.pieElement = el), model: this.pieElementModel, session: this.session })))));
         };
     }
@@ -130,15 +133,66 @@ export class PieDemo {
             this.resizeObserver.unobserve(previous);
         }
     }
+    watchElementParent1(current) {
+        if (current) {
+            this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+        }
+        else {
+            this.mutationObserver.disconnect();
+        }
+    }
+    watchElementParent2(current) {
+        if (current) {
+            this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+        }
+        else {
+            this.mutationObserver.disconnect();
+        }
+    }
     componentWillLoad() {
         console.log('component will load ... ');
         this.watchPie(this.pie);
         this.resizeObserver = new ResizeObserver(() => {
-            this.studentHeaderWidth = this.studentHeader.offsetWidth;
+            if (this.studentHeader) {
+                this.studentHeaderWidth = this.studentHeader.offsetWidth;
+            }
+        });
+        this.mutationObserver = new MutationObserver(() => {
+            this.handleElementParentResize();
         });
         if (this.model) {
             this.updateModel(this.model);
         }
+    }
+    handleElementResize(el) {
+        let minHeight = 'initial';
+        const navigateNode = (el) => {
+            if (el.nodeType === 1) {
+                const allStyle = getComputedStyle(el);
+                if (allStyle.position === 'absolute') {
+                    const currentHeight = el.offsetTop + el.offsetHeight;
+                    if (minHeight === 'initial' || currentHeight > minHeight) {
+                        minHeight = currentHeight;
+                    }
+                }
+                if (el.childNodes.length > 0) {
+                    el.childNodes.forEach(ch => navigateNode(ch));
+                }
+            }
+        };
+        navigateNode(el);
+        this.minHeightAuthoring = minHeight;
+    }
+    handleElementParentResize() {
+        if (this.elementParent1) {
+            this.handleElementResize(this.elementParent1);
+        }
+        if (this.elementParent2) {
+            this.handleElementResize(this.elementParent2);
+        }
+    }
+    componentDidUpdate() {
+        console.log('da');
     }
     wachConfigElement(newEl) {
         newEl && newEl.addEventListener('model.updated', (event) => {
@@ -312,6 +366,14 @@ export class PieDemo {
             "type": Boolean,
             "attr": "editor"
         },
+        "elementParent1": {
+            "state": true,
+            "watchCallbacks": ["watchElementParent1"]
+        },
+        "elementParent2": {
+            "state": true,
+            "watchCallbacks": ["watchElementParent2"]
+        },
         "env": {
             "state": true
         },
@@ -323,10 +385,16 @@ export class PieDemo {
             "type": "Any",
             "attr": "load-pies"
         },
+        "minHeightAuthoring": {
+            "state": true
+        },
         "model": {
             "type": "Any",
             "attr": "model",
             "watchCallbacks": ["updateModel"]
+        },
+        "mutationObserver": {
+            "state": true
         },
         "package": {
             "state": true

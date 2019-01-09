@@ -60,11 +60,19 @@ export class PieDemo {
 
   @State() resizeObserver: any;
 
+  @State() mutationObserver: any;
+
   @State() pieName: string;
 
   @State() pieController: PieController;
 
   @State() pieElement: PieElement;
+
+  @State() elementParent1: any;
+
+  @State() elementParent2: any;
+
+  @State() minHeightAuthoring: any = 'initial';
 
   @State() studentHeader: any;
 
@@ -174,17 +182,81 @@ export class PieDemo {
     }
   }
 
+  @Watch('elementParent1')
+  watchElementParent1(current) {
+    if (current) {
+      this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.mutationObserver.disconnect();
+    }
+  }
+
+  @Watch('elementParent2')
+  watchElementParent2(current) {
+    if (current) {
+      this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.mutationObserver.disconnect();
+    }
+  }
+
   componentWillLoad() {
     console.log('component will load ... ');
     this.watchPie(this.pie);
 
     this.resizeObserver = new (ResizeObserver as any)(() => {
-      this.studentHeaderWidth = this.studentHeader.offsetWidth;
+      if (this.studentHeader) {
+        this.studentHeaderWidth = this.studentHeader.offsetWidth;
+      }
+    });
+
+    this.mutationObserver = new MutationObserver(() => {
+      this.handleElementParentResize();
     });
 
     if (this.model) {
       this.updateModel(this.model);
     }
+  }
+
+  handleElementResize(el) {
+    let minHeight = 'initial';
+
+    const navigateNode = (el) => {
+      if (el.nodeType === 1) {
+        const allStyle = getComputedStyle(el);
+
+        if (allStyle.position === 'absolute') {
+          const currentHeight = el.offsetTop + el.offsetHeight;
+
+          if (minHeight === 'initial' || currentHeight > minHeight) {
+            minHeight = currentHeight;
+          }
+        }
+
+        if (el.childNodes.length > 0) {
+          el.childNodes.forEach(ch => navigateNode(ch));
+        }
+      }
+    };
+
+    navigateNode(el);
+
+    this.minHeightAuthoring = minHeight;
+  }
+
+  handleElementParentResize() {
+    if (this.elementParent1) {
+      this.handleElementResize(this.elementParent1)
+    }
+
+    if (this.elementParent2) {
+      this.handleElementResize(this.elementParent2)
+    }
+  }
+
+  componentDidUpdate() {
+    console.log('da');
   }
 
   @Watch('configElement')
@@ -455,7 +527,10 @@ export class PieDemo {
         {isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled())}
         {
           !isCollapsed &&
-          <div class="element-holder">
+          <div
+            ref={el => el && (this.elementParent1 = el as any)}
+            class="element-holder"
+          >
             <div class="element-parent">
               <ConfigTag
                 id="configure"
@@ -496,7 +571,13 @@ export class PieDemo {
           <div class={classnames('element-holder', {
             toggled: this.studSettVisible
           })}>
-            <div class="element-parent">
+            <div
+              ref={el => el && (this.elementParent2 = el as any)}
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightAuthoring}px`
+              }}
+            >
               <TagName
                 id="render"
                 ref={el => el && (this.pieElement = el as PieElement)}

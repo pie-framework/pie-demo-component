@@ -254,9 +254,10 @@ html, body {
 .config-holder .element-parent {
     background: #fff;
     border-radius: 4px;
-    /*max-height: calc(100% - 100px);*/
+    /*min-height: 500px;*/
     overflow: scroll;
     padding: 20px;
+    position: relative;
 }
 
 .config-holder .collapsed-panel {

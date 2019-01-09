@@ -41,9 +41,13 @@ export declare class PieDemo {
     state: ViewState;
     package: string;
     resizeObserver: any;
+    mutationObserver: any;
     pieName: string;
     pieController: PieController;
     pieElement: PieElement;
+    elementParent1: any;
+    elementParent2: any;
+    minHeightAuthoring: any;
     studentHeader: any;
     studentHeaderWidth: number;
     pieElementModel: Object;
@@ -68,7 +72,12 @@ export declare class PieDemo {
     watchPieElement(pieElement: any): void;
     watchPieElementModel(newModel: any): void;
     watchResizerObserver(current: any, previous: any): void;
+    watchElementParent1(current: any): void;
+    watchElementParent2(current: any): void;
     componentWillLoad(): void;
+    handleElementResize(el: any): void;
+    handleElementParentResize(): void;
+    componentDidUpdate(): void;
     wachConfigElement(newEl: PieElement): void;
     setMode(mode: any): void;
     setOption(option: any): void;
