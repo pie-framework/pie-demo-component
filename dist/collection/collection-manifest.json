@@ -14,6 +14,13 @@
       },
       "props": [
         {
+          "name": "configure",
+          "attr": "configure",
+          "watch": [
+            "updateConfigure"
+          ]
+        },
+        {
           "name": "editor",
           "type": "Boolean",
           "attr": "editor"
@@ -62,6 +69,9 @@
         },
         {
           "name": "configModel"
+        },
+        {
+          "name": "configureObject"
         },
         {
           "name": "currentOption"

@@ -16,6 +16,7 @@ type PieController = {
 
 interface PieElement extends HTMLElement {
   model: Object;
+  configure: Object,
   session: Object;
 }
 
@@ -52,7 +53,11 @@ export class PieDemo {
    */
   @Prop() model: Object;
 
+  @Prop() configure: Object;
+
   @State() configModel: Object;
+
+  @State() configureObject: Object;
 
   @State() state: ViewState = ViewState.LOADING;
 
@@ -131,7 +136,6 @@ export class PieDemo {
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
-
     });
 
     if (this.load) {
@@ -144,15 +148,26 @@ export class PieDemo {
     this.configModel = newModel;
   }
 
+  @Watch('configure')
+  async updateConfigure(newConfigure) {
+    this.configureObject = newConfigure;
+  }
+
   @Watch('configModel')
   async watchConfigModel(newModel) {
     if (this.configElement) this.configElement.model = newModel;
     this.updatePieModelFromController(newModel, this.session, this.env);
   }
 
+  @Watch('configureObject')
+  async watchConfigureObject(newConfigure) {
+    if (this.configElement) this.configElement.configure = newConfigure;
+  }
+
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
       this.pieElementModel =  await this.pieController.model(model, session, env);
+
       if (this.pieElement) {
         this.pieElement.model = this.pieElementModel;
       }
@@ -163,6 +178,7 @@ export class PieDemo {
   watchPieElement(pieElement) {
     if (pieElement && !pieElement.model) {
       pieElement.model = this.model;
+      pieElement.configure = this.configureObject;
     }
   }
   
@@ -170,6 +186,7 @@ export class PieDemo {
   watchPieElementModel(newModel) {
     if (this.pieElement) {
       this.pieElement.model = newModel;
+      this.pieElement.configure = this.configureObject;
     }
   }
 
@@ -217,6 +234,10 @@ export class PieDemo {
     if (this.model) {
       this.updateModel(this.model);
     }
+
+    if (this.configure) {
+      this.updateConfigure(this.configure);
+    }
   }
 
   handleElementResize(el) {
@@ -253,10 +274,6 @@ export class PieDemo {
     if (this.elementParent2) {
       this.handleElementResize(this.elementParent2)
     }
-  }
-
-  componentDidUpdate() {
-    console.log('da');
   }
 
   @Watch('configElement')
@@ -536,6 +553,7 @@ export class PieDemo {
                 id="configure"
                 ref={el => (this.configElement = el as PieElement)}
                 model={this.model}
+                configure={this.configure}
                 session={this.session}
               />
             </div>
@@ -598,7 +616,6 @@ export class PieDemo {
       case ViewState.ERROR:
         return <div id="error">Error...</div>;
       case ViewState.READY:
-        console.log('rendering');
         return (
           <div class="root">
             <div class="config-holder">

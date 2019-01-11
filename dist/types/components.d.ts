@@ -13,6 +13,7 @@ import './stencil.core';
 export namespace Components {
 
   interface PieDemo {
+    'configure': Object;
     /**
     * Include an editor in the view
     */
@@ -43,6 +44,7 @@ export namespace Components {
     'preview': boolean;
   }
   interface PieDemoAttributes extends StencilHTMLAttributes {
+    'configure'?: Object;
     /**
     * Include an editor in the view
     */

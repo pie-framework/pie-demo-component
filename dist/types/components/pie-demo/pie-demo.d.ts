@@ -10,6 +10,7 @@ declare type PieController = {
 };
 interface PieElement extends HTMLElement {
     model: Object;
+    configure: Object;
     session: Object;
 }
 export declare class PieDemo {
@@ -37,7 +38,9 @@ export declare class PieDemo {
      * The model for the pie.
      */
     model: Object;
+    configure: Object;
     configModel: Object;
+    configureObject: Object;
     state: ViewState;
     package: string;
     resizeObserver: any;
@@ -67,7 +70,9 @@ export declare class PieDemo {
     isToggled(): boolean;
     watchPie(newPie: any): void;
     updateModel(newModel: any): Promise<void>;
+    updateConfigure(newConfigure: any): Promise<void>;
     watchConfigModel(newModel: any): Promise<void>;
+    watchConfigureObject(newConfigure: any): Promise<void>;
     updatePieModelFromController(model: any, session: any, env: any): Promise<void>;
     watchPieElement(pieElement: any): void;
     watchPieElementModel(newModel: any): void;
@@ -77,7 +82,6 @@ export declare class PieDemo {
     componentWillLoad(): void;
     handleElementResize(el: any): void;
     handleElementParentResize(): void;
-    componentDidUpdate(): void;
     wachConfigElement(newEl: PieElement): void;
     setMode(mode: any): void;
     setOption(option: any): void;

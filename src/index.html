@@ -11,7 +11,7 @@
 
 <body>
 
-  <pie-demo id="demo" editor="true" pie="@pie-element/protractor@2.0.1"></pie-demo>
+  <pie-demo id="demo" editor="true" pie="@pie-element/multiple-choice@2.4.3"></pie-demo>
 
   <script>
     const model = {
@@ -60,25 +60,28 @@
       partialScoring: false,
       partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
           that is correctly unchecked will be worth 1 point.
-          The maximum points is the total number of answer choices.`,
-      configure: {
-        /**
-         * These are the configurable options
-         */
-        /*promptLabel : 'Item Stem',
-        responseTypeLabel: 'Type of Answer',
-        choicesLabel: 'Answer Choice',
-        addChoiceButtonLabel: 'Add New Choice',
-        enableSelectChoiceLabel: false,
-        enableSelectResponseType: false,
-        enableAddChoice: false,
-        enableAddFeedBack: false,
-        enableDeleteChoice: false*/
-      }
+          The maximum points is the total number of answer choices.`
+    };
+    const configure = {
+      promptLabel : 'Haha',
+      responseTypeLabel: 'Type of Answer',
+      choicesLabel: 'Answer Choice',
+      addChoiceButtonLabel: 'Add New Choice',
+      enableSelectChoiceMode: true,
+      enableSelectChoiceLabels: true,
+      enableAddChoice: false,
+      enableAddFeedBack: false,
+      enableDeleteChoice: false,
+      enablePartialScoring: true,
+      enableConfigShuffle: false,
+      enableShowPrompt: false,
+      answerChoiceCount: 0
     };
 
     const pieDemo = document.getElementById("demo");
+
     pieDemo.model = model;
+    pieDemo.configure = configure;
   </script>
 
 </body>
