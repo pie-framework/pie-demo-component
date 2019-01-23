@@ -16,6 +16,7 @@ type PieController = {
 
 interface PieElement extends HTMLElement {
   model: Object;
+  configure: Object,
   session: Object;
 }
 
@@ -52,7 +53,11 @@ export class PieDemo {
    */
   @Prop() model: Object;
 
+  @Prop() configure: Object;
+
   @State() configModel: Object;
+
+  @State() configureObject: Object;
 
   @State() state: ViewState = ViewState.LOADING;
 
@@ -60,11 +65,19 @@ export class PieDemo {
 
   @State() resizeObserver: any;
 
+  @State() mutationObserver: any;
+
   @State() pieName: string;
 
   @State() pieController: PieController;
 
   @State() pieElement: PieElement;
+
+  @State() elementParent1: any;
+
+  @State() elementParent2: any;
+
+  @State() minHeightAuthoring: any = 'initial';
 
   @State() studentHeader: any;
 
@@ -123,7 +136,6 @@ export class PieDemo {
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
-
     });
 
     if (this.load) {
@@ -136,15 +148,26 @@ export class PieDemo {
     this.configModel = newModel;
   }
 
+  @Watch('configure')
+  async updateConfigure(newConfigure) {
+    this.configureObject = newConfigure;
+  }
+
   @Watch('configModel')
   async watchConfigModel(newModel) {
     if (this.configElement) this.configElement.model = newModel;
     this.updatePieModelFromController(newModel, this.session, this.env);
   }
 
+  @Watch('configureObject')
+  async watchConfigureObject(newConfigure) {
+    if (this.configElement) this.configElement.configure = newConfigure;
+  }
+
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
       this.pieElementModel =  await this.pieController.model(model, session, env);
+
       if (this.pieElement) {
         this.pieElement.model = this.pieElementModel;
       }
@@ -155,6 +178,7 @@ export class PieDemo {
   watchPieElement(pieElement) {
     if (pieElement && !pieElement.model) {
       pieElement.model = this.model;
+      pieElement.configure = this.configureObject;
     }
   }
   
@@ -162,6 +186,7 @@ export class PieDemo {
   watchPieElementModel(newModel) {
     if (this.pieElement) {
       this.pieElement.model = newModel;
+      this.pieElement.configure = this.configureObject;
     }
   }
 
@@ -174,16 +199,80 @@ export class PieDemo {
     }
   }
 
+  @Watch('elementParent1')
+  watchElementParent1(current) {
+    if (current) {
+      this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.mutationObserver.disconnect();
+    }
+  }
+
+  @Watch('elementParent2')
+  watchElementParent2(current) {
+    if (current) {
+      this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.mutationObserver.disconnect();
+    }
+  }
+
   componentWillLoad() {
     console.log('component will load ... ');
     this.watchPie(this.pie);
 
     this.resizeObserver = new (ResizeObserver as any)(() => {
-      this.studentHeaderWidth = this.studentHeader.offsetWidth;
+      if (this.studentHeader) {
+        this.studentHeaderWidth = this.studentHeader.offsetWidth;
+      }
+    });
+
+    this.mutationObserver = new MutationObserver(() => {
+      this.handleElementParentResize();
     });
 
     if (this.model) {
       this.updateModel(this.model);
+    }
+
+    if (this.configure) {
+      this.updateConfigure(this.configure);
+    }
+  }
+
+  handleElementResize(el) {
+    let minHeight = 'initial';
+
+    const navigateNode = (el) => {
+      if (el.nodeType === 1) {
+        const allStyle = getComputedStyle(el);
+
+        if (allStyle.position === 'absolute') {
+          const currentHeight = el.offsetTop + el.offsetHeight;
+
+          if (minHeight === 'initial' || currentHeight > minHeight) {
+            minHeight = currentHeight;
+          }
+        }
+
+        if (el.childNodes.length > 0) {
+          el.childNodes.forEach(ch => navigateNode(ch));
+        }
+      }
+    };
+
+    navigateNode(el);
+
+    this.minHeightAuthoring = minHeight;
+  }
+
+  handleElementParentResize() {
+    if (this.elementParent1) {
+      this.handleElementResize(this.elementParent1)
+    }
+
+    if (this.elementParent2) {
+      this.handleElementResize(this.elementParent2)
     }
   }
 
@@ -455,12 +544,16 @@ export class PieDemo {
         {isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled())}
         {
           !isCollapsed &&
-          <div class="element-holder">
+          <div
+            ref={el => el && (this.elementParent1 = el as any)}
+            class="element-holder"
+          >
             <div class="element-parent">
               <ConfigTag
                 id="configure"
                 ref={el => (this.configElement = el as PieElement)}
                 model={this.model}
+                configure={this.configure}
                 session={this.session}
               />
             </div>
@@ -496,7 +589,13 @@ export class PieDemo {
           <div class={classnames('element-holder', {
             toggled: this.studSettVisible
           })}>
-            <div class="element-parent">
+            <div
+              ref={el => el && (this.elementParent2 = el as any)}
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightAuthoring}px`
+              }}
+            >
               <TagName
                 id="render"
                 ref={el => el && (this.pieElement = el as PieElement)}
@@ -517,7 +616,6 @@ export class PieDemo {
       case ViewState.ERROR:
         return <div id="error">Error...</div>;
       case ViewState.READY:
-        console.log('rendering');
         return (
           <div class="root">
             <div class="config-holder">

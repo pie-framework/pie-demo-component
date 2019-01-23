@@ -32,7 +32,9 @@ export function loadCloudPies(
 
           packages.forEach((pack, index) => {
             const pie = window['pie'].default[pack];
-            const elName = elementsName[index];
+            const initialEl = elementsName[index];
+            const atSymbolPos = initialEl.indexOf('@');
+            const elName = atSymbolPos >= 0 ? initialEl.slice(0, atSymbolPos) : initialEl;
             console.log('defining elements');
 
             if (!customElements.get(elName)) {
