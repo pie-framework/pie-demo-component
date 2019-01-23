@@ -11,12 +11,12 @@
 
 <body>
 
-  <pie-demo id="demo" editor="true" pie="@pie-element/multiple-choice@2.4.3"></pie-demo>
+  <pie-demo id="demo" editor="true" pie="@pie-element/multiple-choice@2.4.6"></pie-demo>
 
   <script>
     const model = {
       id: '1',
-      element: 'protractor-element',
+      element: 'multiple-choice',
       prompt: 'Which of these northern European countries are EU members?',
       choiceMode: 'checkbox',
       keyMode: 'numbers',
@@ -67,9 +67,9 @@
       responseTypeLabel: 'Type of Answer',
       choicesLabel: 'Answer Choice',
       addChoiceButtonLabel: 'Add New Choice',
+      addChoices: false,
       enableSelectChoiceMode: true,
       enableSelectChoiceLabels: true,
-      enableAddChoice: false,
       enableAddFeedBack: false,
       enableDeleteChoice: false,
       enablePartialScoring: true,
