@@ -67,11 +67,17 @@ export class PieDemo {
 
   @State() mutationObserver: any;
 
+  @State() rootResizeObserver: any;
+
+  @State() bottomContResizeObserver: any;
+
   @State() pieName: string;
 
   @State() pieController: PieController;
 
   @State() pieElement: PieElement;
+
+  @State() rootEl: any;
 
   @State() elementParent1: any;
 
@@ -81,13 +87,21 @@ export class PieDemo {
 
   @State() studentHeader: any;
 
+  @State() bottomContentEl: any;
+
   @State() studentHeaderWidth: number = 500;
+
+  @State() rootElWidth: number = 1000;
+
+  @State() bottomContElWidth: number = 550;
 
   @State() pieElementModel: Object;
 
   @State() configElement: PieElement;
 
   @State() tabIndex: number = 0;
+
+  @State() mobileTabIndex: number = 0;
 
   @State() currentOption: string = 'option1';
 
@@ -213,7 +227,25 @@ export class PieDemo {
     if (current) {
       this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
     } else {
-      this.mutationObserver.disconnect();
+      this.mutationObserver.unobserve(current);
+    }
+  }
+
+  @Watch('rootEl')
+  watchRootEl(current) {
+    if (current) {
+      this.rootResizeObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.rootResizeObserver.unobserve(current);
+    }
+  }
+
+  @Watch('bottomContentEl')
+  watchBottomContentEl(current) {
+    if (current) {
+      this.bottomContResizeObserver.observe(current, { attributes: true, childList: true, subtree: true });
+    } else {
+      this.bottomContResizeObserver.disconnect();
     }
   }
 
@@ -229,6 +261,18 @@ export class PieDemo {
 
     this.mutationObserver = new MutationObserver(() => {
       this.handleElementParentResize();
+    });
+
+    this.rootResizeObserver = new (ResizeObserver as any)(() => {
+      if (this.rootEl) {
+        this.rootElWidth = this.rootEl.offsetWidth;
+      }
+    });
+
+    this.bottomContResizeObserver = new (ResizeObserver as any)(() => {
+      if (this.bottomContentEl) {
+        this.bottomContElWidth = this.bottomContentEl.offsetWidth;
+      }
     });
 
     if (this.model) {
@@ -418,36 +462,43 @@ export class PieDemo {
     );
   };
 
-  renderBottomContent() {
+  renderTabs = (tabs) => {
     return (
       <div class="tabs-container">
         <div class="tabs">
-          <div
-            class={classnames('tab', {
-              selected: this.tabIndex === 0
-            })}
-            onClick={() => this.tabIndex = 0}
-          >
-            Settings
-          </div>
-          <div
-            class={classnames('tab', {
-              selected: this.tabIndex === 1
-            })}
-            onClick={() => this.tabIndex = 1}
-          >
-            Embed
-          </div>
+          {tabs.map((tab, index) => (
+            <div
+              class={classnames('tab', {
+                selected: this.tabIndex === index
+              })}
+              onClick={() => this.tabIndex = index}
+            >
+              {tab.name}
+            </div>
+          ))}
         </div>
         <span class="selected-line" style={{
           left: `${this.tabIndex * 100}px`
         }}>
         </span>
         <div class="tab-content">
-          {this.tabIndex === 0 && this.renderSettingsContainer()}
+          {tabs[this.tabIndex] ? tabs[this.tabIndex].content : null}
         </div>
       </div>
-    )
+    );
+  };
+
+  renderBottomContent() {
+    return this.renderTabs([
+      {
+        name: 'Settings',
+        content: this.renderSettingsContainer()
+      },
+      {
+        name: 'Embed',
+        content: null
+      }
+    ]);
   }
 
   renderStudentHeader() {
@@ -501,11 +552,62 @@ export class PieDemo {
     )
   }
 
-  renderControlBar() {
+  renderMobileControlBar() {
     return (
-      <div class="control-bar">
-        {this.renderAuthoringHeader()}
-        {this.renderStudentHeader()}
+      <div class={classnames('control-bar', 'mobile', {
+        toggled: this.isToggled()
+      })}>
+        <div class="buttons">
+          <div
+            class={classnames('mobile-buton', {
+              selected: this.mobileTabIndex === 0
+            })}
+            onClick={() => {
+              this.mobileTabIndex = 0;
+              this.studSettVisible = false;
+            }}
+          >
+          <span>
+            AUTHORING
+          </span>
+          </div>
+          <div
+            class={classnames('mobile-buton', {
+              selected: this.mobileTabIndex === 1
+            })}
+            onClick={() => this.mobileTabIndex = 1}
+          >
+          <span>
+            STUDENT
+          </span>
+          </div>
+        </div>
+        {
+          this.mobileTabIndex === 1 &&
+          <div class="student-tab-content">
+            <div class="toggle-settings">
+              <span>
+                  Toggle Settings
+              </span>
+              <i
+                class={classnames('material-icons', 'toggle-icon', {
+                  toggled: this.isToggled()
+                })}
+                onClick={() => this.toggleStudentSettings()}
+              >
+                {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
+              </i>
+            </div>
+            <div
+              class={classnames('bottomContent', {
+                smaller: this.bottomContElWidth <= 550
+              })}
+              ref={el => el && (this.bottomContentEl = el as any)}
+            >
+              {this.renderBottomContent()}
+            </div>
+          </div>
+        }
       </div>
     );
   };
@@ -522,7 +624,7 @@ export class PieDemo {
     );
   };
 
-  renderAuthoringHolder = () => {
+  renderAuthoringHolder = (noControlBar = false) => {
     const ConfigTag = this.pieName + '-config';
     const isCollapsed = this.collapsed === 'authoring';
 
@@ -538,9 +640,12 @@ export class PieDemo {
           )
         }
       >
-        <div class="control-bar">
-          {this.renderAuthoringHeader()}
-        </div>
+        {
+          !noControlBar &&
+          <div class="control-bar">
+            {this.renderAuthoringHeader()}
+          </div>
+        }
         {isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled())}
         {
           !isCollapsed &&
@@ -563,7 +668,7 @@ export class PieDemo {
     );
   };
 
-  renderStudentHolder = () => {
+  renderStudentHolder = (noControlBar = false) => {
     const TagName = this.pieName + '';
     const isCollapsed = this.collapsed === 'student';
 
@@ -573,14 +678,18 @@ export class PieDemo {
           classnames(
             'student-view-holder',
             {
-              'collapsed': this.collapsed === 'student'
+              'collapsed': this.collapsed === 'student',
+              'toggled': this.isToggled()
             }
           )
         }
       >
-        <div class="control-bar">
-          {this.renderStudentHeader()}
-        </div>
+        {
+          !noControlBar &&
+          <div class="control-bar">
+            {this.renderStudentHeader()}
+          </div>
+        }
         {
           isCollapsed && this.renderCollapsedPanel('Student View')
         }
@@ -609,20 +718,40 @@ export class PieDemo {
     );
   };
 
+  renderContent = () => {
+    if (this.rootElWidth >= 1200) {
+      return (
+        <div class="config-holder">
+          {this.renderAuthoringHolder()}
+          <span class="divider"/>
+          {this.renderStudentHolder()}
+        </div>
+      );
+    }
+
+    return (
+      <div class="smaller-view">
+        {this.renderMobileControlBar()}
+        {this.mobileTabIndex === 0 && this.renderAuthoringHolder(true)}
+        {this.mobileTabIndex === 1 && this.renderStudentHolder(true)}
+      </div>
+    );
+  };
+
   render() {
     switch (this.state) {
       case ViewState.LOADING:
-        return <div id="loading">Loading...</div>;
+        return (
+          <div class="root loading">
+            <div class="lmask" />
+          </div>
+        );
       case ViewState.ERROR:
         return <div id="error">Error...</div>;
       case ViewState.READY:
         return (
-          <div class="root">
-            <div class="config-holder">
-              {this.renderAuthoringHolder()}
-              <span class="divider"/>
-              {this.renderStudentHolder()}
-            </div>
+          <div class="root" ref={el => el && (this.rootEl = el as any)}>
+            {this.renderContent()}
           </div>
         );
     }

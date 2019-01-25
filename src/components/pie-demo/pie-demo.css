@@ -18,6 +18,11 @@ html, body {
     flex-direction: column;
     max-height: 100%;
     height: 100%;
+    position: relative;
+}
+
+.root.loading {
+    background: transparent;
 }
 
 .control-bar {
@@ -52,7 +57,6 @@ html, body {
     height: 76px;
     justify-content: center;
     position: relative;
-    border-right: 2px solid #ebebeb;
 }
 
 .control-bar .header-title {
@@ -124,13 +128,13 @@ html, body {
     display: none;
 }
 
-.control-bar .student-view-header .bottomContent .tabs-container {
+.control-bar .bottomContent .tabs-container {
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-.control-bar .student-view-header .bottomContent .tabs-container .tabs {
+.control-bar .bottomContent .tabs-container .tabs {
     border-bottom: 4px solid #eeeeee;
     display: flex;
     flex-direction: row;
@@ -138,7 +142,7 @@ html, body {
     justify-content: flex-start;
 }
 
-.control-bar .student-view-header .bottomContent .tabs-container .tabs .tab {
+.control-bar .bottomContent .tabs-container .tabs .tab {
     cursor: pointer;
     min-width: 100px;
     height: 48px;
@@ -146,7 +150,7 @@ html, body {
     text-align: center;
 }
 
-.control-bar .student-view-header .bottomContent .tabs-container .selected-line {
+.control-bar .bottomContent .tabs-container .selected-line {
     background-color: #3f51b5;
     bottom: 4px;
     height: 4px;
@@ -156,7 +160,7 @@ html, body {
     width: 100px;
 }
 
-.control-bar .student-view-header .bottomContent .tabs-container .tab-content {
+.control-bar .bottomContent .tabs-container .tab-content {
     height: 78px;
 }
 
@@ -193,7 +197,7 @@ html, body {
     height: 126px;
 }
 
-.control-bar .student-view-header .bottomContent .settings-tab-container {
+.control-bar .bottomContent .settings-tab-container {
     background-color: #fafafa;
     align-items: flex-start;
     display: flex;
@@ -204,27 +208,158 @@ html, body {
     width: 100%;
 }
 
-.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings,
-.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings {
+.control-bar .bottomContent .settings-tab-container .roles-settings,
+.control-bar .bottomContent .settings-tab-container .modes-settings {
     align-self: center;
 }
 
-.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings h5,
-.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings h5 {
+.control-bar .bottomContent .settings-tab-container .roles-settings h5,
+.control-bar .bottomContent .settings-tab-container .modes-settings h5 {
     font-size: 12px;
     margin: 0 0 8px 0;
 }
 
-.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options,
-.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options {
+.control-bar .bottomContent .settings-tab-container .roles-settings .roles-options,
+.control-bar .bottomContent .settings-tab-container .modes-settings .modes-options {
     align-items: center;
     display: flex;
     justify-content: center;
 }
 
-.control-bar .student-view-header .bottomContent .settings-tab-container .roles-settings .roles-options > *,
-.control-bar .student-view-header .bottomContent .settings-tab-container .modes-settings .modes-options > * {
+.control-bar .bottomContent .settings-tab-container .roles-settings .roles-options > *,
+.control-bar .bottomContent .settings-tab-container .modes-settings .modes-options > * {
     margin-right: 18px;
+}
+
+.control-bar.mobile {
+    align-items: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 76px;
+    width: 100%;
+}
+
+.control-bar.mobile .buttons {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    height: 76px;
+    justify-content: space-between;
+    padding: 0 16px;
+    width: 100%;
+}
+
+.control-bar.mobile .buttons .mobile-buton {
+    background-color: #eeeeee;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    width: 163px;
+}
+
+.control-bar.mobile .buttons .mobile-buton span {
+    color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.control-bar.mobile .buttons .mobile-buton.selected {
+    background-color: #3f51b5;
+}
+
+.control-bar.mobile .buttons .mobile-buton.selected span {
+    color: #fff;
+}
+
+.control-bar.mobile .student-tab-content {
+    width: 100%;
+}
+
+.control-bar.mobile .student-tab-content .toggle-settings {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    width: 400px;
+}
+
+.control-bar.mobile .student-tab-content .toggle-settings span {
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.control-bar.mobile .student-tab-content .bottomContent {
+    display: none;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent {
+    display: block;
+    height: 134px;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent.smaller {
+    display: block;
+    height: 204px;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent.smaller .settings-tab-container {
+    box-sizing: border-box;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent.smaller .settings-tab-container .roles-settings {
+    align-self: flex-start;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent.smaller .settings-tab-container .modes-settings {
+    align-self: flex-start;
+    margin-bottom: 20px;
+}
+
+.control-bar.mobile.toggled .student-tab-content .bottomContent.smaller .tabs-container .tab-content {
+    height: 152px;
+}
+
+.smaller-view {
+    height: 100%;
+    width: 100%;
+}
+
+.smaller-view .authoring-holder {
+    height: calc(100% - 76px);
+}
+
+.smaller-view .student-view-holder {
+    height: calc(100% - 120px);
+}
+
+.smaller-view .student-view-holder.toggled {
+    height: calc(100% - 254px);
+}
+
+.smaller-view .element-holder {
+    border: 16px solid #3f51b5;
+    flex: 1;
+    height: calc(100% - 32px);
+    overflow: scroll;
+    width: 98%;
+}
+
+.smaller-view .element-parent {
+    background: #fff;
+    border-radius: 4px;
+    overflow: scroll;
+    padding: 20px;
+}
+
+.smaller-view .element-holder {
+    width: 98%;
 }
 
 .config-holder {
@@ -301,6 +436,14 @@ html, body {
     z-index: 9;
 }
 
+.divider:after {
+    background-color: #ebebeb;
+    content: '';
+    display: block;
+    height: 76px;
+    width: 2px;
+}
+
 .config-holder .student-view-holder {
     display: flex;
     flex: 1 0 0;
@@ -326,3 +469,84 @@ html, body {
 [class*=MuiCheckbox-checked] {
     color: green !important;
 }
+
+.root .lmask {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 9999;
+    opacity: 0.4;
+}
+
+.root .lmask.fixed {
+    position: fixed;
+}
+
+.root .lmask:before {
+    content: '';
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(63, 81, 181, 0.9);
+    opacity: 0.9;
+    border-right: 5px solid rgba(0, 0, 0, 0);
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 50px;
+    box-shadow: 0 0 35px rgba(63, 81, 181, 0.9);
+    width: 50px;
+    height: 50px;
+    -moz-animation: spinPulse 1s infinite ease-in-out;
+    -webkit-animation: spinPulse 1s infinite linear;
+    margin: -25px 0 0 -25px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.root .lmask:after {
+    content: '';
+    background-color: rgba(0, 0, 0, 0);
+    border: 5px solid rgba(63, 81, 181, 0.9);
+    opacity: 0.9;
+    border-left: 5px solid rgba(0, 0, 0, 0);
+    border-right: 5px solid rgba(0, 0, 0, 0);
+    border-radius: 50px;
+    box-shadow: 0 0 15px rgba(63, 81, 181, 0.9);
+    width: 30px;
+    height: 30px;
+    -moz-animation: spinoffPulse 1s infinite linear;
+    -webkit-animation: spinoffPulse 1s infinite linear;
+    margin: -15px 0 0 -15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+@keyframes spinPulse {
+    0% {
+        transform: rotate(160deg);
+        opacity: 0;
+        box-shadow: 0 0 1px rgba(63, 81, 181, 0.9);
+    }
+    50% {
+        transform: rotate(145deg);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-320deg);
+        opacity: 0;
+    }
+}
+
+@keyframes spinoffPulse {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
