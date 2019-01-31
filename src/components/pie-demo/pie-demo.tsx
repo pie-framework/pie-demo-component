@@ -1,5 +1,6 @@
 import { Component, Prop, Watch, State } from '@stencil/core';
 import ResizeObserver from 'resize-observer-polyfill'
+import jsonBeautify from 'json-beautify';
 import classnames from 'classnames';
 import { loadCloudPies } from '../../util/PieCloud';
 
@@ -30,6 +31,25 @@ export class PieDemo {
    * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
    */
   @Prop() pie: string;
+
+  /**
+   * Removes control bar if true
+   * @type {boolean}
+   */
+  @Prop() justElement: boolean = false;
+
+  /**
+   * Makes the element have 50% height
+   * @type {boolean}
+   */
+  @Prop() multiplePies: boolean = false;
+
+  /**
+   * JSON objects for the Dev Options menu
+   * @type {boolean}
+   */
+  @Prop() jsonObjects: object = [];
+
   /**
    * Tells the component if it needs to load the elements or not
    */
@@ -63,7 +83,9 @@ export class PieDemo {
 
   @State() package: string;
 
-  @State() resizeObserver: any;
+  @State() studentHeaderResizeObserver: any;
+
+  @State() authoringHeaderResizeObserver: any;
 
   @State() mutationObserver: any;
 
@@ -85,13 +107,21 @@ export class PieDemo {
 
   @State() minHeightAuthoring: any = 'initial';
 
+  @State() textAreaContentRef: any;
+
   @State() studentHeader: any;
+
+  @State() authoringHeader: any;
+
+  @State() bottomContentRef: any;
 
   @State() bottomContentEl: any;
 
   @State() studentHeaderWidth: number = 500;
 
-  @State() rootElWidth: number = 1000;
+  @State() authoringHeaderWidth: number = 500;
+
+  @State() rootElWidth: number = 1250;
 
   @State() bottomContElWidth: number = 550;
 
@@ -109,9 +139,15 @@ export class PieDemo {
 
   @State() studSettVisible: boolean = false;
 
+  @State() authSettVisible: boolean = false;
+
   @State() env: Object = { mode: 'gather' };
 
   @State() session: Object = {};
+
+  @State() jsonConfigValue: Object = null;
+
+  @State() cachedJsonConfig: Object = null;
 
   // @Element() private element: HTMLElement
 
@@ -126,12 +162,20 @@ export class PieDemo {
     this.collapsed = this.collapsed === name ? null : name;
   }
 
+  toggleAuthoringSettings() {
+    this.authSettVisible = !this.authSettVisible;
+  }
+
   toggleStudentSettings() {
     this.studSettVisible = !this.studSettVisible;
   }
 
-  isToggled() {
-    return this.studSettVisible && this.collapsed !== 'student';
+  isToggled(type = 'student') {
+    if (type === 'student') {
+      return this.studSettVisible && this.collapsed !== 'student';
+    }
+
+    return this.authSettVisible && this.collapsed !== 'authoring';
   }
 
   @Watch('pie')
@@ -205,11 +249,20 @@ export class PieDemo {
   }
 
   @Watch('studentHeader')
-  watchResizerObserver(current, previous) {
+  watchStudentHeader(current, previous) {
     if (current) {
-      this.resizeObserver.observe(current);
+      this.studentHeaderResizeObserver.observe(current);
     } else {
-      this.resizeObserver.unobserve(previous);
+      this.studentHeaderResizeObserver.unobserve(previous);
+    }
+  }
+
+  @Watch('authoringHeader')
+  watchAuthoringHeader(current, previous) {
+    if (current) {
+      this.authoringHeaderResizeObserver.observe(current);
+    } else {
+      this.authoringHeaderResizeObserver.unobserve(previous);
     }
   }
 
@@ -253,9 +306,15 @@ export class PieDemo {
     console.log('component will load ... ');
     this.watchPie(this.pie);
 
-    this.resizeObserver = new (ResizeObserver as any)(() => {
+    this.studentHeaderResizeObserver = new (ResizeObserver as any)(() => {
       if (this.studentHeader) {
         this.studentHeaderWidth = this.studentHeader.offsetWidth;
+      }
+    });
+
+    this.authoringHeaderResizeObserver = new (ResizeObserver as any)(() => {
+      if (this.authoringHeader) {
+        this.authoringHeaderWidth = this.authoringHeader.offsetWidth;
       }
     });
 
@@ -377,28 +436,187 @@ export class PieDemo {
     )
   }
 
-  renderAuthoringHeader() {
+  renderJsonConfigPanel = (jsonData) => {
+    return (
+      <div class="json-config">
+        <div class="header">
+          <div class="view-container">
+            <i class="fa fa-desktop" />
+            <span>
+              View Documentation
+            </span>
+          </div>
+          <div class="right-content">
+            <div
+              class="copy-container"
+              onClick={() => {
+                this.textAreaContentRef.select();
+
+                document.execCommand("copy");
+              }}
+            >
+              <i class="fa fa-clone" />
+              <span>
+              Copy JSON
+            </span>
+            </div>
+            <div
+              class="reset-container"
+              onClick={() => {
+                if (this.textAreaContentRef) {
+                  this.textAreaContentRef.value = jsonBeautify(this.cachedJsonConfig, null, 2, 98);
+                }
+              }}
+            >
+              <i class="fa fa-undo" />
+              <span>
+              Reset
+            </span>
+            </div>
+          </div>
+        </div>
+        <textarea
+          ref={el => (this.textAreaContentRef = el as any)}
+          class="json-content"
+        >
+          {jsonBeautify(jsonData, null, 2, 98)}
+        </textarea>
+      </div>
+    );
+  };
+
+  renderAuthoringBottomContent() {
+    return this.renderTabs([
+      {
+        name: 'Json Config 1',
+        content: () => {
+          this.cachedJsonConfig = this.jsonObjects[0];
+
+          return this.renderJsonConfigPanel(this.jsonObjects[0]);
+        }
+      },
+      {
+        name: 'Json Config 2',
+        content: () => {
+          this.cachedJsonConfig = this.jsonObjects[1];
+
+          return this.renderJsonConfigPanel(this.jsonObjects[1]);
+        }
+      },
+      {
+        name: 'Json Config 3',
+        content: () => {
+          this.cachedJsonConfig = this.jsonObjects[2];
+
+          return this.renderJsonConfigPanel(this.jsonObjects[2]);
+        }
+      }
+    ], 135);
+  }
+
+  renderAuthoringHeader(smallView = false) {
+    const isToggled = this.isToggled('authoring');
+    const determineHeight = () => {
+      let offset = 0;
+
+      if (this.bottomContentRef) {
+        const ref = this.bottomContentRef.querySelector('.tabs');
+
+        if (ref) {
+          const clientRect = ref.getBoundingClientRect();
+
+          offset = clientRect.y;
+
+          return `calc(100vh - ${offset}px)`;
+        }
+
+        return `0px`;
+      }
+    };
+
     return (
       <div
+        ref={el => (this.authoringHeader = el as any)}
         class={
           classnames(
             'authoring-header',
             {
-              collapsed: this.collapsed === 'authoring'
+              collapsed: this.collapsed === 'authoring',
+              toggled: isToggled
             }
           )
         }
       >
-        {this.renderHeaderTitleInfo({
-          title: 'Authoring View',
-          description: 'The view an author sees when configuring this interaction.'
-        })}
-        <i
-          class="material-icons collapse-icon"
-          onClick={() => this.collapsePanel('student')}
+        <div
+          class="topContent"
         >
-          {this.collapsed === 'student'  ? 'format_indent_decrease' : 'format_indent_increase'}
-        </i>
+          {this.renderHeaderTitleInfo({
+            title: isToggled ? 'Dev Options' : 'Authoring View',
+            description: isToggled
+              ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+              : 'The view an author sees when configuring this interaction.'
+          })}
+          {
+            !isToggled &&
+            <div
+              class={classnames('toggle-container', {
+                toggled: this.isToggled('authoring')
+              })}
+              onClick={() => this.toggleAuthoringSettings()}
+            >
+              <i
+                class="material-icons toggle-icon"
+              >
+                {this.authSettVisible ? 'toggle_on' : 'toggle_off'}
+              </i>
+              <span class="toggle-text">
+              Dev Options
+            </span>
+            </div>
+          }
+          {
+            isToggled &&
+            <span
+              class="close-icon"
+              onClick={() => this.toggleAuthoringSettings()}
+            >
+              X
+            </span>
+          }
+          {
+            !isToggled &&
+            !smallView &&
+            <i
+              class={classnames('material-icons', 'collapse-icon', {
+                collapsed: this.collapsed === 'student'
+              })}
+              onClick={() => this.collapsePanel('student')}
+            >
+              {this.collapsed === 'student' ? 'format_indent_decrease' : 'format_indent_increase'}
+            </i>
+          }
+          {
+            !isToggled &&
+            smallView &&
+            <div
+              class="mobile-button"
+              onClick={() => this.mobileTabIndex = 1}
+            >
+            <span>
+              STUDENT VIEW
+            </span>
+            </div>
+          }
+        </div>
+        <div
+          ref={el => (this.bottomContentRef = el as any)}
+          style={{
+            height: determineHeight()
+          }}
+          class="bottomContent authoring"
+        >
+          {isToggled && this.renderAuthoringBottomContent()}
+        </div>
       </div>
     )
   };
@@ -462,7 +680,10 @@ export class PieDemo {
     );
   };
 
-  renderTabs = (tabs) => {
+  renderTabs = (tabs, tabWidth = 100) => {
+    const content = tabs[this.tabIndex] ? tabs[this.tabIndex].content : null;
+    const contentValue = typeof content === 'function' ? content() : content;
+
     return (
       <div class="tabs-container">
         <div class="tabs">
@@ -478,11 +699,12 @@ export class PieDemo {
           ))}
         </div>
         <span class="selected-line" style={{
-          left: `${this.tabIndex * 100}px`
+          left: `${this.tabIndex * tabWidth}px`,
+          width: `${tabWidth}px`
         }}>
         </span>
         <div class="tab-content">
-          {tabs[this.tabIndex] ? tabs[this.tabIndex].content : null}
+          {contentValue}
         </div>
       </div>
     );
@@ -501,7 +723,7 @@ export class PieDemo {
     ]);
   }
 
-  renderStudentHeader() {
+  renderStudentHeader(smallView = false) {
     return (
       <div
         ref={el => (this.studentHeader = el as any)}
@@ -524,26 +746,44 @@ export class PieDemo {
               this.currentOption
             ]
           })}
-          {
-            this.studentHeaderWidth >= 800 &&
-            <span>
-              Toggle Settings
-            </span>
-          }
-          <i
-            class={classnames('material-icons', 'toggle-icon', {
+
+          <div
+            class={classnames('toggle-container', 'student', {
               toggled: this.isToggled()
             })}
             onClick={() => this.toggleStudentSettings()}
           >
-            {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
-          </i>
-          <i
-            class="material-icons collapse-icon"
-            onClick={() => this.collapsePanel('authoring')}
-          >
-            {this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease'}
-          </i>
+            <i
+              class="material-icons toggle-icon"
+            >
+              {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
+            </i>
+            <span class="toggle-text">
+              Options
+            </span>
+          </div>
+          {
+            !smallView &&
+            <i
+              class={classnames('material-icons', 'collapse-icon', {
+                collapsed: this.collapsed === 'authoring'
+              })}
+              onClick={() => this.collapsePanel('authoring')}
+            >
+              {this.collapsed === 'authoring' ? 'format_indent_increase' : 'format_indent_decrease'}
+            </i>
+          }
+          {
+            smallView &&
+            <div
+              class="mobile-button"
+              onClick={() => this.mobileTabIndex = 0}
+            >
+              <span>
+                AUTHORING VIEW
+              </span>
+            </div>
+          }
         </div>
         <div class="bottomContent">
           {this.renderBottomContent()}
@@ -551,66 +791,6 @@ export class PieDemo {
       </div>
     )
   }
-
-  renderMobileControlBar() {
-    return (
-      <div class={classnames('control-bar', 'mobile', {
-        toggled: this.isToggled()
-      })}>
-        <div class="buttons">
-          <div
-            class={classnames('mobile-buton', {
-              selected: this.mobileTabIndex === 0
-            })}
-            onClick={() => {
-              this.mobileTabIndex = 0;
-              this.studSettVisible = false;
-            }}
-          >
-          <span>
-            AUTHORING
-          </span>
-          </div>
-          <div
-            class={classnames('mobile-buton', {
-              selected: this.mobileTabIndex === 1
-            })}
-            onClick={() => this.mobileTabIndex = 1}
-          >
-          <span>
-            STUDENT
-          </span>
-          </div>
-        </div>
-        {
-          this.mobileTabIndex === 1 &&
-          <div class="student-tab-content">
-            <div class="toggle-settings">
-              <span>
-                  Toggle Settings
-              </span>
-              <i
-                class={classnames('material-icons', 'toggle-icon', {
-                  toggled: this.isToggled()
-                })}
-                onClick={() => this.toggleStudentSettings()}
-              >
-                {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
-              </i>
-            </div>
-            <div
-              class={classnames('bottomContent', {
-                smaller: this.bottomContElWidth <= 550
-              })}
-              ref={el => el && (this.bottomContentEl = el as any)}
-            >
-              {this.renderBottomContent()}
-            </div>
-          </div>
-        }
-      </div>
-    );
-  };
 
   renderCollapsedPanel(title, toggled = undefined) {
     return (
@@ -624,7 +804,7 @@ export class PieDemo {
     );
   };
 
-  renderAuthoringHolder = (noControlBar = false) => {
+  renderAuthoringHolder = (smallView = false) => {
     const ConfigTag = this.pieName + '-config';
     const isCollapsed = this.collapsed === 'authoring';
 
@@ -640,18 +820,21 @@ export class PieDemo {
           )
         }
       >
-        {
-          !noControlBar &&
-          <div class="control-bar">
-            {this.renderAuthoringHeader()}
-          </div>
-        }
+        <div
+          class={classnames('control-bar', {
+            justElement: this.justElement
+          })}
+        >
+          {this.renderAuthoringHeader(smallView)}
+        </div>
         {isCollapsed && this.renderCollapsedPanel('Authoring View', this.isToggled())}
         {
           !isCollapsed &&
           <div
             ref={el => el && (this.elementParent1 = el as any)}
-            class="element-holder"
+            class={classnames('element-holder', {
+              justElement: this.justElement
+            })}
           >
             <div class="element-parent">
               <ConfigTag
@@ -668,7 +851,7 @@ export class PieDemo {
     );
   };
 
-  renderStudentHolder = (noControlBar = false) => {
+  renderStudentHolder = (smallView = false) => {
     const TagName = this.pieName + '';
     const isCollapsed = this.collapsed === 'student';
 
@@ -684,19 +867,21 @@ export class PieDemo {
           )
         }
       >
-        {
-          !noControlBar &&
-          <div class="control-bar">
-            {this.renderStudentHeader()}
-          </div>
-        }
+        <div
+          class={classnames('control-bar', {
+            justElement: this.justElement
+          })}
+        >
+          {this.renderStudentHeader(smallView)}
+        </div>
         {
           isCollapsed && this.renderCollapsedPanel('Student View')
         }
         {
           !isCollapsed &&
           <div class={classnames('element-holder', {
-            toggled: this.studSettVisible
+            toggled: this.studSettVisible,
+            justElement: this.justElement
           })}>
             <div
               ref={el => el && (this.elementParent2 = el as any)}
@@ -723,7 +908,11 @@ export class PieDemo {
       return (
         <div class="config-holder">
           {this.renderAuthoringHolder()}
-          <span class="divider"/>
+          <span
+            class={classnames('divider', {
+              larger: this.studSettVisible && this.authSettVisible
+            })}
+          />
           {this.renderStudentHolder()}
         </div>
       );
@@ -731,7 +920,6 @@ export class PieDemo {
 
     return (
       <div class="smaller-view">
-        {this.renderMobileControlBar()}
         {this.mobileTabIndex === 0 && this.renderAuthoringHolder(true)}
         {this.mobileTabIndex === 1 && this.renderStudentHolder(true)}
       </div>
@@ -750,7 +938,12 @@ export class PieDemo {
         return <div id="error">Error...</div>;
       case ViewState.READY:
         return (
-          <div class="root" ref={el => el && (this.rootEl = el as any)}>
+          <div
+            class={classnames('root', {
+              multiplePies: this.multiplePies
+            })}
+            ref={el => el && (this.rootEl = el as any)}
+          >
             {this.renderContent()}
           </div>
         );

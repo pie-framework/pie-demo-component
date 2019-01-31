@@ -21,6 +21,10 @@ html, body {
     position: relative;
 }
 
+.root.multiplePies {
+    height: 50%;
+}
+
 .root.loading {
     background: transparent;
 }
@@ -35,9 +39,22 @@ html, body {
     width: 100%;
 }
 
+.control-bar.justElement {
+    display: none;
+}
+
 .control-bar .collapse-icon {
-    cursor: pointer;
-    margin-right: 22px;
+    border-radius: 4px;
+    border: 1px solid #3f51b5;
+    color: #3f51b5;
+    font-size: 16px;
+    margin-right: 18px;
+    padding: 7px;
+}
+
+.control-bar .collapse-icon.collapsed {
+    background-color: #3f51b5;
+    color: #fff;
 }
 
 .control-bar .toggle-icon {
@@ -57,6 +74,95 @@ html, body {
     height: 76px;
     justify-content: center;
     position: relative;
+}
+
+.control-bar .authoring-header .topContent .toggle-text {
+    font-size: 12px;
+    margin-right: 10px;
+}
+
+.control-bar .authoring-header .bottomContent {
+    background: #fff;
+    bottom: 0;
+    display: none;
+    height: calc(100vh - 76px);
+    left: 0;
+    position: absolute;
+    top: 76px;
+    width: 100%;
+    z-index: 100;
+}
+
+.control-bar .authoring-header .bottomContent .tabs-container {
+    height: 100%;
+}
+
+.control-bar .authoring-header .bottomContent .tabs-container .tab-content {
+    height: calc(100% - 52px);
+}
+
+.control-bar .authoring-header .bottomContent .json-config {
+    align-items: flex-start;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    width: 100%;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .header {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0;
+    width: 100%;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .header .right-content {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .header .view-container,
+.control-bar .authoring-header .bottomContent .json-config .header .right-content > div {
+    cursor: pointer;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .header .right-content .copy-container {
+    margin-right: 25px;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .header i {
+    margin-right: 8px;
+}
+
+.control-bar .authoring-header .bottomContent .json-config .json-content {
+    background-color: #ffffff;
+    border: 1px solid #DDD;
+    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.07), 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+    color: #000000;
+    font-size: 12px;
+    height: 100%;
+    padding: 16px;
+    width: 100%;
+}
+
+.control-bar .authoring-header.toggled .close-icon {
+    background-color: #ffffff;
+    border: 1px solid #3f51b5;
+    border-radius: 4px;
+    color: #3f51b5;
+    cursor: pointer;
+    font-size: 12px;
+    height: 32px;
+    line-height: 32px;
+    margin-right: 18px;
+    text-align: center;
+    width: 32px;
 }
 
 .control-bar .header-title {
@@ -89,14 +195,12 @@ html, body {
     color: rgba(0, 0, 0, 0.56);
 }
 
-.control-bar .header-title .title-info h4,
 .control-bar .header-title .title-info h4 {
     color: rgba(0, 0, 0, 0.87);
     font-size: 16px;
-    letter-spacing: 3px;
+    font-weight: 500;
     margin: 0 8px 4px 0;
     text-align: left;
-    text-transform: uppercase;
 }
 
 .control-bar .student-view-header.collapsed,
@@ -114,7 +218,8 @@ html, body {
     margin: 0;
 }
 
-.control-bar .student-view-header.collapsed .toggle-icon {
+.control-bar .authoring-header.collapsed .toggle-container,
+.control-bar .student-view-header.collapsed .toggle-container {
     display: none;
 }
 
@@ -135,6 +240,7 @@ html, body {
 }
 
 .control-bar .bottomContent .tabs-container .tabs {
+    background-color: #fafafa;
     border-bottom: 4px solid #eeeeee;
     display: flex;
     flex-direction: row;
@@ -144,10 +250,12 @@ html, body {
 
 .control-bar .bottomContent .tabs-container .tabs .tab {
     cursor: pointer;
+    color: #000;
     min-width: 100px;
     height: 48px;
     line-height: 48px;
     text-align: center;
+    width: 135px;
 }
 
 .control-bar .bottomContent .tabs-container .selected-line {
@@ -157,7 +265,6 @@ html, body {
     position: absolute;
     top: 48px;
     transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    width: 100px;
 }
 
 .control-bar .bottomContent .tabs-container .tab-content {
@@ -168,28 +275,75 @@ html, body {
     height: 210px;
 }
 
-.control-bar .student-view-header.toggled .bottomContent {
+.control-bar .toggled .bottomContent {
     display: block;
     height: 134px;
 }
 
-.control-bar .student-view-header.toggled .topContent {
+.control-bar .toggled .topContent {
     height: 76px;
 }
 
-.control-bar .student-view-header .topContent {
+.control-bar .topContent {
     align-items: center;
     display: flex;
     justify-content: center;
     height: 100%;
+    width: 100%;
 }
 
-.control-bar .student-view-header .topContent span {
+.control-bar .topContent .mobile-button {
+    width: 147px;
+}
+
+.control-bar .topContent .toggle-text {
     font-size: 12px;
     margin-right: 10px;
 }
 
-.control-bar .student-view-header .topContent h4 {
+.control-bar .topContent .toggle-container {
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #3f51b5;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    height: 32px;
+    justify-content: space-between;
+    margin-right: 5px;
+    padding: 8px;
+    width: 105px;
+}
+
+.control-bar .topContent .toggle-container.student {
+    width: 82px;
+}
+
+.control-bar .topContent .toggle-container i {
+    color: #3f51b5;
+    font-size: 16px;
+    margin-right: 0;
+}
+
+.control-bar .topContent .toggle-container .toggle-text {
+    color: #3f51b5;
+    margin-right: 0 !important;
+}
+
+.control-bar .topContent .toggle-container.toggled {
+    background-color: #3f51b5;
+}
+
+.control-bar .topContent .toggle-container.toggled i {
+    color: #fff;
+}
+
+.control-bar .topContent .toggle-container.toggled .toggle-text {
+    color: #fff;
+}
+
+.control-bar .topContent h4 {
     margin-bottom: 10px;
 }
 
@@ -198,7 +352,7 @@ html, body {
 }
 
 .control-bar .bottomContent .settings-tab-container {
-    background-color: #fafafa;
+    background-color: #fff;
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
@@ -250,28 +404,24 @@ html, body {
     width: 100%;
 }
 
-.control-bar.mobile .buttons .mobile-buton {
-    background-color: #eeeeee;
+.mobile-button {
+    background-color: #3f51b5;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.02), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
     border-radius: 4px;
     cursor: pointer;
     height: 36px;
     line-height: 36px;
+    margin-right: 24px;
     text-align: center;
-    width: 163px;
+    min-width: 126px;
 }
 
-.control-bar.mobile .buttons .mobile-buton span {
-    color: #000000;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.control-bar.mobile .buttons .mobile-buton.selected {
-    background-color: #3f51b5;
-}
-
-.control-bar.mobile .buttons .mobile-buton.selected span {
+.mobile-button span {
     color: #fff;
+    font-size: 14px !important;
+    line-height: 1.39;
+    letter-spacing: normal;
+    margin: 0 !important;
 }
 
 .control-bar.mobile .student-tab-content {
@@ -382,6 +532,10 @@ html, body {
     height: calc(100% - 108px);
 }
 
+.config-holder .element-holder.justElement {
+    top: 0;
+}
+
 .config-holder .element-holder.toggled {
     top: 210px;
 }
@@ -442,6 +596,10 @@ html, body {
     display: block;
     height: 76px;
     width: 2px;
+}
+
+.divider.larger:after {
+    height: 210px;
 }
 
 .config-holder .student-view-holder {

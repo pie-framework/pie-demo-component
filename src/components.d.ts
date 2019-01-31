@@ -19,6 +19,14 @@ export namespace Components {
     */
     'editor': boolean;
     /**
+    * JSON objects for the Dev Options menu
+    */
+    'jsonObjects': object;
+    /**
+    * Removes control bar if true
+    */
+    'justElement': boolean;
+    /**
     * Tells the component if it needs to load the elements or not
     */
     'load': boolean;
@@ -30,6 +38,10 @@ export namespace Components {
     * The model for the pie.
     */
     'model': Object;
+    /**
+    * Makes the element have 50% height
+    */
+    'multiplePies': boolean;
     /**
     * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
     */
@@ -50,6 +62,14 @@ export namespace Components {
     */
     'editor'?: boolean;
     /**
+    * JSON objects for the Dev Options menu
+    */
+    'jsonObjects'?: object;
+    /**
+    * Removes control bar if true
+    */
+    'justElement'?: boolean;
+    /**
     * Tells the component if it needs to load the elements or not
     */
     'load'?: boolean;
@@ -61,6 +81,10 @@ export namespace Components {
     * The model for the pie.
     */
     'model'?: Object;
+    /**
+    * Makes the element have 50% height
+    */
+    'multiplePies'?: boolean;
     /**
     * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
     */
