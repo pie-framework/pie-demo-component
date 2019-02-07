@@ -1,6 +1,6 @@
 {
   "name": "pie-demo",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
@@ -21,6 +21,7 @@
   "dependencies": {
     "@stencil/core": "~0.15.1",
     "classnames": "^2.2.6",
+    "docson": "git://github.com/lakatosandrei/docson.git#e48bf436dd6ea2ec65bae5ff540a517bd3eb0fa0",
     "json-beautify": "^1.0.1",
     "lodash": "^4.17.11",
     "resize-observer-polyfill": "^1.5.1"
@@ -31,6 +32,8 @@
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
     "puppeteer": "1.8.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
     "serve": "^10.0.2",
     "start-server-and-test": "^1.7.8"
   },
