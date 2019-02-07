@@ -2,6 +2,7 @@ import { Component, Prop, Watch, State } from '@stencil/core';
 import ResizeObserver from 'resize-observer-polyfill'
 import jsonBeautify from 'json-beautify';
 import classnames from 'classnames';
+import docson from 'docson';
 import { loadCloudPies } from '../../util/PieCloud';
 
 enum ViewState {
@@ -16,9 +17,12 @@ type PieController = {
 };
 
 interface PieElement extends HTMLElement {
+  _model: Object,
   model: Object;
   configure: Object,
+  _configure: Object,
   session: Object;
+  onModelChanged: Function;
 }
 
 @Component({
@@ -43,6 +47,12 @@ export class PieDemo {
    * @type {boolean}
    */
   @Prop() multiplePies: boolean = false;
+
+  /**
+   * Link to the pie-schema markdown file
+   * @type {boolean}
+   */
+  @Prop() schemaJSONURI: string = null;
 
   /**
    * JSON objects for the Dev Options menu
@@ -74,6 +84,8 @@ export class PieDemo {
   @Prop() model: Object;
 
   @Prop() configure: Object;
+
+  @State() pieSchemaJSON: Object = null;
 
   @State() configModel: Object;
 
@@ -107,7 +119,9 @@ export class PieDemo {
 
   @State() minHeightAuthoring: any = 'initial';
 
-  @State() textAreaContentRef: any;
+  @State() textAreaContentRef1: any;
+
+  @State() textAreaContentRef2: any;
 
   @State() studentHeader: any;
 
@@ -141,13 +155,17 @@ export class PieDemo {
 
   @State() authSettVisible: boolean = false;
 
+  @State() docHolderVisible: boolean = false;
+
   @State() env: Object = { mode: 'gather' };
 
   @State() session: Object = {};
 
   @State() jsonConfigValue: Object = null;
 
-  @State() cachedJsonConfig: Object = null;
+  @State() cachedJsonConfig1: Object = null;
+
+  @State() cachedJsonConfig2: Object = null;
 
   // @Element() private element: HTMLElement
 
@@ -341,6 +359,12 @@ export class PieDemo {
     if (this.configure) {
       this.updateConfigure(this.configure);
     }
+
+    if (this.schemaJSONURI) {
+      this.watchSchemaJSONURI(this.schemaJSONURI);
+    }
+
+    docson.templateBaseUrl = "/assets/html";
   }
 
   handleElementResize(el) {
@@ -386,7 +410,20 @@ export class PieDemo {
       this.configModel = event.detail && event.detail.update;
       this.updatePieModelFromController(this.configModel, this.session, this.env);
     });
-  } 
+  }
+
+  @Watch('schemaJSONURI')
+  watchSchemaJSONURI(newUrl) {
+    if (newUrl) {
+      fetch(newUrl, {
+        mode: 'cors'
+      })
+        .then((response: Response) => response.json())
+        .then(response => {
+          this.pieSchemaJSON = response;
+        });
+    }
+  }
 
   setMode(mode) {
     this.env['mode'] = mode;
@@ -436,11 +473,21 @@ export class PieDemo {
     )
   }
 
-  renderJsonConfigPanel = (jsonData) => {
+  viewDocumentation = () => {
+    this.docHolderVisible = true;
+    docson.doc('schema-holder', this.pieSchemaJSON);
+  };
+
+  renderJsonConfigPanel = (jsonData, index) => {
+    console.log(jsonData);
+
     return (
       <div class="json-config">
         <div class="header">
-          <div class="view-container">
+          <div
+            class="view-container"
+            onClick={this.viewDocumentation}
+          >
             <i class="fa fa-desktop" />
             <span>
               View Documentation
@@ -450,7 +497,7 @@ export class PieDemo {
             <div
               class="copy-container"
               onClick={() => {
-                this.textAreaContentRef.select();
+                this[`textAreaContentRef${index}`].select();
 
                 document.execCommand("copy");
               }}
@@ -463,8 +510,8 @@ export class PieDemo {
             <div
               class="reset-container"
               onClick={() => {
-                if (this.textAreaContentRef) {
-                  this.textAreaContentRef.value = jsonBeautify(this.cachedJsonConfig, null, 2, 98);
+                if (this[`textAreaContentRef${index}`]) {
+                  this[`textAreaContentRef${index}`].value = jsonBeautify(this[`cachedJsonConfig${index}`], null, 2, 98);
                 }
               }}
             >
@@ -476,10 +523,19 @@ export class PieDemo {
           </div>
         </div>
         <textarea
-          ref={el => (this.textAreaContentRef = el as any)}
+          ref={el => (this[`textAreaContentRef${index}`] = el as any)}
           class="json-content"
+          value={jsonBeautify(jsonData, null, 2, 98)}
+          onChange={(e) => {
+            const target = e.target as any;
+
+            if (index === 1) {
+              this.configModel = JSON.parse(target.value);
+            } else {
+              this.configureObject = JSON.parse(target.value);
+            }
+          }}
         >
-          {jsonBeautify(jsonData, null, 2, 98)}
         </textarea>
       </div>
     );
@@ -488,30 +544,22 @@ export class PieDemo {
   renderAuthoringBottomContent() {
     return this.renderTabs([
       {
-        name: 'Json Config 1',
+        name: 'Item Model',
         content: () => {
-          this.cachedJsonConfig = this.jsonObjects[0];
+          this.cachedJsonConfig1 = this.configElement._model;
 
-          return this.renderJsonConfigPanel(this.jsonObjects[0]);
+          return this.renderJsonConfigPanel(this.configElement._model, 1);
         }
       },
       {
-        name: 'Json Config 2',
+        name: 'Authoring View Settings',
         content: () => {
-          this.cachedJsonConfig = this.jsonObjects[1];
+          this.cachedJsonConfig2 = this.configElement._configure;
 
-          return this.renderJsonConfigPanel(this.jsonObjects[1]);
-        }
-      },
-      {
-        name: 'Json Config 3',
-        content: () => {
-          this.cachedJsonConfig = this.jsonObjects[2];
-
-          return this.renderJsonConfigPanel(this.jsonObjects[2]);
+          return this.renderJsonConfigPanel(this.configElement._configure, 2);
         }
       }
-    ], 135);
+    ], 200);
   }
 
   renderAuthoringHeader(smallView = false) {
@@ -558,30 +606,34 @@ export class PieDemo {
           })}
           {
             !isToggled &&
-            <div
-              class={classnames('toggle-container', {
-                toggled: this.isToggled('authoring')
-              })}
-              onClick={() => this.toggleAuthoringSettings()}
-            >
-              <i
-                class="material-icons toggle-icon"
+            <div class="buttons-container">
+              <div
+                class={classnames('toggle-container', {
+                  toggled: this.isToggled('authoring')
+                })}
+                onClick={() => this.toggleAuthoringSettings()}
               >
-                {this.authSettVisible ? 'toggle_on' : 'toggle_off'}
-              </i>
-              <span class="toggle-text">
-              Dev Options
-            </span>
+                <i
+                  class="material-icons toggle-icon"
+                >
+                  {this.authSettVisible ? 'toggle_on' : 'toggle_off'}
+                </i>
+                <span class="toggle-text">
+                  Dev Options
+                </span>
+              </div>
+              {
+                smallView &&
+                <div
+                  class="mobile-button"
+                  onClick={() => this.mobileTabIndex = 1}
+                >
+                <span>
+                  STUDENT VIEW
+                </span>
+                </div>
+              }
             </div>
-          }
-          {
-            isToggled &&
-            <span
-              class="close-icon"
-              onClick={() => this.toggleAuthoringSettings()}
-            >
-              X
-            </span>
           }
           {
             !isToggled &&
@@ -596,16 +648,13 @@ export class PieDemo {
             </i>
           }
           {
-            !isToggled &&
-            smallView &&
-            <div
-              class="mobile-button"
-              onClick={() => this.mobileTabIndex = 1}
+            isToggled &&
+            <span
+              class="close-icon"
+              onClick={() => this.toggleAuthoringSettings()}
             >
-            <span>
-              STUDENT VIEW
+              X
             </span>
-            </div>
           }
         </div>
         <div
@@ -689,6 +738,9 @@ export class PieDemo {
         <div class="tabs">
           {tabs.map((tab, index) => (
             <div
+              style={{
+                width: `${tabWidth}px`
+              }}
               class={classnames('tab', {
                 selected: this.tabIndex === index
               })}
@@ -837,13 +889,16 @@ export class PieDemo {
             })}
           >
             <div class="element-parent">
-              <ConfigTag
-                id="configure"
-                ref={el => (this.configElement = el as PieElement)}
-                model={this.model}
-                configure={this.configure}
-                session={this.session}
-              />
+              {
+                !this.authSettVisible &&
+                <ConfigTag
+                  id="configure"
+                  ref={el => (this.configElement = el as PieElement)}
+                  model={this.configModel}
+                  configure={this.configureObject}
+                  session={this.session}
+                />
+              }
             </div>
           </div>
         }
@@ -919,9 +974,34 @@ export class PieDemo {
     }
 
     return (
-      <div class="smaller-view">
+      <div
+        class={classnames('smaller-view', {
+          mobile: this.rootElWidth <= 700
+        })}
+      >
         {this.mobileTabIndex === 0 && this.renderAuthoringHolder(true)}
         {this.mobileTabIndex === 1 && this.renderStudentHolder(true)}
+      </div>
+    );
+  };
+
+  renderDocHolder = () => {
+    return (
+      <div
+        class={classnames('doc-holder', {
+          visible: this.docHolderVisible,
+          mobile: this.rootElWidth <= 700
+        })}
+      >
+        <span
+          class="close-icon"
+          onClick={() => this.docHolderVisible = false}
+        >
+          X
+        </span>
+        <div
+          id="schema-holder"
+        />
       </div>
     );
   };
@@ -944,6 +1024,7 @@ export class PieDemo {
             })}
             ref={el => el && (this.rootEl = el as any)}
           >
+            {this.renderDocHolder()}
             {this.renderContent()}
           </div>
         );

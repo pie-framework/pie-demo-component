@@ -54,6 +54,10 @@ export namespace Components {
     * Include an item preview in the view
     */
     'preview': boolean;
+    /**
+    * Link to the pie-schema markdown file
+    */
+    'schemaJSONURI': string;
   }
   interface PieDemoAttributes extends StencilHTMLAttributes {
     'configure'?: Object;
@@ -97,6 +101,10 @@ export namespace Components {
     * Include an item preview in the view
     */
     'preview'?: boolean;
+    /**
+    * Link to the pie-schema markdown file
+    */
+    'schemaJSONURI'?: string;
   }
 }
 

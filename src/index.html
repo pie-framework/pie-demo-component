@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
   <title>Stencil Component Starter</title>
+  <link type="text/css" rel="stylesheet" href="/assets/docson.css">
   <script src="/build/pie-demo.js"></script>
 
 </head>
@@ -63,25 +64,26 @@
           The maximum points is the total number of answer choices.`
     };
     const configure = {
-      promptLabel : 'Haha',
-      responseTypeLabel: 'Type of Answer',
-      choicesLabel: 'Answer Choice',
-      addChoiceButtonLabel: 'Add New Choice',
-      addChoices: false,
-      enableSelectChoiceMode: true,
-      enableSelectChoiceLabels: true,
-      enableAddFeedBack: false,
-      enableDeleteChoice: false,
-      enablePartialScoring: true,
-      enableConfigShuffle: false,
-      enableShowPrompt: false,
-      answerChoiceCount: 0
+      promptLabel: "Prompt",
+      addChoiceButtonLabel: "Add a choice",
+      addChoice: false,
+      addFeedBack: true,
+      deleteChoice: true,
+      showPrompt: true,
+      answerChoiceCount: 0,
+      settingsSelectChoiceMode: true,
+      settingsSelectChoicePrefixes: true,
+      settingsSelectChoiceModeLabel: "Response Type",
+      settingsChoicePrefixesLabel: "Choice Labels",
+      settingsPartialScoring: true,
+      settingsConfigShuffle: true
     };
 
     const pieDemo = document.getElementById("demo");
 
     pieDemo.model = model;
     pieDemo.configure = configure;
+    pieDemo.schemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
   </script>
 
 </body>
