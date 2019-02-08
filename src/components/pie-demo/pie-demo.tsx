@@ -1,6 +1,7 @@
 import { Component, Prop, Watch, State } from '@stencil/core';
 import ResizeObserver from 'resize-observer-polyfill'
 import jsonBeautify from 'json-beautify';
+import { getPackageWithoutVersion } from '../../util/utils';
 import classnames from 'classnames';
 import docson from 'docson';
 import { loadCloudPies } from '../../util/PieCloud';
@@ -208,7 +209,7 @@ export class PieDemo {
 
     customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
-      const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
+      const packageWithoutVersion = getPackageWithoutVersion(this.package);
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
@@ -483,7 +484,7 @@ export class PieDemo {
 
     return (
       <div class="json-config">
-        <div class="header">
+        <div class="json-config-header">
           <div
             class="view-container"
             onClick={this.viewDocumentation}

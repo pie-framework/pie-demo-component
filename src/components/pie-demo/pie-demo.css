@@ -164,7 +164,7 @@ html, body {
     width: 100%;
 }
 
-.control-bar .authoring-header .bottomContent .json-config .header {
+.control-bar .authoring-header .bottomContent .json-config .json-config-header {
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -173,22 +173,22 @@ html, body {
     width: 100%;
 }
 
-.control-bar .authoring-header .bottomContent .json-config .header .right-content {
+.control-bar .authoring-header .bottomContent .json-config .json-config-header .right-content {
     align-items: center;
     display: flex;
     justify-content: space-between;
 }
 
-.control-bar .authoring-header .bottomContent .json-config .header .view-container,
-.control-bar .authoring-header .bottomContent .json-config .header .right-content > div {
+.control-bar .authoring-header .bottomContent .json-config .json-config-header .view-container,
+.control-bar .authoring-header .bottomContent .json-config .json-config-header .right-content > div {
     cursor: pointer;
 }
 
-.control-bar .authoring-header .bottomContent .json-config .header .right-content .copy-container {
+.control-bar .authoring-header .bottomContent .json-config .json-config-header .right-content .copy-container {
     margin-right: 25px;
 }
 
-.control-bar .authoring-header .bottomContent .json-config .header i {
+.control-bar .authoring-header .bottomContent .json-config .json-config-header i {
     margin-right: 8px;
 }
 

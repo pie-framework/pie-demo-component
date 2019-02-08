@@ -1,4 +1,5 @@
 import isFunction from 'lodash/isFunction';
+import { getPackageWithoutVersion } from './utils';
 
 const getEmptyConfigure = () => class extends HTMLElement{
 
@@ -23,7 +24,7 @@ export function loadCloudPies(
     for (const key in keys) {
       const elementName = keys[key];
       const npmPackage:string = elements[elementName];
-      const packageWithoutVersion = npmPackage.replace(/(?<=[a-z])\@(?:.(?!\@))+/g, '');
+      const packageWithoutVersion = getPackageWithoutVersion(npmPackage);
       const script = doc.createElement('script');
       const onloadFn = (_package => {
         return () => {

@@ -40,8 +40,8 @@ describe('pie-demo', () => {
   it('is in loading mode until element loaded', async () => {
     // TODO use >>> for shadowroot e.g. `pie-demo >>> #loading`, but shadow
     // is disabled currently as it breaks css for MUI.
-    const loading = await page.find('pie-demo #loading');
-    expect(loading.textContent).toEqual(`Loading...`);
+    const loading = await page.find('.root.loading');
+    expect(loading.innerHTML).toEqual('<div class="lmask"></div>');
 
   });
 
