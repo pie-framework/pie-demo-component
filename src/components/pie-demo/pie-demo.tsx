@@ -4,6 +4,7 @@ import jsonBeautify from 'json-beautify';
 import classnames from 'classnames';
 import docson from 'docson';
 import { loadCloudPies } from '../../util/PieCloud';
+import parseNpm from 'parse-package-name';
 
 enum ViewState {
   LOADING,
@@ -158,7 +159,6 @@ export class PieDemo {
   @State() docHolderVisible: boolean = false;
 
   @State() env: Object = { mode: 'gather' };
-
   @State() session: Object = {};
 
   @State() jsonConfigValue: Object = null;
@@ -208,7 +208,7 @@ export class PieDemo {
 
     customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
-      const packageWithoutVersion = this.package.replace(/(?<=[a-z])\@(?:.(?!\@))+$/, '');
+      const packageWithoutVersion =  parseNpm(this.package).name;
       this.pieController = window['pie'].default[packageWithoutVersion].controller;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
