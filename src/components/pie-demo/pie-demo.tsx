@@ -255,7 +255,6 @@ export class PieDemo {
   watchPieElement(pieElement) {
     if (pieElement && !pieElement.model) {
       pieElement.model = this.model;
-      pieElement.configure = this.configureObject;
     }
   }
   
