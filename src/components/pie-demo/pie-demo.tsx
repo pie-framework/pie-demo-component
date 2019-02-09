@@ -254,7 +254,7 @@ export class PieDemo {
   @Watch('pieElement')
   watchPieElement(pieElement) {
     if (pieElement && !pieElement.model) {
-      pieElement.model = this.model;
+      pieElement.model = this.pieElementModel;
     }
   }
   
