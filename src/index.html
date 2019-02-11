@@ -12,57 +12,50 @@
 
 <body>
 
-  <pie-demo id="demo" editor="true" pie="@pie-element/multiple-choice@2.4.6"></pie-demo>
+  <pie-demo id="demo" editor="true" pie="@pie-element/math-inline@0.2.3"></pie-demo>
 
   <script>
-    const model = {
-      id: '1',
-      element: 'multiple-choice',
-      prompt: 'Which of these northern European countries are EU members?',
-      choiceMode: 'checkbox',
-      keyMode: 'numbers',
-      choices: [
-        {
-          correct: true,
-          value: 'sweden',
-          label: 'Sweden',
-          feedback: {
-            type: 'none',
-            value: ''
-          }
+    const model =
+      {
+        "id": "0",
+        "element": "pie-element-math-inline",
+        "mode": "advanced",
+        "expression": "1+1",
+        "question": "What is the equation for a slope?",
+        "equationEditor": "simple",
+        "defaultResponse": {
+          "id": 0,
+          "validation": "symbolic",
+          "answer": "y = mx + b",
+          "alternates": {},
+          "allowSpaces": true,
+          "allowDecimals": true
         },
-        {
-          value: 'iceland',
-          label: 'Iceland',
-          feedback: {
-            type: 'none',
-            value: ''
+        "responses": [
+          {
+            "id": "answerBlock1",
+            "validation": "symbolic",
+            "answer": "y = mx + b",
+            "alternates": {},
+            "allowSpaces": true,
+            "allowDecimals": true
           }
-        },
-        {
-          value: 'norway',
-          label: 'Norway',
-          feedback: {
-            type: 'none',
-            value:
-              ''
-          }
-        },
-        {
-          correct: true,
-          value: 'finland',
-          label: 'Finland',
-          feedback: {
-            type: 'none',
-            value: ''
+        ],
+        "feedback": {
+          "correct": {
+            "type": "none",
+            "default": "Correct"
+          },
+          "partial": {
+            "type": "none",
+            "default": "Nearly"
+          },
+          "incorrect": {
+            "type": "none",
+            "default": "Incorrect"
           }
         }
-      ],
-      partialScoring: false,
-      partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
-          that is correctly unchecked will be worth 1 point.
-          The maximum points is the total number of answer choices.`
-    };
+      };
     const configure = {
       promptLabel: "Prompt",
       addChoiceButtonLabel: "Add a choice",

@@ -799,20 +799,22 @@ export class PieDemo {
             ]
           })}
 
-          <div
-            class={classnames('toggle-container', 'student', {
-              toggled: this.isToggled()
-            })}
-            onClick={() => this.toggleStudentSettings()}
-          >
-            <i
-              class="material-icons toggle-icon"
+          <div class="buttons-container">
+            <div
+              class={classnames('toggle-container', 'student', {
+                toggled: this.isToggled()
+              })}
+              onClick={() => this.toggleStudentSettings()}
             >
-              {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
-            </i>
-            <span class="toggle-text">
-              Options
-            </span>
+              <i
+                class="material-icons toggle-icon"
+              >
+                {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
+              </i>
+              <span class="toggle-text">
+                Options
+              </span>
+            </div>
           </div>
           {
             !smallView &&

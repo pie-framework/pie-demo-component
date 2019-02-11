@@ -271,8 +271,8 @@ html, body {
     margin: 0;
 }
 
-.control-bar .authoring-header.collapsed .toggle-container,
-.control-bar .student-view-header.collapsed .toggle-container {
+.control-bar .authoring-header.collapsed .buttons-container,
+.control-bar .student-view-header.collapsed .buttons-container {
     display: none;
 }
 
