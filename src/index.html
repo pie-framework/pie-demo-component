@@ -12,47 +12,121 @@
 
 <body>
 
-  <pie-demo id="demo" editor="true" pie="@pie-element/math-inline@0.2.3"></pie-demo>
+  <pie-demo id="demo" editor="true" pie="@pie-element/categorize@2.13.3"></pie-demo>
 
   <script>
     const model =
       {
-        "id": "0",
-        "element": "pie-element-math-inline",
-        "mode": "advanced",
-        "expression": "1+1",
-        "question": "What is the equation for a slope?",
-        "equationEditor": "simple",
-        "defaultResponse": {
-          "id": 0,
-          "validation": "symbolic",
-          "answer": "y = mx + b",
-          "alternates": {},
-          "allowSpaces": true,
-          "allowDecimals": true
-        },
-        "responses": [
+        "choices": [
           {
-            "id": "answerBlock1",
-            "validation": "symbolic",
-            "answer": "y = mx + b",
-            "alternates": {},
-            "allowSpaces": true,
-            "allowDecimals": true
+            "id": "0",
+            "content": "<div><span data-latex=\"\" data-raw=\"420\\text{ cm}=4.2\\text{ meters}\">\\(420\\text{ cm}=4.2\\text{ meters}\\)</span></div>",
+            "correctResponseCount": 1
+          },
+          {
+            "id": "1",
+            "content": "<div><span data-latex=\"\" data-raw=\"3.4\\text{ kg}=340\\text{ g}\">\\(3.4\\text{ kg}=340\\text{ g}\\)</span></div>",
+            "correctResponseCount": 1
+          },
+          {
+            "id": "2",
+            "content": "<div><span data-latex=\"\" data-raw=\"1\\text{,}800\\text{ mL}=180\\text{ L}\">\\(1\\text{,}800\\text{ mL}=180\\text{ L}\\)</span></div>",
+            "correctResponseCount": 1
+          },
+          {
+            "id": "3",
+            "content": "<div><span data-latex=\"\" data-raw=\"3.5\\text{ meters}=350\\text{ cm}\">\\(3.5\\text{ meters}=350\\text{ cm}\\)</span></div>",
+            "correctResponseCount": 1
+          },
+          {
+            "id": "4",
+            "content": "<div><span data-latex=\"\" data-raw=\"4\\text{,}800\\text{ g}=0.48\\text{ kg}\">\\(4\\text{,}800\\text{ g}=0.48\\text{ kg}\\)</span></div>",
+            "correctResponseCount": 1
+          },
+          {
+            "id": "5",
+            "content": "<div><span data-latex=\"\" data-raw=\"250\\text{ mL}=0.25\\text{ L}\">\\(250\\text{ mL}=0.25\\text{ L}\\)</span></div>",
+            "correctResponseCount": 1
           }
         ],
-        "feedback": {
-          "correct": {
-            "type": "none",
-            "default": "Correct"
+        "categories": [
+          {
+            "id": "0",
+            "label": "<div>Equivalent</div>",
+            "choices": [
+              {
+                "id": "0",
+                "content": "<div><span data-latex=\"\" data-raw=\"420\\text{ cm}=4.2\\text{ meters}\">\\(420\\text{ cm}=4.2\\text{ meters}\\)</span></div>"
+              },
+              {
+                "id": "3",
+                "content": "<div><span data-latex=\"\" data-raw=\"3.5\\text{ meters}=350\\text{ cm}\">\\(3.5\\text{ meters}=350\\text{ cm}\\)</span></div>"
+              },
+              {
+                "id": "5",
+                "content": "<div><span data-latex=\"\" data-raw=\"250\\text{ mL}=0.25\\text{ L}\">\\(250\\text{ mL}=0.25\\text{ L}\\)</span></div>"
+              }
+            ]
+          },
+          {
+            "id": "1",
+            "label": "<div><b>NOT </b>equivalent</div>",
+            "choices": [
+              {
+                "id": "4",
+                "content": "<div><span data-latex=\"\" data-raw=\"4\\text{,}800\\text{ g}=0.48\\text{ kg}\">\\(4\\text{,}800\\text{ g}=0.48\\text{ kg}\\)</span></div>"
+              },
+              {
+                "id": "1",
+                "content": "<div><span data-latex=\"\" data-raw=\"3.4\\text{ kg}=340\\text{ g}\">\\(3.4\\text{ kg}=340\\text{ g}\\)</span></div>"
+              },
+              {
+                "id": "2",
+                "content": "<div><span data-latex=\"\" data-raw=\"1\\text{,}800\\text{ mL}=180\\text{ L}\">\\(1\\text{,}800\\text{ mL}=180\\text{ L}\\)</span></div>"
+              }
+            ]
+          }
+        ],
+        "correctResponse": [
+          {
+            "category": "0",
+            "choices": [
+              "0",
+              "3",
+              "5"
+            ]
+          },
+          {
+            "category": "1",
+            "choices": [
+              "4",
+              "1",
+              "2"
+            ]
+          }
+        ],
+        "id": "0",
+        "element": "pie-element-categorize",
+        "config": {
+          "choices": {
+            "columns": 2,
+            "position": "below",
+            "label": "",
+            "shuffle": false,
+            "removeafterplacing": false
+          },
+          "categories": {
+            "columns": 2
+          }
+        },
+        "scoring": {
+          "weighting": {
+            "enabled": false,
+            "rules": []
           },
           "partial": {
-            "type": "none",
-            "default": "Nearly"
-          },
-          "incorrect": {
-            "type": "none",
-            "default": "Incorrect"
+            "enabled": false,
+            "rules": []
           }
         }
       };

@@ -192,6 +192,10 @@ html, body {
     margin-right: 8px;
 }
 
+.control-bar .authoring-header .bottomContent .json-config textarea {
+    resize: none;
+}
+
 .control-bar .authoring-header .bottomContent .json-config .json-content {
     background-color: #ffffff;
     border: 1px solid #DDD;
@@ -705,6 +709,32 @@ html, body {
 
 .config-holder .student-view-holder.collapsed {
     max-width: 56px;
+}
+
+.score-holder {
+    background: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: none;
+    margin-bottom: 40px;
+    min-height: 40px;
+    overflow: scroll;
+    padding: 20px;
+    width: 100%;
+}
+
+.score-holder.visible {
+    display: block;
+}
+
+.score-holder .score {
+    margin-bottom: 10px;
+}
+
+.score-holder pre {
+    border: solid 1px rgba(0,0,0,0.14);
+    background-color: white;
+    padding: 8px;
 }
 
 .custom-checkbox {

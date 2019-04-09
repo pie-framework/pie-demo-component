@@ -12,9 +12,19 @@ enum ViewState {
   ERROR
 }
 
+interface ScoringObject extends Object {
+  score: number;
+  details: Object;
+}
+
+interface DisplayedScore extends Object {
+  score: number;
+  json: string;
+}
+
 type PieController = {
   model: (config: Object, session: Object, env: Object) => Promise<Object>;
-  score: (config: Object, session: Object, env: Object) => Promise<Object>;
+  outcome: (config: Object, session: Object, env: Object) => Promise<ScoringObject>;
 };
 
 interface PieElement extends HTMLElement {
@@ -162,6 +172,11 @@ export class PieDemo {
 
   @State() session: Object = {};
 
+  @State() scoring: DisplayedScore = {
+    score: 0,
+    json: ''
+  };
+
   @State() jsonConfigValue: Object = null;
 
   @State() cachedJsonConfig1: Object = null;
@@ -244,6 +259,13 @@ export class PieDemo {
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
       this.pieElementModel =  await this.pieController.model(model, session, env);
+
+      const scoring = await this.pieController.outcome(this.pieElementModel, this.session, this.env);
+
+      this.scoring = {
+        score: scoring.score,
+        json: jsonBeautify(scoring.details, null, 2, 80)
+      };
 
       if (this.pieElement) {
         this.pieElement.model = this.pieElementModel;
@@ -936,10 +958,24 @@ export class PieDemo {
         }
         {
           !isCollapsed &&
-          <div class={classnames('element-holder', {
-            toggled: this.studSettVisible,
-            justElement: this.justElement
-          })}>
+          <div
+            class={classnames('element-holder', {
+              toggled: this.studSettVisible,
+              justElement: this.justElement
+            })}
+          >
+            <div
+              class={classnames('score-holder', {
+                visible: this.env[ 'mode' ] === 'evaluate'
+              })}
+            >
+              <div class="score">
+                <span>Score: </span> {this.scoring.score}
+              </div>
+              <pre>
+                {this.scoring.json}
+              </pre>
+            </div>
             <div
               ref={el => el && (this.elementParent2 = el as any)}
               class="element-parent"
