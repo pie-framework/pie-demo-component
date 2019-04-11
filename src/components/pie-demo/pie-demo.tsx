@@ -114,8 +114,6 @@ export class PieDemo {
 
   @State() rootResizeObserver: any;
 
-  @State() bottomContResizeObserver: any;
-
   @State() pieName: string;
 
   @State() pieController: PieController;
@@ -139,8 +137,6 @@ export class PieDemo {
   @State() authoringHeader: any;
 
   @State() bottomContentRef: any;
-
-  @State() bottomContentEl: any;
 
   @State() studentHeaderWidth: number = 500;
 
@@ -210,6 +206,26 @@ export class PieDemo {
     }
 
     return this.authSettVisible && this.collapsed !== 'authoring';
+  }
+
+  detachListeners() {
+    if (this.configElement) {
+      this.configElement.removeEventListener('model.updated', this.handleSetConfigElement);
+    }
+
+    if (this.studentHeader) {
+      this.studentHeaderResizeObserver.unobserve(this.studentHeader);
+    }
+
+    if (this.authoringHeader) {
+      this.authoringHeaderResizeObserver.unobserve(this.authoringHeader);
+    }
+
+    this.mutationObserver.disconnect();
+
+    if (this.rootEl) {
+      this.rootResizeObserver.unobserve(this.rootEl);
+    }
   }
 
   @Watch('pie')
@@ -294,6 +310,7 @@ export class PieDemo {
       this.studentHeaderResizeObserver.observe(current);
     } else {
       this.studentHeaderResizeObserver.unobserve(previous);
+      this.detachListeners();
     }
   }
 
@@ -303,6 +320,7 @@ export class PieDemo {
       this.authoringHeaderResizeObserver.observe(current);
     } else {
       this.authoringHeaderResizeObserver.unobserve(previous);
+      this.detachListeners();
     }
   }
 
@@ -320,25 +338,16 @@ export class PieDemo {
     if (current) {
       this.mutationObserver.observe(current, { attributes: true, childList: true, subtree: true });
     } else {
-      this.mutationObserver.unobserve(current);
+      this.mutationObserver.disconnect();
     }
   }
 
   @Watch('rootEl')
-  watchRootEl(current) {
+  watchRootEl(current, previous) {
     if (current) {
       this.rootResizeObserver.observe(current, { attributes: true, childList: true, subtree: true });
     } else {
-      this.rootResizeObserver.unobserve(current);
-    }
-  }
-
-  @Watch('bottomContentEl')
-  watchBottomContentEl(current) {
-    if (current) {
-      this.bottomContResizeObserver.observe(current, { attributes: true, childList: true, subtree: true });
-    } else {
-      this.bottomContResizeObserver.disconnect();
+      this.rootResizeObserver.unobserve(previous);
     }
   }
 
@@ -365,12 +374,6 @@ export class PieDemo {
     this.rootResizeObserver = new (ResizeObserver as any)(() => {
       if (this.rootEl) {
         this.rootElWidth = this.rootEl.offsetWidth;
-      }
-    });
-
-    this.bottomContResizeObserver = new (ResizeObserver as any)(() => {
-      if (this.bottomContentEl) {
-        this.bottomContElWidth = this.bottomContentEl.offsetWidth;
       }
     });
 
@@ -425,13 +428,15 @@ export class PieDemo {
     }
   }
 
+  handleSetConfigElement(event: CustomEvent) {
+    console.log('model.updated');
+    this.configModel = event.detail && event.detail.update;
+    this.updatePieModelFromController(this.configModel, this.session, this.env);
+  }
+
   @Watch('configElement')
   wachConfigElement(newEl: PieElement) {
-    newEl && newEl.addEventListener('model.updated', (event: CustomEvent) => {
-      console.log('model.updated');
-      this.configModel = event.detail && event.detail.update;
-      this.updatePieModelFromController(this.configModel, this.session, this.env);
-    });
+    newEl && newEl.addEventListener('model.updated', this.handleSetConfigElement.bind(this));
   }
 
   @Watch('schemaJSONURI')
