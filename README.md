@@ -19,7 +19,94 @@ A Custom Element for demonstrating a PIE interaction designed for use with the p
 
 
 
-## Development 
+## Development
+
+Edit `src/index.html` with the name and version of the element you want to demo. And also alter the model.
+
+Example
+```html
+<pie-demo id="demo" editor="true" pie="@pie-element/ebsr@1.2.0"></pie-demo>
+
+  <script>
+    const model = {
+      "id": "0",
+      "element": "pie-element-ebsr",
+      "partA": {
+        "prompt": "What color is the sky?",
+        "choiceMode": "radio",
+        "keyMode": "numbers",
+        "choices": [
+          {
+            "value": "yellow",
+            "label": "<div>Yellow</div>",
+            "correct": false
+          },
+          {
+            "value": "green",
+            "label": "<div>Green</div>",
+            "correct": false
+          },
+          {
+            "correct": true,
+            "value": "blue",
+            "label": "<div>Blue</div>"
+          }
+        ],
+        "partialScoring": false,
+        "partialScoringLabel": "Each correct response that is correctly checked and each incorrect response\n          that is correctly unchecked will be worth 1 point.\n          The maximum points is the total number of answer choices.",
+        "shuffle": false,
+        "showCorrect": false
+      },
+      "partB": {
+        "prompt": "What color do you get when you mix Red with your answer in Part 1?",
+        "choiceMode": "radio",
+        "keyMode": "numbers",
+        "choices": [
+          {
+            "value": "orange",
+            "label": "<div>Orange</div>",
+            "correct": false
+          },
+          {
+            "correct": true,
+            "value": "purple",
+            "label": "<div>Purple</div>"
+          },
+          {
+            "value": "pink",
+            "label": "<div>Pink</div>"
+          },
+          {
+            "value": "green",
+            "label": "<div>Green</div>"
+          }
+        ],
+        "partialScoring": false,
+        "partialScoringLabel": "Each correct response that is correctly checked and each incorrect response\n          that is correctly unchecked will be worth 1 point.\n          The maximum points is the total number of answer choices.",
+        "shuffle": false
+      }
+    };
+    const configure = {
+      promptLabel: "Prompt",
+      addChoiceButtonLabel: "Add a choice",
+      addChoice: false,
+      addFeedBack: true,
+      deleteChoice: true,
+      showPrompt: true,
+      answerChoiceCount: 0,
+      settingsSelectChoiceMode: true,
+      settingsSelectChoicePrefixes: true,
+      settingsSelectChoiceModeLabel: "Response Type",
+      settingsChoicePrefixesLabel: "Choice Labels",
+      settingsPartialScoring: true,
+      settingsConfigShuffle: true
+    };
+    const pieDemo = document.getElementById("demo");
+    pieDemo.model = model;
+    pieDemo.configure = configure;
+    pieDemo.schemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
+  </script>
+```
 
 ### Testing
 
