@@ -274,7 +274,7 @@ export class PieDemo {
 
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
-      this.pieElementModel =  await this.pieController.model(model, session, env);
+      this.pieElementModel = await this.pieController.model(model, session, env);
 
       const scoring = await this.pieController.outcome(this.pieElementModel, this.session, this.env);
 
@@ -918,16 +918,13 @@ export class PieDemo {
             })}
           >
             <div class="element-parent">
-              {
-                !this.authSettVisible &&
-                <ConfigTag
-                  id="configure"
-                  ref={el => (this.configElement = el as PieElement)}
-                  model={this.configModel}
-                  configure={this.configureObject}
-                  session={this.session}
-                />
-              }
+              <ConfigTag
+                id="configure"
+                ref={el => (this.configElement = el as PieElement)}
+                model={this.configModel}
+                configure={this.configureObject}
+                session={this.session}
+              />
             </div>
           </div>
         }
