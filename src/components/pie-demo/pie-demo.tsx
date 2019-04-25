@@ -36,6 +36,21 @@ interface PieElement extends HTMLElement {
   onModelChanged: Function;
 }
 
+const defaultController = {
+  model: (model, session, env) => {
+    console.log(model, session, env);
+
+    return {
+      ...model,
+      mode: env.mode
+    };
+  },
+  outcome: () => ({
+    score: 0,
+    details: {}
+  })
+};
+
 @Component({
   tag: 'pie-demo',
   styleUrl: 'pie-demo.css',
@@ -241,7 +256,7 @@ export class PieDemo {
     customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = getPackageWithoutVersion(this.package);
-      this.pieController = window['pie'].default[packageWithoutVersion].controller;
+      this.pieController = window['pie'].default[packageWithoutVersion].controller || defaultController;
       this.updatePieModelFromController(this.model, this.session, this.env);
       this.state = ViewState.READY;
     });
