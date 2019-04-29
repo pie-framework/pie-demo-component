@@ -15,6 +15,10 @@ export namespace Components {
   interface PieDemo {
     'configure': Object;
     /**
+    * Link to the pie-schema markdown file
+    */
+    'configureSchemaJSONURI': string;
+    /**
     * Include an editor in the view
     */
     'editor': boolean;
@@ -39,6 +43,10 @@ export namespace Components {
     */
     'model': Object;
     /**
+    * Link to the pie-schema markdown file
+    */
+    'modelSchemaJSONURI': string;
+    /**
     * Makes the element have 50% height
     */
     'multiplePies': boolean;
@@ -54,13 +62,13 @@ export namespace Components {
     * Include an item preview in the view
     */
     'preview': boolean;
-    /**
-    * Link to the pie-schema markdown file
-    */
-    'schemaJSONURI': string;
   }
   interface PieDemoAttributes extends StencilHTMLAttributes {
     'configure'?: Object;
+    /**
+    * Link to the pie-schema markdown file
+    */
+    'configureSchemaJSONURI'?: string;
     /**
     * Include an editor in the view
     */
@@ -86,6 +94,10 @@ export namespace Components {
     */
     'model'?: Object;
     /**
+    * Link to the pie-schema markdown file
+    */
+    'modelSchemaJSONURI'?: string;
+    /**
     * Makes the element have 50% height
     */
     'multiplePies'?: boolean;
@@ -101,10 +113,6 @@ export namespace Components {
     * Include an item preview in the view
     */
     'preview'?: boolean;
-    /**
-    * Link to the pie-schema markdown file
-    */
-    'schemaJSONURI'?: string;
   }
 }
 

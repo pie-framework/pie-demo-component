@@ -104,7 +104,8 @@ Example
     const pieDemo = document.getElementById("demo");
     pieDemo.model = model;
     pieDemo.configure = configure;
-    pieDemo.schemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
+    pieDemo.modelSchemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
+    pieDemo.configureSchemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json';
   </script>
 ```
 

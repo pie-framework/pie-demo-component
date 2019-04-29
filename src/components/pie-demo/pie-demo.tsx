@@ -78,7 +78,13 @@ export class PieDemo {
    * Link to the pie-schema markdown file
    * @type {boolean}
    */
-  @Prop() schemaJSONURI: string = null;
+  @Prop() modelSchemaJSONURI: string = null;
+
+  /**
+   * Link to the pie-schema markdown file
+   * @type {boolean}
+   */
+  @Prop() configureSchemaJSONURI: string = null;
 
   /**
    * JSON objects for the Dev Options menu
@@ -111,7 +117,9 @@ export class PieDemo {
 
   @Prop() configure: Object;
 
-  @State() pieSchemaJSON: Object = null;
+  @State() modelSchemaJSON: Object = null;
+
+  @State() configureSchemaJSON: Object = null;
 
   @State() configModel: Object;
 
@@ -400,8 +408,12 @@ export class PieDemo {
       this.updateConfigure(this.configure);
     }
 
-    if (this.schemaJSONURI) {
-      this.watchSchemaJSONURI(this.schemaJSONURI);
+    if (this.modelSchemaJSONURI) {
+      this.watchModelSchemaJSONURI(this.modelSchemaJSONURI);
+    }
+
+    if (this.configureSchemaJSONURI) {
+      this.watchConfigureSchemaJSONURI(this.configureSchemaJSONURI);
     }
 
     docson.templateBaseUrl = "/assets/html";
@@ -454,15 +466,28 @@ export class PieDemo {
     newEl && newEl.addEventListener('model.updated', this.handleSetConfigElement.bind(this));
   }
 
-  @Watch('schemaJSONURI')
-  watchSchemaJSONURI(newUrl) {
+  @Watch('modelSchemaJSONURI')
+  watchModelSchemaJSONURI(newUrl) {
     if (newUrl) {
       fetch(newUrl, {
         mode: 'cors'
       })
         .then((response: Response) => response.json())
         .then(response => {
-          this.pieSchemaJSON = response;
+          this.modelSchemaJSON = response;
+        });
+    }
+  }
+
+  @Watch('configureSchemaJSONURI')
+  watchConfigureSchemaJSONURI(newUrl) {
+    if (newUrl) {
+      fetch(newUrl, {
+        mode: 'cors'
+      })
+        .then((response: Response) => response.json())
+        .then(response => {
+          this.configureSchemaJSON = response;
         });
     }
   }
@@ -515,9 +540,13 @@ export class PieDemo {
     )
   }
 
-  viewDocumentation = () => {
+  viewDocumentation = (tabIndex) => {
+    console.log('Tab Index', tabIndex);
+
+    const currentContent = tabIndex === 1 ? this.modelSchemaJSON : this.configureSchemaJSON;
+
     this.docHolderVisible = true;
-    docson.doc('schema-holder', this.pieSchemaJSON);
+    docson.doc('schema-holder', currentContent);
   };
 
   renderJsonConfigPanel = (jsonData, index) => {
@@ -528,7 +557,7 @@ export class PieDemo {
         <div class="json-config-header">
           <div
             class="view-container"
-            onClick={this.viewDocumentation}
+            onClick={() => this.viewDocumentation(index)}
           >
             <i class="fa fa-desktop" />
             <span>
