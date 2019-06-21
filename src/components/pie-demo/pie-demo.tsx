@@ -30,8 +30,8 @@ type PieController = {
 interface PieElement extends HTMLElement {
   _model: Object,
   model: Object;
-  configure: Object,
-  _configure: Object,
+  configuration: Object,
+  _configuration: Object,
   session: Object;
   onModelChanged: Function;
 }
@@ -85,12 +85,6 @@ export class PieDemo {
    * @type {boolean}
    */
   @Prop() configureSchemaJSONURI: string = null;
-
-  /**
-   * JSON objects for the Dev Options menu
-   * @type {boolean}
-   */
-  @Prop() jsonObjects: object = [];
 
   /**
    * Tells the component if it needs to load the elements or not
@@ -292,7 +286,7 @@ export class PieDemo {
 
   @Watch('configureObject')
   async watchConfigureObject(newConfigure) {
-    if (this.configElement) this.configElement.configure = newConfigure;
+    if (this.configElement) this.configElement.configuration = newConfigure;
   }
 
   async updatePieModelFromController(model, session, env) {
@@ -323,7 +317,7 @@ export class PieDemo {
   watchPieElementModel(newModel) {
     if (this.pieElement) {
       this.pieElement.model = newModel;
-      this.pieElement.configure = this.configureObject;
+      this.pieElement.configuration = this.configureObject;
     }
   }
 
@@ -625,9 +619,9 @@ export class PieDemo {
       {
         name: 'Authoring View Settings',
         content: () => {
-          this.cachedJsonConfig2 = this.configElement._configure;
+          this.cachedJsonConfig2 = this.configElement._configuration;
 
-          return this.renderJsonConfigPanel(this.configElement._configure, 2);
+          return this.renderJsonConfigPanel(this.configElement._configuration, 2);
         }
       }
     ], 200);

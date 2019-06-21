@@ -23,10 +23,6 @@ export namespace Components {
     */
     'editor': boolean;
     /**
-    * JSON objects for the Dev Options menu
-    */
-    'jsonObjects': object;
-    /**
     * Removes control bar if true
     */
     'justElement': boolean;
@@ -73,10 +69,6 @@ export namespace Components {
     * Include an editor in the view
     */
     'editor'?: boolean;
-    /**
-    * JSON objects for the Dev Options menu
-    */
-    'jsonObjects'?: object;
     /**
     * Removes control bar if true
     */
