@@ -145,6 +145,8 @@ export class PieDemo {
 
   @State() minHeightAuthoring: any = 'initial';
 
+  @State() minHeightStudent: any = 'initial';
+
   @State() textAreaContentRef1: any;
 
   @State() textAreaContentRef2: any;
@@ -413,15 +415,16 @@ export class PieDemo {
     docson.templateBaseUrl = "/assets/html";
   }
 
-  handleElementResize(el) {
+  handleElementResize(el, name) {
     let minHeight = 'initial';
 
     const navigateNode = (el) => {
       if (el.nodeType === 1) {
         const allStyle = getComputedStyle(el);
 
-        if (allStyle.position === 'absolute') {
-          const currentHeight = el.offsetTop + el.offsetHeight;
+        if (!el.matches('.element-holder') && allStyle.position === 'absolute') {
+          const bounding = el.getBoundingClientRect();
+          const currentHeight = bounding.top + bounding.height;
 
           if (minHeight === 'initial' || currentHeight > minHeight) {
             minHeight = currentHeight;
@@ -436,16 +439,16 @@ export class PieDemo {
 
     navigateNode(el);
 
-    this.minHeightAuthoring = minHeight;
+    this[name] = minHeight;
   }
 
   handleElementParentResize() {
     if (this.elementParent1) {
-      this.handleElementResize(this.elementParent1)
+      this.handleElementResize(this.elementParent1, 'minHeightAuthoring')
     }
 
     if (this.elementParent2) {
-      this.handleElementResize(this.elementParent2)
+      this.handleElementResize(this.elementParent2, 'minHeightStudent')
     }
   }
 
@@ -955,7 +958,12 @@ export class PieDemo {
               justElement: this.justElement
             })}
           >
-            <div class="element-parent">
+            <div
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightAuthoring}px`
+              }}
+            >
               <ConfigTag
                 id="configure"
                 ref={el => (this.configElement = el as PieElement)}
@@ -1020,7 +1028,7 @@ export class PieDemo {
               ref={el => el && (this.elementParent2 = el as any)}
               class="element-parent"
               style={{
-                minHeight: `${this.minHeightAuthoring}px`
+                minHeight: `${this.minHeightStudent}px`
               }}
             >
               <TagName
