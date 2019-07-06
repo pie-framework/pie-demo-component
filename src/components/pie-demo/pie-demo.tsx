@@ -198,8 +198,6 @@ export class PieDemo {
 
   @State() cachedJsonConfig2: Object = null;
 
-  // @Element() private element: HTMLElement
-
   /**
    * Some functionality
    */
