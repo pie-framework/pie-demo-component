@@ -295,7 +295,7 @@ export class PieDemo {
     if (this.pieController && this.pieController.model) {
       this.pieElementModel = await this.pieController.model(model, session, env);
 
-      const scoring = await this.pieController.outcome(this.pieElementModel, this.session, this.env);
+      const scoring = await this.pieController.outcome(this.configModel, this.session, this.env);
 
       this.scoring = {
         score: scoring.score,
