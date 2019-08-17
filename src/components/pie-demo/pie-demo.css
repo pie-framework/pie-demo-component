@@ -67,7 +67,7 @@ html, body {
 }
 
 *:not(i) {
-    font-family: Roboto, serif !important;
+    font-family: Roboto, serif;
 }
 
 .root {
