@@ -5,13 +5,10 @@
  */
 
 
-import '@stencil/core';
-
-
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-
   interface PieDemo {
     'configure': Object;
     /**
@@ -20,10 +17,12 @@ export namespace Components {
     'editor': boolean;
     /**
     * JSON objects for the Dev Options menu
+    * @type {boolean}
     */
     'jsonObjects': object;
     /**
     * Removes control bar if true
+    * @type {boolean}
     */
     'justElement': boolean;
     /**
@@ -40,6 +39,7 @@ export namespace Components {
     'model': Object;
     /**
     * Makes the element have 50% height
+    * @type {boolean}
     */
     'multiplePies': boolean;
     /**
@@ -56,10 +56,27 @@ export namespace Components {
     'preview': boolean;
     /**
     * Link to the pie-schema markdown file
+    * @type {boolean}
     */
     'schemaJSONURI': string;
   }
-  interface PieDemoAttributes extends StencilHTMLAttributes {
+}
+
+declare global {
+
+
+  interface HTMLPieDemoElement extends Components.PieDemo, HTMLStencilElement {}
+  var HTMLPieDemoElement: {
+    prototype: HTMLPieDemoElement;
+    new (): HTMLPieDemoElement;
+  };
+  interface HTMLElementTagNameMap {
+    'pie-demo': HTMLPieDemoElement;
+  }
+}
+
+declare namespace LocalJSX {
+  interface PieDemo extends JSXBase.HTMLAttributes<HTMLPieDemoElement> {
     'configure'?: Object;
     /**
     * Include an editor in the view
@@ -67,10 +84,12 @@ export namespace Components {
     'editor'?: boolean;
     /**
     * JSON objects for the Dev Options menu
+    * @type {boolean}
     */
     'jsonObjects'?: object;
     /**
     * Removes control bar if true
+    * @type {boolean}
     */
     'justElement'?: boolean;
     /**
@@ -87,6 +106,7 @@ export namespace Components {
     'model'?: Object;
     /**
     * Makes the element have 50% height
+    * @type {boolean}
     */
     'multiplePies'?: boolean;
     /**
@@ -103,42 +123,23 @@ export namespace Components {
     'preview'?: boolean;
     /**
     * Link to the pie-schema markdown file
+    * @type {boolean}
     */
     'schemaJSONURI'?: string;
   }
+
+  interface IntrinsicElements {
+    'pie-demo': PieDemo;
+  }
 }
 
-declare global {
-  interface StencilElementInterfaces {
-    'PieDemo': Components.PieDemo;
-  }
-
-  interface StencilIntrinsicElements {
-    'pie-demo': Components.PieDemoAttributes;
-  }
+export { LocalJSX as JSX };
 
 
-  interface HTMLPieDemoElement extends Components.PieDemo, HTMLStencilElement {}
-  var HTMLPieDemoElement: {
-    prototype: HTMLPieDemoElement;
-    new (): HTMLPieDemoElement;
-  };
-
-  interface HTMLElementTagNameMap {
-    'pie-demo': HTMLPieDemoElement
-  }
-
-  interface ElementTagNameMap {
-    'pie-demo': HTMLPieDemoElement;
-  }
-
-
+declare module "@stencil/core" {
   export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
   }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+

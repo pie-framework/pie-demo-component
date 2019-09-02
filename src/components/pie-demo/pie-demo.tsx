@@ -1,4 +1,4 @@
-import { Component, Prop, Watch, State } from "@stencil/core";
+import { Component, h, Prop, Watch, State } from "@stencil/core";
 import ResizeObserver from "resize-observer-polyfill";
 import jsonBeautify from "json-beautify";
 import { getPackageWithoutVersion } from "../../util/utils";
