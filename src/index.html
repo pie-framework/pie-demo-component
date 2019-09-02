@@ -1,102 +1,94 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Stencil Component Starter</title>
+    <link type="text/css" rel="stylesheet" href="/assets/docson.css" />
+    <script type="module" src="/build/pie-demo.esm.js"></script>
+    <script nomodule src="/build/pie-demo.js"></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Stencil Component Starter</title>
-  <link type="text/css" rel="stylesheet" href="/assets/docson.css">
-  <script src="/build/pie-demo.js"></script>
+  <body>
+    ///
 
-</head>
+    <pie-demo
+      id="demo"
+      editor="true"
+      pie="@pie-element/multiple-choice@3.7.0"
+    ></pie-demo>
 
-<body>
-
-  <pie-demo id="demo" editor="true" pie="@pie-element/ebsr@1.2.3"></pie-demo>
-
-  <script>
-    const model = {
-      "id": "0",
-      "element": "pie-element-ebsr",
-      "partA": {
-        "prompt": "What color is the sky?",
-        "choiceMode": "radio",
-        "keyMode": "numbers",
-        "choices": [
+    <script>
+      const model = (id, element) => ({
+        id,
+        element,
+        choiceMode: "checkbox",
+        choicePrefix: "numbers",
+        choices: [
           {
-            "value": "yellow",
-            "label": "<div>Yellow</div>",
-            "correct": false
+            correct: true,
+            value: "sweden",
+            label: "Sweden",
+            feedback: {
+              type: "none",
+              value: ""
+            }
           },
           {
-            "value": "green",
-            "label": "<div>Green</div>",
-            "correct": false
+            value: "iceland",
+            label: "Iceland",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Iceland"
           },
           {
-            "correct": true,
-            "value": "blue",
-            "label": "<div>Blue</div>"
+            value: "norway",
+            label: "Norway",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Norway"
+          },
+          {
+            correct: true,
+            value: "finland",
+            label: "Finland",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Finland"
           }
         ],
-        "partialScoring": false,
-        "partialScoringLabel": "Each correct response that is correctly checked and each incorrect response\n          that is correctly unchecked will be worth 1 point.\n          The maximum points is the total number of answer choices.",
-        "shuffle": false,
-        "showCorrect": false
-      },
-      "partB": {
-        "prompt": "What color do you get when you mix Red with your answer in Part 1?",
-        "choiceMode": "radio",
-        "keyMode": "numbers",
-        "choices": [
-          {
-            "value": "orange",
-            "label": "<div>Orange</div>",
-            "correct": false
-          },
-          {
-            "correct": true,
-            "value": "purple",
-            "label": "<div>Purple</div>"
-          },
-          {
-            "value": "pink",
-            "label": "<div>Pink</div>"
-          },
-          {
-            "value": "green",
-            "label": "<div>Green</div>"
-          }
-        ],
-        "partialScoring": false,
-        "partialScoringLabel": "Each correct response that is correctly checked and each incorrect response\n          that is correctly unchecked will be worth 1 point.\n          The maximum points is the total number of answer choices.",
-        "shuffle": false
-      }
-    };
-    const configure = {
-      promptLabel: "Prompt",
-      addChoiceButtonLabel: "Add a choice",
-      addChoice: false,
-      addFeedBack: true,
-      deleteChoice: true,
-      showPrompt: true,
-      answerChoiceCount: 0,
-      settingsSelectChoiceMode: true,
-      settingsSelectChoicePrefixes: true,
-      settingsSelectChoiceModeLabel: "Response Type",
-      settingsChoicePrefixesLabel: "Choice Labels",
-      settingsPartialScoring: true,
-      settingsConfigShuffle: true
-    };
+        prompt: "Which of these northern European countries are EU members?"
+      });
+      const configure = {
+        promptLabel: "Prompt",
+        addChoiceButtonLabel: "Add a choice",
+        addChoice: false,
+        addFeedBack: true,
+        deleteChoice: true,
+        showPrompt: true,
+        answerChoiceCount: 0,
+        settingsSelectChoiceMode: true,
+        settingsSelectChoicePrefixes: true,
+        settingsSelectChoiceModeLabel: "Response Type",
+        settingsChoicePrefixesLabel: "Choice Labels",
+        settingsPartialScoring: true,
+        settingsConfigShuffle: true
+      };
+      const pieDemo = document.getElementById("demo");
+      pieDemo.model = model("0", "pie-element-multiple-choice");
 
-    const pieDemo = document.getElementById("demo");
-
-    pieDemo.model = model;
-    pieDemo.configure = configure;
-    pieDemo.modelSchemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
-    pieDemo.configureSchemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json';
-  </script>
-
-</body>
-
+      pieDemo.configure = configure;
+      pieDemo.configureSchemaJSONURI =
+        "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json";
+    </script>
+  </body>
 </html>
