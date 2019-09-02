@@ -1,84 +1,106 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+    />
+    <title>Pie Demo Component</title>
+    <link type="text/css" rel="stylesheet" href="/assets/docson.css" />
+    <script src="/build/pie-demo.js"></script>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Stencil Component Starter</title>
-  <link type="text/css" rel="stylesheet" href="/assets/docson.css">
-  <script src="/build/pie-demo.js"></script>
+  <body>
+    <pie-demo
+      id="demo"
+      editor="true"
+      pie="@pie-element/multiple-choice@3.7.0"
+    ></pie-demo>
 
-</head>
-
-<body>
-
-  <pie-demo id="demo" editor="true" pie="@pie-element/math-inline@0.2.3"></pie-demo>
-
-  <script>
-    const model =
-      {
-        "id": "0",
-        "element": "pie-element-math-inline",
-        "mode": "advanced",
-        "expression": "1+1",
-        "question": "What is the equation for a slope?",
-        "equationEditor": "simple",
-        "defaultResponse": {
-          "id": 0,
-          "validation": "symbolic",
-          "answer": "y = mx + b",
-          "alternates": {},
-          "allowSpaces": true,
-          "allowDecimals": true
-        },
-        "responses": [
+    <script>
+      const model = (id, element) => ({
+        id,
+        element,
+        choiceMode: "checkbox",
+        choicePrefix: "numbers",
+        choices: [
           {
-            "id": "answerBlock1",
-            "validation": "symbolic",
-            "answer": "y = mx + b",
-            "alternates": {},
-            "allowSpaces": true,
-            "allowDecimals": true
+            correct: true,
+            value: "sweden",
+            label: "Sweden",
+            feedback: {
+              type: "none",
+              value: ""
+            }
+          },
+          {
+            value: "iceland",
+            label: "Iceland",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Iceland"
+          },
+          {
+            value: "norway",
+            label: "Norway",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Norway"
+          },
+          {
+            correct: true,
+            value: "finland",
+            label: "Finland",
+            feedback: {
+              type: "none",
+              value: ""
+            },
+            rationale: "Rationale for Finland"
           }
         ],
-        "feedback": {
-          "correct": {
-            "type": "none",
-            "default": "Correct"
-          },
-          "partial": {
-            "type": "none",
-            "default": "Nearly"
-          },
-          "incorrect": {
-            "type": "none",
-            "default": "Incorrect"
-          }
-        }
+        prompt: "Which of these northern European countries are EU members?"
+      });
+
+      const configure = {
+        promptLabel: "Prompt",
+        addChoiceButtonLabel: "Add a choice",
+        addChoice: false,
+        addFeedBack: true,
+        deleteChoice: true,
+        showPrompt: true,
+        answerChoiceCount: 0,
+        settingsSelectChoiceMode: true,
+        settingsSelectChoicePrefixes: true,
+        settingsSelectChoiceModeLabel: "Response Type",
+        settingsChoicePrefixesLabel: "Choice Labels",
+        settingsPartialScoring: true,
+        settingsConfigShuffle: true
       };
-    const configure = {
-      promptLabel: "Prompt",
-      addChoiceButtonLabel: "Add a choice",
-      addChoice: false,
-      addFeedBack: true,
-      deleteChoice: true,
-      showPrompt: true,
-      answerChoiceCount: 0,
-      settingsSelectChoiceMode: true,
-      settingsSelectChoicePrefixes: true,
-      settingsSelectChoiceModeLabel: "Response Type",
-      settingsChoicePrefixesLabel: "Choice Labels",
-      settingsPartialScoring: true,
-      settingsConfigShuffle: true
-    };
 
-    const pieDemo = document.getElementById("demo");
+      const pieDemo = document.getElementById("demo");
 
-    pieDemo.model = model;
-    pieDemo.configure = configure;
-    pieDemo.schemaJSONURI = 'https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json';
-  </script>
+      pieDemo.model = model("0", "pie-element-multiple-choice");
+      pieDemo.configure = configure;
+      pieDemo.schemaJSONURI =
+        "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json";
+    </script>
 
-</body>
-
+    <script>
+      if ("serviceWorker" in navigator && location.protocol !== "file:") {
+        // auto-unregister service worker during dev mode
+        navigator.serviceWorker.getRegistration().then(function(registration) {
+          if (registration) {
+            registration.unregister().then(function() {
+              location.reload(true);
+            });
+          }
+        });
+      }
+    </script>
+  </body>
 </html>

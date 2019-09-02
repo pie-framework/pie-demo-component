@@ -20,9 +20,10 @@
     "serve": "serve"
   },
   "dependencies": {
+    "@pie-framework/pie-configure-events": "^1.2.0",
     "@stencil/core": "~0.15.1",
     "classnames": "^2.2.6",
-    "docson": "git://github.com/lakatosandrei/docson.git#e48bf436dd6ea2ec65bae5ff540a517bd3eb0fa0",
+    "docson": "^2.1.0",
     "json-beautify": "^1.0.1",
     "lodash": "^4.17.11",
     "parse-package-name": "^0.1.0",
