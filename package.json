@@ -1,5 +1,9 @@
 {
   "name": "@pie-framework/pie-demo",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "pie-framework/pie-demo-component",
   "version": "2.1.0",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
