@@ -13,7 +13,9 @@
   "scripts": {
     "build": "stencil build",
     "prepublish": "npm run build",
-    "start": "stencil build --dev --watch --serve",
+    "release": "release-it",
+    "start": "dev",
+    "dev": "stencil build --dev --watch --serve",
     "startEs5": "stencil build --dev --watch --serve --es5",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watchAll",
@@ -35,6 +37,7 @@
     "jest": "23.6.0",
     "jest-cli": "23.6.0",
     "puppeteer": "1.8.0",
+    "release-it": "^12.3.6",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "serve": "^10.0.2",
