@@ -13,7 +13,7 @@
   "scripts": {
     "build": "stencil build",
     "prepublish": "npm run build",
-    "release": "release-it",
+    "release": "stencil build && release-it",
     "start": "dev",
     "dev": "stencil build --dev --watch --serve",
     "startEs5": "stencil build --dev --watch --serve --es5",
