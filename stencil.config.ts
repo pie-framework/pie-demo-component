@@ -9,6 +9,7 @@ export const config: Config = {
   },
   plugins: [builtins(), globals()],
   copy: [
+    { src: "../src/ebsr.html", dest: "ebsr.html" },
     {
       src: "../node_modules/docson/public/templates/box.html",
       dest: "assets/html/box.html"

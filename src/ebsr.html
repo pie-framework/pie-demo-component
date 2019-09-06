@@ -6,20 +6,79 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
     />
-    <title>pie-demo</title>
+    <title>pie-demo - ebsr</title>
     <link type="text/css" rel="stylesheet" href="/assets/docson.css" />
     <script type="module" src="/build/pie-demo.esm.js"></script>
     <script nomodule src="/build/pie-demo.js"></script>
   </head>
 
   <body>
-    <pie-demo
-      id="demo"
-      editor="true"
-      pie="@pie-element/multiple-choice@3.7.0"
-    ></pie-demo>
+    <pie-demo id="demo" editor="true" pie="@pie-element/ebsr@2.8.1"></pie-demo>
 
     <script>
+      const model = {
+        id: "1",
+        element: "pie-ebsr",
+        partA: {
+          choiceMode: "radio",
+          choices: [
+            {
+              value: "yellow",
+              label: "Yellow"
+            },
+            {
+              value: "green",
+              label: "Green"
+            },
+            {
+              correct: true,
+              value: "blue",
+              label: "Blue"
+            }
+          ],
+          choicePrefix: "numbers",
+          partialScoring: false,
+          prompt: "What color is the sky?"
+        },
+        partB: {
+          choiceMode: "radio",
+          choices: [
+            {
+              value: "orange",
+              label: "Orange"
+            },
+            {
+              correct: true,
+              value: "purple",
+              label: "Purple"
+            },
+            {
+              value: "pink",
+              label: "Pink"
+            },
+            {
+              value: "green",
+              label: "Green"
+            }
+          ],
+          choicePrefix: "numbers",
+          partialScoring: false,
+          prompt:
+            "What color do you get when you mix Red with your answer in Part 1?"
+        }
+      };
+
+      const player = document.querySelector("pie-demo");
+      if (!player) {
+        throw new Error(`cant find pie-demo - things won't work`);
+      }
+      player.addEventListener("sessionChanged", event => {
+        console.log(event.type + ":" + JSON.stringify(event.detail));
+      });
+      player.model = model;
+    </script>
+
+    <!-- <script>
       const model = (id, element) => ({
         id,
         element,
@@ -81,12 +140,12 @@
         settingsPartialScoring: true,
         settingsConfigShuffle: true
       };
-      const pieDemo = document.querySelector("pie-demo");
+      const pieDemo = document.getElementById("demo");
       pieDemo.model = model("0", "pie-element-multiple-choice");
 
       pieDemo.configure = configure;
       pieDemo.configureSchemaJSONURI =
         "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json";
-    </script>
+    </script> -->
   </body>
 </html>

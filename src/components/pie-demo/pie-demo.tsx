@@ -1,4 +1,4 @@
-import { Component, h, Prop, Watch, State } from "@stencil/core";
+import { Component, h, Prop, Watch, State, Listen } from "@stencil/core";
 import ResizeObserver from "resize-observer-polyfill";
 import jsonBeautify from "json-beautify";
 import { getPackageWithoutVersion } from "../../util/utils";
@@ -12,7 +12,9 @@ import {
   DeleteImageEvent,
   ImageHandler
 } from "@pie-framework/pie-configure-events";
-import isEqual from "lodash/isEqual";
+import debug from "debug";
+
+const log = debug("pie-framework:pie-demo");
 
 enum ViewState {
   LOADING,
@@ -50,7 +52,7 @@ interface PieElement extends HTMLElement {
 
 const defaultController = {
   model: (model, session, env) => {
-    console.log(model, session, env);
+    log(model, session, env);
 
     return {
       ...model,
@@ -220,21 +222,6 @@ export class PieDemo {
   handleSetConfigElement: (e: CustomEvent) => void;
 
   constructor() {
-    this.handleSetConfigElement = (event: CustomEvent) => {
-      console.log("[handleSetConfigElement] - model.updated");
-
-      const u = event.detail.update || {};
-      if (isEqual(this.configModel, u)) {
-        return;
-      }
-      this.configModel = event.detail && event.detail.update;
-      this.updatePieModelFromController(
-        this.configModel,
-        this.session,
-        this.env
-      );
-    };
-
     this.handleFileInputChange = (e: Event) => {
       const input = e.target;
 
@@ -243,10 +230,10 @@ export class PieDemo {
         return;
       }
 
-      console.log("[handleInputFiles] input.files: ", input);
+      log("[handleInputFiles] input.files: ", input);
       const files = (input as any).files;
       if (files.length < 1 || !files[0]) {
-        console.log("[handleInputFiles] = !!! no files.");
+        log("[handleInputFiles] = !!! no files.");
         this.imageHandler.cancel();
         this.imageHandler = null;
       } else {
@@ -255,14 +242,14 @@ export class PieDemo {
         this.fileInput.value = "";
         const reader = new FileReader();
         reader.onload = () => {
-          console.log("[reader.onload]");
+          log("[reader.onload]");
           const dataURL = reader.result;
           setTimeout(() => {
             this.imageHandler.done(null, dataURL.toString());
             this.imageHandler = null;
           }, 2000);
         };
-        console.log("call readAsDataUrl...", file);
+        log("call readAsDataUrl...", file);
         let progress = 0;
         this.imageHandler.progress(progress, 0, 100);
         range(1, 100).forEach(n => {
@@ -275,7 +262,7 @@ export class PieDemo {
     };
 
     this.handleInsertImage = (e: InsertImageEvent) => {
-      console.log("[handleInsertImage] fileInput:", this.fileInput);
+      log("[handleInsertImage] fileInput:", this.fileInput);
       this.imageHandler = e.detail;
       this.fileInput.click();
     };
@@ -343,7 +330,7 @@ export class PieDemo {
 
   @Watch("pie")
   watchPie(newPie) {
-    console.log("pie-watch triggered");
+    log("[watchPie] ", newPie);
     this.package = newPie;
     this.pieName = newPie
       .substr(newPie.lastIndexOf("/") + 1, newPie.length)
@@ -359,7 +346,9 @@ export class PieDemo {
       this.pieController =
         window["pie"].default[packageWithoutVersion].controller ||
         defaultController;
-      this.updatePieModelFromController(this.model, this.session, this.env);
+      if (this.model) {
+        this.updatePieModelFromController(this.model, this.session, this.env);
+      }
       this.state = ViewState.READY;
     });
 
@@ -369,7 +358,7 @@ export class PieDemo {
   }
 
   @Watch("model")
-  async updateModel(newModel) {
+  updateModel(newModel) {
     this.configModel = newModel;
   }
 
@@ -379,7 +368,7 @@ export class PieDemo {
   }
 
   @Watch("configModel")
-  async watchConfigModel(newModel) {
+  watchConfigModel(newModel) {
     if (this.configElement) this.configElement.model = newModel;
     this.updatePieModelFromController(newModel, this.session, this.env);
   }
@@ -489,7 +478,7 @@ export class PieDemo {
   }
 
   componentWillLoad() {
-    console.log("component will load ... ");
+    log("component will load ... ");
     this.watchPie(this.pie);
 
     this.studentHeaderResizeObserver = new (ResizeObserver as any)(() => {
@@ -573,13 +562,21 @@ export class PieDemo {
     }
   }
 
+  /**
+   * Pick up @pie-framework/pie-configure-events and trigger an update.
+   * TODO: Why cant i use ModelUpdatedEvent.TYPE in the decorator?
+   */
+  @Listen("model.updated")
+  onModelUpdated(event: ModelUpdatedEvent) {
+    log("MODEL UPDATED: target:", event.target, event.detail);
+    this.updatePieModelFromController(this.configModel, this.session, this.env);
+  }
+
   @Watch("configElement")
   watchConfigElement(el: PieElement) {
     if (!el) {
       return;
     }
-
-    el.addEventListener(ModelUpdatedEvent.TYPE, this.handleSetConfigElement);
 
     el.addEventListener(InsertImageEvent.TYPE, this.handleInsertImage);
     el.addEventListener(DeleteImageEvent.TYPE, this.handleDeleteImage);
@@ -650,7 +647,7 @@ export class PieDemo {
   }
 
   viewDocumentation = tabIndex => {
-    console.log("Tab Index", tabIndex);
+    log("Tab Index", tabIndex);
 
     const currentContent =
       tabIndex === 1 ? this.modelSchemaJSON : this.configureSchemaJSON;
@@ -660,7 +657,7 @@ export class PieDemo {
   };
 
   renderJsonConfigPanel = (jsonData, index) => {
-    console.log(jsonData);
+    log(jsonData);
 
     return (
       <div class="json-config">

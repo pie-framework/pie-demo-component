@@ -1,5 +1,8 @@
 import isFunction from "lodash/isFunction";
 import { getPackageWithoutVersion } from "./utils";
+import debug from "debug";
+
+const log = debug("pie-framework:pie-cloud");
 
 const getEmptyConfigure = () =>
   class extends HTMLElement {
@@ -17,7 +20,7 @@ export function loadCloudPies(
   doc,
   baseUrl = "https://pits-dot-pie-dev-221718.appspot.com/bundles/"
 ) {
-  console.log("elements:", elements);
+  log("[loadCloudPies] elements:", elements);
 
   const head = doc.getElementsByTagName("head")[0];
   const keys = Object.keys(elements);
@@ -38,7 +41,7 @@ export function loadCloudPies(
           const atSymbolPos = initialEl.indexOf("@");
           const elName =
             atSymbolPos >= 0 ? initialEl.slice(0, atSymbolPos) : initialEl;
-          console.log("defining elements");
+          log("defining element:", elName);
 
           if (!customElements.get(elName)) {
             customElements.define(elName, pie.Element);
