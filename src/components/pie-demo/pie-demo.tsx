@@ -569,7 +569,12 @@ export class PieDemo {
   @Listen("model.updated")
   onModelUpdated(event: ModelUpdatedEvent) {
     log("MODEL UPDATED: target:", event.target, event.detail);
-    this.updatePieModelFromController(this.configModel, this.session, this.env);
+    this.model = event.detail.update;
+    this.updatePieModelFromController(
+      event.detail.update,
+      this.session,
+      this.env
+    );
   }
 
   @Watch("configElement")
