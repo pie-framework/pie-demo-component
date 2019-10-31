@@ -38,12 +38,8 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^1.1.0",
-    "@types/puppeteer": "1.19.1",
     "conventional-changelog": "^3.1.10",
     "conventional-changelog-cli": "^2.0.23",
-    "jest": "24.8.0",
-    "jest-cli": "24.8.0",
-    "puppeteer": "1.19.0",
     "release-it": "^12.3.6",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
