@@ -4,7 +4,7 @@
     "access": "public"
   },
   "repository": "pie-framework/pie-demo-component",
-  "version": "2.1.3",
+  "version": "2.1.5",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
@@ -29,8 +29,8 @@
     "@pie-framework/pie-configure-events": "^1.2.0",
     "@stencil/core": "^1.3.2",
     "classnames": "^2.2.6",
-    "docson": "^2.1.0",
     "debug": "^4.1.1",
+    "docson": "^2.1.0",
     "json-beautify": "^1.1.0",
     "lodash": "^4.17.11",
     "parse-package-name": "^0.1.0",
@@ -38,7 +38,6 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^1.1.0",
-    "@types/jest": "24.0.18",
     "@types/puppeteer": "1.19.1",
     "conventional-changelog": "^3.1.10",
     "conventional-changelog-cli": "^2.0.23",

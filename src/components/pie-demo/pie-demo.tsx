@@ -276,6 +276,24 @@ export class PieDemo {
     if (this.fileInput) {
       this.fileInput.addEventListener("change", this.handleFileInputChange);
     }
+
+    const isAuthoringToggled = this.isToggled("authoring");
+
+    if (isAuthoringToggled) {
+      let offset = 0;
+
+      if (this.bottomContentRef) {
+        const ref = this.bottomContentRef.querySelector(".tabs");
+
+        if (ref) {
+          const clientRect = ref.getBoundingClientRect();
+
+          offset = clientRect.y;
+
+          this.bottomContentRef.style.height = `calc(100vh - ${offset}px)`;
+        }
+      }
+    }
   }
 
   /**
@@ -751,23 +769,6 @@ export class PieDemo {
 
   renderAuthoringHeader(smallView = false) {
     const isToggled = this.isToggled("authoring");
-    const determineHeight = () => {
-      let offset = 0;
-
-      if (this.bottomContentRef) {
-        const ref = this.bottomContentRef.querySelector(".tabs");
-
-        if (ref) {
-          const clientRect = ref.getBoundingClientRect();
-
-          offset = clientRect.y;
-
-          return `calc(100vh - ${offset}px)`;
-        }
-
-        return `0px`;
-      }
-    };
 
     return (
       <div
@@ -831,7 +832,7 @@ export class PieDemo {
         <div
           ref={el => (this.bottomContentRef = el as any)}
           style={{
-            height: determineHeight()
+            height: '100vh'
           }}
           class="bottomContent authoring"
         >
