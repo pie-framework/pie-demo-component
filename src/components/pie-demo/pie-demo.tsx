@@ -127,6 +127,8 @@ export class PieDemo {
 
   @State() modelSchemaJSON: Object = null;
 
+  @State() pieAuthor: any = null;
+
   @State() configureSchemaJSON: Object = null;
 
   @State() configModel: Object;
@@ -275,6 +277,72 @@ export class PieDemo {
   componentDidUpdate() {
     if (this.fileInput) {
       this.fileInput.addEventListener("change", this.handleFileInputChange);
+    }
+
+    if (this.pieAuthor && !this.pieAuthor.config) {
+      const newConfig = {
+        id: "1",
+        elements: {
+          "pie-multiple-choice": "@pie-element/multiple-choice@2.7.3"
+        },
+        models: [
+          {
+            id: "1",
+            element: "pie-multiple-choice",
+            prompt:
+              "Which of these northern European countries are EU members?",
+            choiceMode: "checkbox",
+            keyMode: "numbers",
+            choices: [
+              {
+                correct: true,
+                value: "sweden",
+                label: "Sweden",
+                feedback: {
+                  type: "none",
+                  value: ""
+                }
+              },
+              {
+                value: "iceland",
+                label: `Iceland <math style="display: block;"> <mtable columnalign="right center left"> <mtr> <mtd> <msup> <mrow> <mo> ( </mo> <mi> a </mi> <mo> + </mo> <mi> b </mi> <mo> ) </mo> </mrow> <mn> 2 </mn> </msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 4 </mn> <mo> ⋅ </mo> <mo>(</mo> <mfrac> <mn> 1 </mn> <mn> 2 </mn> </mfrac> <mi> a </mi><mi> b </mi> <mo>)</mo>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</mtd> </mtr> <mtr> <mtd> <msup><mi> a </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b </mi> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b</mi></mtd></mtr><mtr><mtd></mtd></mtr><mtr><mtd><msup><mi>a </mi><mn>2</mn></msup> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> </mtd> </mtr> </mtable> </math>`,
+                feedback: {
+                  type: "none",
+                  value: ""
+                }
+              },
+              {
+                value: "norway",
+                label: "Norway",
+                feedback: {
+                  type: "none",
+                  value: ""
+                }
+              },
+              {
+                correct: true,
+                value: "finland",
+                label: "Finland",
+                feedback: {
+                  type: "none",
+                  value: ""
+                }
+              }
+            ],
+            partialScoring: false,
+            partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
+            that is correctly unchecked will be worth 1 point.
+            The maximum points is the total number of answer choices.`
+          }
+        ],
+        markup: `
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mrow><mo>-</mo><mn>5</mn><mo>,</mo><mn>1</mn></mrow></mfenced></math> drafted by his assistant on a computer program which involves coordinate planes.&#160; The designer suggests to change the location and size of the lawn by dilating and then reflecting the lawn across the <span class="variable">x</span>-axis to produce the similar square lawn.&#160; The coordinates of the new square lawn are <math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mrow><mo>-</mo><mn>4</mn><mo>,</mo><mo>-</mo><mn>2</mn></mrow></mfenced></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mrow><mo>-</mo><mn>2</mn><mo>,</mo><mo>-</mo><mn>2</mn></mrow></mfenced></math>,&#160;<math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mrow><mo>-</mo><mn>4</mn><mo>,</mo><mo>-</mo><mn>4</mn></mrow></mfenced></math>, and <math xmlns="http://www.w3.org/1998/Math/MathML"><mfenced><mrow><mo>-</mo><mn>2</mn><mo>,</mo><mo>-</mo><mn>4</mn></mrow></mfenced></math>
+
+          <pie-multiple-choice id='1'></pie-multiple-choice>
+        `
+      };
+
+      this.pieAuthor.config = newConfig;
     }
 
     const isAuthoringToggled = this.isToggled("authoring");
@@ -1048,13 +1116,7 @@ export class PieDemo {
                 minHeight: `${this.minHeightAuthoring}px`
               }}
             >
-              <ConfigTag
-                id="configure"
-                ref={el => (this.configElement = el as PieElement)}
-                model={this.configModel}
-                configure={this.configureObject}
-                session={this.session}
-              />
+              <pie-author id="author" ref={r => (this.pieAuthor = r)}></pie-author>
             </div>
           </div>
         )}
