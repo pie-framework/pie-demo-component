@@ -41,9 +41,9 @@ export function loadCloudPies(
           const atSymbolPos = initialEl.indexOf("@");
           const elName =
             atSymbolPos >= 0 ? initialEl.slice(0, atSymbolPos) : initialEl;
-          log("defining element:", elName);
 
           if (!customElements.get(elName)) {
+            log("defining element:", elName);
             customElements.define(elName, pie.Element);
 
             pie.Configure = isFunction(pie.Configure)

@@ -6,6 +6,7 @@ import classnames from "classnames";
 import docson from "docson";
 import { loadCloudPies } from "../../util/PieCloud";
 import range from "lodash/range";
+import get from "lodash/get";
 import {
   ModelUpdatedEvent,
   InsertImageEvent,
@@ -49,6 +50,20 @@ interface PieElement extends HTMLElement {
   session: Object;
   onModelChanged: Function;
 }
+
+const getController = (n: string) => {
+  try {
+    return (window as any).__pie_demo_controllers[n];
+  } catch (e) {
+    return undefined;
+  }
+};
+const saveController = (n: string, c: any) => {
+  (window as any).__pie_demo_controllers = {
+    ...(window as any).__pie_demo_controllers,
+    [n]: c
+  };
+};
 
 const defaultController = {
   model: (model, session, env) => {
@@ -221,7 +236,9 @@ export class PieDemo {
   handleDeleteImage: (e: DeleteImageEvent) => void;
   handleSetConfigElement: (e: CustomEvent) => void;
 
+  loadedControllers: any = {};
   constructor() {
+    this.loadedControllers = {};
     this.handleFileInputChange = (e: Event) => {
       const input = e.target;
 
@@ -300,7 +317,8 @@ export class PieDemo {
    * Some functionality
    */
   @Prop() loadPies: Function = elements => {
-    loadCloudPies(elements, document);
+    console.log("disabled!!", elements);
+    // loadCloudPies(elements, document);
   };
 
   collapsePanel(name) {
@@ -358,12 +376,26 @@ export class PieDemo {
       this.pieName = `x-${this.pieName}`;
     }
 
+    const c = getController(this.pieName);
+
+    if (!c) {
+      loadCloudPies({ [this.pieName]: newPie }, document);
+    }
+
     customElements.whenDefined(this.pieName).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = getPackageWithoutVersion(this.package);
-      this.pieController =
-        window["pie"].default[packageWithoutVersion].controller ||
-        defaultController;
+
+      if (!c) {
+        saveController(
+          this.pieName,
+          get(window, `pie.default.${packageWithoutVersion}.controller`)
+        );
+      }
+      this.pieController = getController(this.pieName);
+      // this.pieController = c ?
+      //   window["pie"].default[packageWithoutVersion].controller ||
+      //   defaultController;
       if (this.model) {
         this.updatePieModelFromController(this.model, this.session, this.env);
       }
@@ -397,6 +429,8 @@ export class PieDemo {
   }
 
   async updatePieModelFromController(model, session, env) {
+    console.log("UPDATE: ", model, session, env, this.pieController);
+    console.log("UPDATE: loaded:", (window as any).__pie_demo_controllers);
     if (this.pieController && this.pieController.model) {
       this.pieElementModel = await this.pieController.model(
         model,
@@ -416,6 +450,7 @@ export class PieDemo {
       };
 
       if (this.pieElement) {
+        console.log("SET THE MODEL!!!, ", this.pieElement);
         this.pieElement.model = this.pieElementModel;
       }
     }
@@ -832,7 +867,7 @@ export class PieDemo {
         <div
           ref={el => (this.bottomContentRef = el as any)}
           style={{
-            height: '100vh'
+            height: "100vh"
           }}
           class="bottomContent authoring"
         >
