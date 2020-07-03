@@ -1,6 +1,6 @@
 import isFunction from "lodash/isFunction";
 import { getPackageWithoutVersion } from "./utils";
-import debug from "debug";
+import * as debug from "debug";
 
 const log = debug("pie-framework:pie-cloud");
 
