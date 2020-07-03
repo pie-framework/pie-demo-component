@@ -7,7 +7,10 @@ export const config: Config = {
   testing: {
     testRegex: "__tests__/.*.(spec|e2e).ts"
   },
-  plugins: [builtins(), globals()],
+  rollupPlugins: {
+    before: [], 
+    after: [ builtins(), globals() ] 
+  },
   copy: [
     { src: "../src/ebsr.html", dest: "ebsr.html" },
     {

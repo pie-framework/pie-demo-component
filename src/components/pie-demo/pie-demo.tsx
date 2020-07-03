@@ -12,7 +12,7 @@ import {
   DeleteImageEvent,
   ImageHandler
 } from "@pie-framework/pie-configure-events";
-import * as debug from "debug";
+import debug from "debug";
 
 const log = debug("pie-framework:pie-demo");
 
