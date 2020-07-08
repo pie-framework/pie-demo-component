@@ -1,4 +1,5 @@
 import { Component, h, Prop, Watch, State, Listen } from "@stencil/core";
+import { defineCustomElements } from "@pie-framework/pie-player-components/dist/esm/loader";
 import ResizeObserver from "resize-observer-polyfill";
 import jsonBeautify from "json-beautify";
 import { getPackageWithoutVersion } from "../../util/utils";
@@ -15,6 +16,8 @@ import {
 import debug from "debug";
 
 const log = debug("pie-framework:pie-demo");
+
+defineCustomElements(window);
 
 enum ViewState {
   LOADING,
@@ -1016,10 +1019,129 @@ export class PieDemo {
   }
 
   renderAuthoringHolder = (smallView = false) => {
-    const ConfigTag = this.pieName + "-config";
+    // const ConfigTag = this.pieName + "-config";
     const isCollapsed = this.collapsed === "authoring";
+    const config = {
+      id: "1",
+      elements: {
+        "pie-multiple-choice": "@pie-element/multiple-choice@3.7.0"
+      },
+      models: [
+        {
+          id: "1",
+          element: "pie-multiple-choice",
+          prompt: `<math> <mrow>
+   <msup>
+     <mfenced>
+       <mrow>
+         <mi>a</mi>
+         <mo>+</mo>
+         <mi>b</mi>
+       </mrow>
+     </mfenced>
+     <mn>2</mn>
+   </msup>
+ </mrow></math>`,
+          choiceMode: "checkbox",
+          keyMode: "numbers",
+          choices: [
+            {
+              correct: true,
+              value: "sweden",
+              label: "Sweden",
+              feedback: {
+                type: "none",
+                value: ""
+              }
+            },
+            {
+              value: "iceland",
+              label: `Iceland <math xmlns="http://www.w3.org/1998/Math/MathML">   <mrow>
+   <msup>
+     <mfenced>
+       <mrow>
+         <mi>a</mi>
+         <mo>+</mo>
+         <mi>b</mi>
+       </mrow>
+     </mfenced>
+     <mn>2</mn>
+   </msup>
+ </mrow> </math>`,
+              //label: `Iceland <math style="display: block;"> <mtable columnalign="right center left"> <mtr> <mtd> <msup> <mrow> <mo> ( </mo> <mi> a </mi> <mo> + </mo> <mi> b </mi> <mo> ) </mo> </mrow> <mn> 2 </mn> </msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 4 </mn> <mo> ⋅ </mo> <mo>(</mo> <mfrac> <mn> 1 </mn> <mn> 2 </mn> </mfrac> <mi> a </mi><mi> b </mi> <mo>)</mo>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</mtd> </mtr> <mtr> <mtd> <msup><mi> a </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b </mi> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b</mi></mtd></mtr><mtr><mtd></mtd></mtr><mtr><mtd><msup><mi>a </mi><mn>2</mn></msup> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> </mtd> </mtr> </mtable> </math>`,
+              feedback: {
+                type: "none",
+                value: ""
+              }
+            },
+            {
+              value: "norway",
+              label: "Norway",
+              feedback: {
+                type: "none",
+                value: ""
+              }
+            },
+            {
+              correct: true,
+              value: "finland",
+              label: "Finland",
+              feedback: {
+                type: "none",
+                value: ""
+              }
+            }
+          ],
+          partialScoring: false,
+          partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
+            that is correctly unchecked will be worth 1 point.
+            The maximum points is the total number of answer choices.`
+        }
+      ],
+      markup: `
+          <pie-multiple-choice id='1'></pie-multiple-choice>
+        `
+    };
 
     return (
+      <div
+        class={classnames("authoring-holder", {
+          collapsed: this.collapsed === "authoring",
+          toggled: this.isToggled()
+        })}
+      >
+        <div
+          class={classnames("control-bar", {
+            justElement: this.justElement
+          })}
+        >
+          {this.renderAuthoringHeader(smallView)}
+        </div>
+        {isCollapsed &&
+        this.renderCollapsedPanel("Authoring View", this.isToggled())}
+        {!isCollapsed && (
+          <div
+            ref={el => el && (this.elementParent1 = el as any)}
+            class={classnames("element-holder", {
+              justElement: this.justElement
+            })}
+          >
+            <div
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightAuthoring}px`
+              }}
+            >
+              <pie-player
+                config={config}
+              />
+            </div>
+          </div>
+        )}
+        <input type="file" hidden ref={r => (this.fileInput = r)} />
+      </div>
+    );
+    /*return (
       <div
         class={classnames("authoring-holder", {
           collapsed: this.collapsed === "authoring",
@@ -1060,7 +1182,7 @@ export class PieDemo {
         )}
         <input type="file" hidden ref={r => (this.fileInput = r)} />
       </div>
-    );
+    );*/
   };
 
   renderStudentHolder = (smallView = false) => {
