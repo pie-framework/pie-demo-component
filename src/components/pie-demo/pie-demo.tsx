@@ -1,12 +1,17 @@
 import { Component, h, Prop, Watch, State, Listen } from "@stencil/core";
-import { defineCustomElements } from "@pie-framework/pie-player-components/dist/esm/loader";
+import "@pie-framework/pie-player-components";
+import { PieModel } from "@pie-framework/pie-player-components/dist/types/interface";
+import { JSX } from "@pie-framework/pie-player-components/dist/types/components";
 import ResizeObserver from "resize-observer-polyfill";
 import jsonBeautify from "json-beautify";
-import { getPackageWithoutVersion } from "../../util/utils";
+import { getPackageWithoutVersion, packageToElementName } from "../../util/utils";
 import classnames from "classnames";
 import docson from "docson";
-import { loadCloudPies } from "../../util/PieCloud";
+// import { loadCloudPies } from "../../util/PieCloud";
 import range from "lodash/range";
+import cloneDeep from "lodash/cloneDeep";
+import isEqual from 'lodash/isEqual'
+import merge from 'lodash/merge'
 import {
   ModelUpdatedEvent,
   InsertImageEvent,
@@ -16,8 +21,6 @@ import {
 import debug from "debug";
 
 const log = debug("pie-framework:pie-demo");
-
-defineCustomElements(window);
 
 enum ViewState {
   LOADING,
@@ -132,7 +135,7 @@ export class PieDemo {
 
   @State() configureSchemaJSON: Object = null;
 
-  @State() configModel: Object;
+  @State() configModel: PieModel;
 
   @State() configureObject: Object;
 
@@ -153,6 +156,10 @@ export class PieDemo {
   @State() pieController: PieController;
 
   @State() pieElement: PieElement;
+
+  @State() pieAuthor: JSX.PieAuthor;
+
+  @State() piePlayer: JSX.PiePlayer;
 
   @State() rootEl: any;
 
@@ -182,7 +189,7 @@ export class PieDemo {
 
   @State() bottomContElWidth: number = 550;
 
-  @State() pieElementModel: Object;
+  @State() pieElementModel: PieModel;
 
   @State() configElement: PieElement;
 
@@ -190,7 +197,7 @@ export class PieDemo {
 
   @State() mobileTabIndex: number = 0;
 
-  @State() currentOption: string = "option1";
+  @State() currentOption: string = "student";
 
   @State() collapsed: string;
 
@@ -303,7 +310,8 @@ export class PieDemo {
    * Some functionality
    */
   @Prop() loadPies: Function = elements => {
-    loadCloudPies(elements, document);
+    console.log(elements);
+    // loadCloudPies(elements, document);
   };
 
   collapsePanel(name) {
@@ -361,7 +369,7 @@ export class PieDemo {
       this.pieName = `x-${this.pieName}`;
     }
 
-    customElements.whenDefined(this.pieName).then(async () => {
+    customElements.whenDefined(`pp-${packageToElementName(this.pie)}`).then(async () => {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = getPackageWithoutVersion(this.package);
       this.pieController =
@@ -374,7 +382,8 @@ export class PieDemo {
     });
 
     if (this.load) {
-      loadCloudPies({ [this.pieName]: this.package }, document);
+      this.state = ViewState.READY;
+      // loadCloudPies({ [this.pieName]: this.package }, document);
     }
   }
 
@@ -396,12 +405,16 @@ export class PieDemo {
 
   @Watch("configureObject")
   async watchConfigureObject(newConfigure) {
-    if (this.configElement) this.configElement.configuration = newConfigure;
+    // if (this.configElement) this.configElement.configuration = newConfigure;
+    if (this.pieAuthor) {
+      console.log(newConfigure);
+      // this.pieAuthor.configSettings = {[getPackageWithoutVersion(this.pie)]: newConfigure };
+    }
   }
 
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
-      this.pieElementModel = await this.pieController.model(
+      (this.pieElementModel as any) = await this.pieController.model(
         model,
         session,
         env
@@ -418,8 +431,23 @@ export class PieDemo {
         json: jsonBeautify(scoring.details, null, 2, 80)
       };
 
-      if (this.pieElement) {
-        this.pieElement.model = this.pieElementModel;
+      if (this.piePlayer) {
+        const ConfigTag = this.pieName + "-config";
+        const newModel = merge(cloneDeep(this.configModel, this.pieElementModel));
+        const config = {
+          id: "1",
+          elements: {
+            [ConfigTag]: this.pie
+          },
+          models: [
+            newModel
+          ],
+          markup: `
+          <${ConfigTag} id='1'></${ConfigTag}>
+        `
+        };
+
+        this.piePlayer.config = config;
       }
     }
   }
@@ -515,7 +543,7 @@ export class PieDemo {
     });
 
     this.mutationObserver = new MutationObserver(() => {
-      this.handleElementParentResize();
+      // this.handleElementParentResize();
     });
 
     this.rootResizeObserver = new (ResizeObserver as any)(() => {
@@ -540,6 +568,7 @@ export class PieDemo {
       this.watchConfigureSchemaJSONURI(this.configureSchemaJSONURI);
     }
 
+    (window as any).global = window;
     docson.templateBaseUrl = "/assets/html";
   }
 
@@ -598,6 +627,15 @@ export class PieDemo {
     );
   }
 
+
+  @Listen("session-changed")
+  onSessionChanged(event: ModelUpdatedEvent) {
+    log("MODEL UPDATED: target:", event.target, event.detail);
+    if (event.target) {
+      this.session = (event.target as any).session;
+    }
+  }
+
   @Watch("configElement")
   watchConfigElement(el: PieElement) {
     if (!el) {
@@ -636,11 +674,20 @@ export class PieDemo {
 
   setMode(mode) {
     this.env["mode"] = mode;
+
+    if (this.piePlayer) {
+      this.piePlayer.env = { mode: mode, role: this.currentOption };
+    }
+
     this.updatePieModelFromController(this.configModel, this.session, this.env);
   }
 
   setOption(option) {
     this.currentOption = option;
+
+    if (this.piePlayer) {
+        this.piePlayer.env = { mode: this.env['mode'], role: this.currentOption };
+    }
   }
 
   customCheckBox({ label, checked, value, action = undefined }) {
@@ -717,6 +764,12 @@ export class PieDemo {
                     2,
                     98
                   );
+
+                  if (index === 1) {
+                    this.configModel = this[`cachedJsonConfig${index}`];
+                  } else {
+                    this.configureObject = this[`cachedJsonConfig${index}`];
+                  }
                 }
               }}
             >
@@ -749,20 +802,17 @@ export class PieDemo {
         {
           name: "Item Model",
           content: () => {
-            this.cachedJsonConfig1 = this.configElement._model;
+            this.cachedJsonConfig1 = cloneDeep(this.model);
 
-            return this.renderJsonConfigPanel(this.configElement._model, 1);
+            return this.renderJsonConfigPanel(this.cachedJsonConfig1, 1);
           }
         },
         {
           name: "Authoring View Settings",
           content: () => {
-            this.cachedJsonConfig2 = this.configElement._configuration;
+            this.cachedJsonConfig2 = cloneDeep(this.configure);
 
-            return this.renderJsonConfigPanel(
-              this.configElement._configuration,
-              2
-            );
+            return this.renderJsonConfigPanel(this.cachedJsonConfig2, 2);
           }
         }
       ],
@@ -1019,88 +1069,22 @@ export class PieDemo {
   }
 
   renderAuthoringHolder = (smallView = false) => {
-    // const ConfigTag = this.pieName + "-config";
+    const ConfigTag = this.pieName + "-config";
     const isCollapsed = this.collapsed === "authoring";
     const config = {
       id: "1",
       elements: {
-        "pie-multiple-choice": "@pie-element/multiple-choice@3.7.0"
+        [ConfigTag]: this.pie
       },
       models: [
-        {
-          id: "1",
-          element: "pie-multiple-choice",
-          prompt: `<math> <mrow>
-   <msup>
-     <mfenced>
-       <mrow>
-         <mi>a</mi>
-         <mo>+</mo>
-         <mi>b</mi>
-       </mrow>
-     </mfenced>
-     <mn>2</mn>
-   </msup>
- </mrow></math>`,
-          choiceMode: "checkbox",
-          keyMode: "numbers",
-          choices: [
-            {
-              correct: true,
-              value: "sweden",
-              label: "Sweden",
-              feedback: {
-                type: "none",
-                value: ""
-              }
-            },
-            {
-              value: "iceland",
-              label: `Iceland <math xmlns="http://www.w3.org/1998/Math/MathML">   <mrow>
-   <msup>
-     <mfenced>
-       <mrow>
-         <mi>a</mi>
-         <mo>+</mo>
-         <mi>b</mi>
-       </mrow>
-     </mfenced>
-     <mn>2</mn>
-   </msup>
- </mrow> </math>`,
-              //label: `Iceland <math style="display: block;"> <mtable columnalign="right center left"> <mtr> <mtd> <msup> <mrow> <mo> ( </mo> <mi> a </mi> <mo> + </mo> <mi> b </mi> <mo> ) </mo> </mrow> <mn> 2 </mn> </msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 4 </mn> <mo> ⋅ </mo> <mo>(</mo> <mfrac> <mn> 1 </mn> <mn> 2 </mn> </mfrac> <mi> a </mi><mi> b </mi> <mo>)</mo>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</mtd> </mtr> <mtr> <mtd> <msup><mi> a </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b </mi> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> <mo> + </mo> <mn> 2 </mn><mi> a </mi><mi> b</mi></mtd></mtr><mtr><mtd></mtd></mtr><mtr><mtd><msup><mi>a </mi><mn>2</mn></msup> <mo> + </mo> <msup><mi> b </mi><mn>2</mn></msup> </mtd> <mtd> <mo> = </mo> </mtd> <mtd> <msup><mi> c </mi><mn>2</mn></msup> </mtd> </mtr> </mtable> </math>`,
-              feedback: {
-                type: "none",
-                value: ""
-              }
-            },
-            {
-              value: "norway",
-              label: "Norway",
-              feedback: {
-                type: "none",
-                value: ""
-              }
-            },
-            {
-              correct: true,
-              value: "finland",
-              label: "Finland",
-              feedback: {
-                type: "none",
-                value: ""
-              }
-            }
-          ],
-          partialScoring: false,
-          partialScoringLabel: `Each correct response that is correctly checked and each incorrect response
-            that is correctly unchecked will be worth 1 point.
-            The maximum points is the total number of answer choices.`
-        }
+        this.configModel
       ],
       markup: `
-          <pie-multiple-choice id='1'></pie-multiple-choice>
+          <${ConfigTag} id='1'></${ConfigTag}>
         `
+    };
+    const configSettings = {
+      [getPackageWithoutVersion(this.pie)]: this.configureObject
     };
 
     return (
@@ -1132,9 +1116,14 @@ export class PieDemo {
                 minHeight: `${this.minHeightAuthoring}px`
               }}
             >
-              <pie-player
+              <pie-author
+                class="pie-author"
+                ref={el => el && (this.pieAuthor = el as JSX.PieAuthor)}
                 config={config}
-              />
+                configSettings={configSettings}
+              >
+                {" "}
+              </pie-author>
             </div>
           </div>
         )}
@@ -1188,8 +1177,71 @@ export class PieDemo {
   renderStudentHolder = (smallView = false) => {
     const TagName = this.pieName + "";
     const isCollapsed = this.collapsed === "student";
+    const config = {
+      id: "1",
+      elements: {
+        [TagName]: this.pie
+      },
+      models: [
+        this.configModel
+      ],
+      markup: `
+          <${TagName} id='1'></${TagName}>
+        `
+    };
 
     return (
+      <div
+        class={classnames("student-view-holder", {
+          collapsed: this.collapsed === "student",
+          toggled: this.isToggled()
+        })}
+      >
+        <div
+          class={classnames("control-bar", {
+            justElement: this.justElement
+          })}
+        >
+          {this.renderStudentHeader(smallView)}
+        </div>
+        {isCollapsed && this.renderCollapsedPanel("Student View")}
+        {!isCollapsed && (
+          <div
+            class={classnames("element-holder", {
+              toggled: this.studSettVisible,
+              justElement: this.justElement
+            })}
+          >
+            <div
+              class={classnames("score-holder", {
+                visible: this.env["mode"] === "evaluate"
+              })}
+            >
+              <div class="score">
+                <span>Score: </span> {this.scoring.score}
+              </div>
+              <pre>{this.scoring.json}</pre>
+            </div>
+            <div
+              ref={el => el && (this.elementParent2 = el as any)}
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightStudent}px`
+              }}
+            >
+              <pie-player
+                class="pie-player"
+                ref={el => el && (this.piePlayer = el as JSX.PiePlayer)}
+                config={config}
+              >
+                {" "}
+              </pie-player>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+    /*return (
       <div
         class={classnames("student-view-holder", {
           collapsed: this.collapsed === "student",
@@ -1238,7 +1290,7 @@ export class PieDemo {
           </div>
         )}
       </div>
-    );
+    );*/
   };
 
   renderContent = () => {
@@ -1286,6 +1338,11 @@ export class PieDemo {
       </div>
     );
   };
+
+  componentShouldUpdate(newVal, oldValue, propName) {
+    console.log(newVal, oldValue, propName);
+    return !isEqual(newVal, oldValue);
+  }
 
   render() {
     switch (this.state) {

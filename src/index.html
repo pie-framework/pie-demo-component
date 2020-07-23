@@ -23,6 +23,8 @@
       const model = (id, element) => ({
         id,
         element,
+        allowFeedback: true,
+        lockChoiceOrder: true,
         choiceMode: "checkbox",
         choicePrefix: "numbers",
         choices: [
@@ -67,22 +69,53 @@
         prompt: "Which of these northern European countries are EU members?"
       });
       const configure = {
-        promptLabel: "Prompt",
-        addChoiceButtonLabel: "Add a choice",
-        addChoice: false,
-        addFeedBack: true,
-        deleteChoice: true,
-        showPrompt: true,
-        answerChoiceCount: 0,
-        settingsSelectChoiceMode: true,
-        settingsSelectChoicePrefixes: true,
-        settingsSelectChoiceModeLabel: "Response Type",
-        settingsChoicePrefixesLabel: "Choice Labels",
-        settingsPartialScoring: true,
-        settingsConfigShuffle: true
+        answerChoiceCount: 4,
+        addChoiceButton: {
+          settings: true,
+          label: 'Add Choice'
+        },
+        choiceMode: {
+          settings: false,
+          label: 'Response Type'
+        },
+        lockChoiceOrder: {
+          settings: true,
+          label: 'Lock Choice Order'
+        },
+        partialScoring: {
+          settings: false,
+          label: 'Allow Partial Scoring'
+        },
+        choicePrefix: {
+          settings: true,
+          label: 'Choice Labels'
+        },
+        deleteChoice: {
+          settings: true
+        },
+        feedback: {
+          settings: false,
+          label: 'Student Feedback'
+        },
+        prompt: {
+          settings: true,
+          label: 'Item Stem'
+        },
+        rationale: {
+          settings: true,
+          label: 'Rationale'
+        },
+        studentInstructions: {
+          settings: false,
+          label: 'Student Instructions'
+        },
+        teacherInstructions: {
+          settings: true,
+          label: 'Teacher Instructions'
+        }
       };
       const pieDemo = document.querySelector("pie-demo");
-      pieDemo.model = model("0", "pie-element-multiple-choice");
+      pieDemo.model = model("1", "pie-element-multiple-choice");
 
       pieDemo.configure = configure;
       pieDemo.configureSchemaJSONURI =
