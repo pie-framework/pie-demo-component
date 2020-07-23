@@ -808,20 +808,26 @@
   resolved "https://registry.yarnpkg.com/@pie-framework/pie-configure-events/-/pie-configure-events-1.2.0.tgz#b1a8dea620ac120fe768e4d6a624f40090d3f153"
   integrity sha512-6aFT2ckKLh3ECZ6eTgthkoa11sMxTeUHAau8UZ0CLLyCd2d0c0pzQaXY0D3bc0DL3++9u0t7DbZLleXrk/HDoA==
 
-"@pie-framework/pie-player-components@^0.25.1":
-  version "0.25.1"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-0.25.1.tgz#d2604812cca2994433bd11b7ee90ebf7af30cf04"
-  integrity sha512-ofw3RPv7tanxOHSmvkAo/7U9MSrnMcn5B8+/GN+3+EdrWm2wg78nsEIyKrZ8qGgxZli5c+gnrx+8KMkuvcIm4A==
+"@pie-framework/pie-player-components@^0.25.2":
+  version "0.25.2"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-0.25.2.tgz#9d7d4904d4b5a8cf61e533e7e48c339c3e8a868c"
+  integrity sha512-YZ9N26JNmS2dOklD1f2v3SbKquW79ZbK/aUoOhuuHBlHy6jq6wx7dI/KgF3tT6a+VdsDmw4wD9pZ4JkCDAzORg==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
     "@material/tab" "^2.2.0"
     "@material/tab-bar" "^2.2.0"
     "@pie-framework/pie-configure-events" "^1.2.0"
+    "@pie-framework/pie-player-events" "^0.1.0"
     "@pie-lib/math-rendering" "^2.1.10"
     async-retry "^1.2.3"
     lodash "^4.17.15"
     parse-package-name "^0.1.0"
+
+"@pie-framework/pie-player-events@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-events/-/pie-player-events-0.1.0.tgz#0150904118fd604559982ab658967811c053ffe3"
+  integrity sha512-6H1tlRGmcZ3Wt+8HMqu5KugVcwwyNrMylfI5rIpvOSt0T82QDmjRj+2sPgQG5zos/w6MtwUqn/QZ+8Rq2EXSOA==
 
 "@pie-lib/math-rendering@^2.1.10":
   version "2.1.12"
