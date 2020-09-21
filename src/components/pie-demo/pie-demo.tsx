@@ -7,10 +7,8 @@ import jsonBeautify from "json-beautify";
 import { getPackageWithoutVersion, packageToElementName } from "../../util/utils";
 import classnames from "classnames";
 import docson from "docson";
-// import { loadCloudPies } from "../../util/PieCloud";
 import range from "lodash/range";
 import cloneDeep from "lodash/cloneDeep";
-import isEqual from 'lodash/isEqual'
 import merge from 'lodash/merge'
 import {
   ModelUpdatedEvent,
@@ -131,9 +129,9 @@ export class PieDemo {
 
   @Prop() configure: Object;
 
-  @State() modelSchemaJSON: Object = null;
+  // @State() modelSchemaJSON: Object = null;
 
-  @State() configureSchemaJSON: Object = null;
+  // @State() configureSchemaJSON: Object = null;
 
   @State() configModel: PieModel;
 
@@ -147,8 +145,6 @@ export class PieDemo {
 
   @State() authoringHeaderResizeObserver: any;
 
-  @State() mutationObserver: any;
-
   @State() rootResizeObserver: any;
 
   @State() pieName: string;
@@ -157,29 +153,9 @@ export class PieDemo {
 
   @State() pieElement: PieElement;
 
-  @State() pieAuthor: JSX.PieAuthor;
-
-  @State() piePlayer: JSX.PiePlayer;
-
-  @State() rootEl: any;
-
-  @State() elementParent1: any;
-
-  @State() elementParent2: any;
-
   @State() minHeightAuthoring: any = "initial";
 
   @State() minHeightStudent: any = "initial";
-
-  @State() textAreaContentRef1: any;
-
-  @State() textAreaContentRef2: any;
-
-  @State() studentHeader: any;
-
-  @State() authoringHeader: any;
-
-  @State() bottomContentRef: any;
 
   @State() studentHeaderWidth: number = 500;
 
@@ -218,14 +194,25 @@ export class PieDemo {
 
   @State() jsonConfigValue: Object = null;
 
-  @State() cachedJsonConfig1: Object = null;
-
-  @State() cachedJsonConfig2: Object = null;
-
-  @State() fileInput: any = null;
-
   imageHandler: ImageHandler = null;
 
+  configureSchemaJSON: Object = null;
+  modelSchemaJSON: Object = null;
+  textAreaContentRef1: any;
+  textAreaContentRef2: any;
+  cachedJsonConfig1: Object = null;
+  cachedJsonConfig2: Object = null;
+  authoringHeader: any;
+  studentHeader: any;
+  rootEl: any = null;
+  elementParent2: any;
+  pieAuthor: JSX.PieAuthor;
+  piePlayer: JSX.PiePlayer;
+  fileInput: any = null;
+  elementParent1: any;
+  bottomContentRef: any;
+  _renderingAuthor: Boolean = false;
+  _renderingStudent: Boolean = false;
   handleFileInputChange: (e: Event) => void;
   handleInsertImage: (e: InsertImageEvent) => void;
   handleDeleteImage: (e: DeleteImageEvent) => void;
@@ -271,6 +258,10 @@ export class PieDemo {
       }
     };
 
+    this.handleRootEl = this.handleRootEl.bind(this);
+    this.handleAuthoringHeader = this.handleAuthoringHeader.bind(this);
+    this.handleStudentHeader = this.handleStudentHeader.bind(this);
+
     this.handleInsertImage = (e: InsertImageEvent) => {
       log("[handleInsertImage] fileInput:", this.fileInput);
       this.imageHandler = e.detail;
@@ -280,6 +271,10 @@ export class PieDemo {
     this.handleDeleteImage = (e: DeleteImageEvent) => {
       e.detail.done();
     };
+  }
+
+  componentShouldUpdate(a, b, c) {
+    console.log(a, b, c);
   }
 
   componentDidUpdate() {
@@ -305,14 +300,6 @@ export class PieDemo {
       }
     }
   }
-
-  /**
-   * Some functionality
-   */
-  @Prop() loadPies: Function = elements => {
-    console.log(elements);
-    // loadCloudPies(elements, document);
-  };
 
   collapsePanel(name) {
     this.collapsed = this.collapsed === name ? null : name;
@@ -350,8 +337,6 @@ export class PieDemo {
       this.authoringHeaderResizeObserver.unobserve(this.authoringHeader);
     }
 
-    this.mutationObserver.disconnect();
-
     if (this.rootEl) {
       this.rootResizeObserver.unobserve(this.rootEl);
     }
@@ -373,7 +358,7 @@ export class PieDemo {
       // TODO - what if same element reloaded, could elems be redefined? may need to undefine prior?
       const packageWithoutVersion = getPackageWithoutVersion(this.package);
       this.pieController =
-        window["pie"].default[packageWithoutVersion].controller ||
+        (window["pie"].default[packageWithoutVersion] && window["pie"].default[packageWithoutVersion].controller) ||
         defaultController;
       if (this.model) {
         this.updatePieModelFromController(this.model, this.session, this.env);
@@ -383,7 +368,6 @@ export class PieDemo {
 
     if (this.load) {
       this.state = ViewState.READY;
-      // loadCloudPies({ [this.pieName]: this.package }, document);
     }
   }
 
@@ -403,37 +387,30 @@ export class PieDemo {
     this.updatePieModelFromController(newModel, this.session, this.env);
   }
 
-  @Watch("configureObject")
-  async watchConfigureObject(newConfigure) {
-    // if (this.configElement) this.configElement.configuration = newConfigure;
-    if (this.pieAuthor) {
-      console.log(newConfigure);
-      // this.pieAuthor.configSettings = {[getPackageWithoutVersion(this.pie)]: newConfigure };
-    }
-  }
-
   async updatePieModelFromController(model, session, env) {
     if (this.pieController && this.pieController.model) {
-      (this.pieElementModel as any) = await this.pieController.model(
+      const newConfig = await this.pieController.model(
         model,
         session,
         env
       );
 
-      const scoring = await this.pieController.outcome(
-        this.configModel,
-        this.session,
-        this.env
-      );
+      if (this.env["mode"] === "evaluate") {
+        const scoring = await this.pieController.outcome(
+          this.configModel,
+          this.session,
+          this.env
+        );
 
-      this.scoring = {
-        score: scoring.score,
-        json: jsonBeautify(scoring.details, null, 2, 80)
-      };
+        this.scoring = {
+          score: scoring.score,
+          json: jsonBeautify(scoring.details, null, 2, 80)
+        };
+      }
 
       if (this.piePlayer) {
         const ConfigTag = this.pieName + "-config";
-        const newModel = merge(cloneDeep(this.configModel, this.pieElementModel));
+        const newModel = merge(cloneDeep(this.configModel, newConfig));
         const config = {
           id: "1",
           elements: {
@@ -467,62 +444,42 @@ export class PieDemo {
     }
   }
 
-  @Watch("studentHeader")
-  watchStudentHeader(current, previous) {
+  handleStudentHeader(current) {
     if (current) {
+      this.studentHeader = current;
       this.studentHeaderResizeObserver.observe(current);
     } else {
-      this.studentHeaderResizeObserver.unobserve(previous);
+      if (this.studentHeader) {
+        this.studentHeaderResizeObserver.unobserve(this.studentHeader);
+      }
+
       this.detachListeners();
     }
   }
 
-  @Watch("authoringHeader")
-  watchAuthoringHeader(current, previous) {
+  handleAuthoringHeader(current) {
     if (current) {
+      this.authoringHeader = current;
       this.authoringHeaderResizeObserver.observe(current);
     } else {
-      this.authoringHeaderResizeObserver.unobserve(previous);
+      if (this.authoringHeader) {
+        this.authoringHeaderResizeObserver.unobserve(this.authoringHeader);
+      }
+
       this.detachListeners();
     }
   }
 
-  @Watch("elementParent1")
-  watchElementParent1(current) {
+  handleRootEl(current) {
     if (current) {
-      this.mutationObserver.observe(current, {
-        attributes: true,
-        childList: true,
-        subtree: true
-      });
-    } else {
-      this.mutationObserver.disconnect();
-    }
-  }
-
-  @Watch("elementParent2")
-  watchElementParent2(current) {
-    if (current) {
-      this.mutationObserver.observe(current, {
-        attributes: true,
-        childList: true,
-        subtree: true
-      });
-    } else {
-      this.mutationObserver.disconnect();
-    }
-  }
-
-  @Watch("rootEl")
-  watchRootEl(current, previous) {
-    if (current) {
+      this.rootEl = current;
       this.rootResizeObserver.observe(current, {
         attributes: true,
         childList: true,
         subtree: true
       });
-    } else {
-      this.rootResizeObserver.unobserve(previous);
+    } else if (this.rootEl) {
+      this.rootResizeObserver.unobserve(this.rootEl);
     }
   }
 
@@ -540,10 +497,6 @@ export class PieDemo {
       if (this.authoringHeader) {
         this.authoringHeaderWidth = this.authoringHeader.offsetWidth;
       }
-    });
-
-    this.mutationObserver = new MutationObserver(() => {
-      // this.handleElementParentResize();
     });
 
     this.rootResizeObserver = new (ResizeObserver as any)(() => {
@@ -602,31 +555,26 @@ export class PieDemo {
     this[name] = minHeight;
   }
 
-  handleElementParentResize() {
-    if (this.elementParent1) {
-      this.handleElementResize(this.elementParent1, "minHeightAuthoring");
-    }
-
-    if (this.elementParent2) {
-      this.handleElementResize(this.elementParent2, "minHeightStudent");
-    }
-  }
-
   /**
    * Pick up @pie-framework/pie-configure-events and trigger an update.
    * TODO: Why cant i use ModelUpdatedEvent.TYPE in the decorator?
    */
   @Listen("model.updated")
   onModelUpdated(event: ModelUpdatedEvent) {
+    if (this._renderingAuthor || this._renderingStudent) {
+      this._renderingAuthor = false;
+      this._renderingStudent = false;
+      return;
+    }
+
     log("MODEL UPDATED: target:", event.target, event.detail);
-    this.model = event.detail.update;
+    // this.model = event.detail.update;
     this.updatePieModelFromController(
       event.detail.update,
       this.session,
       this.env
     );
   }
-
 
   @Listen("session-changed")
   onSessionChanged(event: ModelUpdatedEvent) {
@@ -673,7 +621,10 @@ export class PieDemo {
   }
 
   setMode(mode) {
-    this.env["mode"] = mode;
+    this.env = {
+      ...this.env,
+      mode: mode
+    };
 
     if (this.piePlayer) {
       this.piePlayer.env = { mode: mode, role: this.currentOption };
@@ -802,7 +753,7 @@ export class PieDemo {
         {
           name: "Item Model",
           content: () => {
-            this.cachedJsonConfig1 = cloneDeep(this.model);
+            this.cachedJsonConfig1 = cloneDeep(this.configModel);
 
             return this.renderJsonConfigPanel(this.cachedJsonConfig1, 1);
           }
@@ -825,7 +776,7 @@ export class PieDemo {
 
     return (
       <div
-        ref={el => (this.authoringHeader = el as any)}
+        ref={this.handleAuthoringHeader}
         class={classnames("authoring-header", {
           collapsed: this.collapsed === "authoring",
           toggled: isToggled
@@ -1003,7 +954,7 @@ export class PieDemo {
   renderStudentHeader(smallView = false) {
     return (
       <div
-        ref={el => (this.studentHeader = el as any)}
+        ref={this.handleStudentHeader}
         class={classnames("student-view-header", {
           collapsed: this.collapsed === "student",
           toggled: this.isToggled()
@@ -1086,6 +1037,7 @@ export class PieDemo {
     const configSettings = {
       [getPackageWithoutVersion(this.pie)]: this.configureObject
     };
+    this._renderingAuthor = true;
 
     return (
       <div
@@ -1130,48 +1082,6 @@ export class PieDemo {
         <input type="file" hidden ref={r => (this.fileInput = r)} />
       </div>
     );
-    /*return (
-      <div
-        class={classnames("authoring-holder", {
-          collapsed: this.collapsed === "authoring",
-          toggled: this.isToggled()
-        })}
-      >
-        <div
-          class={classnames("control-bar", {
-            justElement: this.justElement
-          })}
-        >
-          {this.renderAuthoringHeader(smallView)}
-        </div>
-        {isCollapsed &&
-          this.renderCollapsedPanel("Authoring View", this.isToggled())}
-        {!isCollapsed && (
-          <div
-            ref={el => el && (this.elementParent1 = el as any)}
-            class={classnames("element-holder", {
-              justElement: this.justElement
-            })}
-          >
-            <div
-              class="element-parent"
-              style={{
-                minHeight: `${this.minHeightAuthoring}px`
-              }}
-            >
-              <ConfigTag
-                id="configure"
-                ref={el => (this.configElement = el as PieElement)}
-                model={this.configModel}
-                configure={this.configureObject}
-                session={this.session}
-              />
-            </div>
-          </div>
-        )}
-        <input type="file" hidden ref={r => (this.fileInput = r)} />
-      </div>
-    );*/
   };
 
   renderStudentHolder = (smallView = false) => {
@@ -1189,6 +1099,7 @@ export class PieDemo {
           <${TagName} id='1'></${TagName}>
         `
     };
+    this._renderingStudent = true;
 
     return (
       <div
@@ -1241,56 +1152,6 @@ export class PieDemo {
         )}
       </div>
     );
-    /*return (
-      <div
-        class={classnames("student-view-holder", {
-          collapsed: this.collapsed === "student",
-          toggled: this.isToggled()
-        })}
-      >
-        <div
-          class={classnames("control-bar", {
-            justElement: this.justElement
-          })}
-        >
-          {this.renderStudentHeader(smallView)}
-        </div>
-        {isCollapsed && this.renderCollapsedPanel("Student View")}
-        {!isCollapsed && (
-          <div
-            class={classnames("element-holder", {
-              toggled: this.studSettVisible,
-              justElement: this.justElement
-            })}
-          >
-            <div
-              class={classnames("score-holder", {
-                visible: this.env["mode"] === "evaluate"
-              })}
-            >
-              <div class="score">
-                <span>Score: </span> {this.scoring.score}
-              </div>
-              <pre>{this.scoring.json}</pre>
-            </div>
-            <div
-              ref={el => el && (this.elementParent2 = el as any)}
-              class="element-parent"
-              style={{
-                minHeight: `${this.minHeightStudent}px`
-              }}
-            >
-              <TagName
-                id="render"
-                ref={el => el && (this.pieElement = el as PieElement)}
-                model={this.pieElementModel}
-                session={this.session}
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    );*/
   };
 
   renderContent = () => {
@@ -1339,11 +1200,6 @@ export class PieDemo {
     );
   };
 
-  componentShouldUpdate(newVal, oldValue, propName) {
-    console.log(newVal, oldValue, propName);
-    return !isEqual(newVal, oldValue);
-  }
-
   render() {
     switch (this.state) {
       case ViewState.LOADING:
@@ -1360,7 +1216,7 @@ export class PieDemo {
             class={classnames("root", {
               multiplePies: this.multiplePies
             })}
-            ref={el => el && (this.rootEl = el as any)}
+            ref={this.handleRootEl}
           >
             {this.renderDocHolder()}
             {this.renderContent()}

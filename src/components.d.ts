@@ -27,10 +27,6 @@ export namespace Components {
          */
         "load": boolean;
         /**
-          * Some functionality
-         */
-        "loadPies": Function;
-        /**
           * The model for the pie.
          */
         "model": Object;
@@ -90,10 +86,6 @@ declare namespace LocalJSX {
           * Tells the component if it needs to load the elements or not
          */
         "load"?: boolean;
-        /**
-          * Some functionality
-         */
-        "loadPies"?: Function;
         /**
           * The model for the pie.
          */
