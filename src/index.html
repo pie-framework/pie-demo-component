@@ -16,57 +16,50 @@
     <pie-demo
       id="demo"
       editor="true"
-      pie="@pie-element/multiple-choice@5.5.5"
+      pie="@pie-element/math-inline@latest"
     ></pie-demo>
 
     <script>
       const model = (id, element) => ({
         id,
         element,
-        allowFeedback: true,
-        lockChoiceOrder: true,
-        choiceMode: "checkbox",
-        choicePrefix: "numbers",
-        choices: [
+        customKeys: [
+          '<',
+          '\\le',
+          '\\ge',
+          '>',
+          '\\frac{}{}',
+          'x^{}',
+          '\\left(\\right)',
+          '\\abs{}',
+          '\\sqrt{}',
+          '\\sqrt[n]{}',
+          '\\pi',
+          '\\iota',
+          '\\sin',
+          '\\cos',
+          '\\tan',
+          '\\arcsin',
+          '\\arccos',
+          '\\arctan',
+          'r',
+          'V_uppercase',
+          '\\fract'
+        ],
+        equationEditor: 'geometry',
+        responseType: 'Advanced Multi',
+        expression: '{{response}}',
+        responses: [
           {
-            correct: true,
-            value: "sweden",
-            label: "Sweden",
-            feedback: {
-              type: "none",
-              value: ""
-            }
-          },
-          {
-            value: "iceland",
-            label: "Iceland",
-            feedback: {
-              type: "none",
-              value: ""
-            },
-            rationale: "Rationale for Iceland"
-          },
-          {
-            value: "norway",
-            label: "Norway",
-            feedback: {
-              type: "none",
-              value: ""
-            },
-            rationale: "Rationale for Norway"
-          },
-          {
-            correct: true,
-            value: "finland",
-            label: "Finland",
-            feedback: {
-              type: "none",
-              value: ""
-            },
-            rationale: "Rationale for Finland"
+            allowSpaces: true,
+            answer: 'r=\\sqrt{\\frac{V}{7\\pi}}',
+            id: '1',
+            alternates: {},
+            validation: 'symbolic'
           }
         ],
-        prompt: "Which of these northern European countries are EU members?"
+        rationale:
+                '<p>The correct answer is:</p><ul><li><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>r</mi><mo>=</mo><msqrt><mfrac><mi>V</mi><mrow><mn>7</mn><mi>&#960;</mi></mrow></mfrac></msqrt></math></li></ul>',
       });
       const configure = {
         answerChoiceCount: 4,

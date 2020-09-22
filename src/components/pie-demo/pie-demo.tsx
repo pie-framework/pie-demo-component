@@ -10,6 +10,7 @@ import docson from "docson";
 import range from "lodash/range";
 import cloneDeep from "lodash/cloneDeep";
 import merge from 'lodash/merge'
+import throttle from 'lodash/throttle'
 import {
   ModelUpdatedEvent,
   InsertImageEvent,
@@ -141,10 +142,6 @@ export class PieDemo {
 
   @State() package: string;
 
-  @State() studentHeaderResizeObserver: any;
-
-  @State() authoringHeaderResizeObserver: any;
-
   @State() rootResizeObserver: any;
 
   @State() pieName: string;
@@ -156,10 +153,6 @@ export class PieDemo {
   @State() minHeightAuthoring: any = "initial";
 
   @State() minHeightStudent: any = "initial";
-
-  @State() studentHeaderWidth: number = 500;
-
-  @State() authoringHeaderWidth: number = 500;
 
   @State() rootElWidth: number = 1250;
 
@@ -194,6 +187,8 @@ export class PieDemo {
 
   @State() jsonConfigValue: Object = null;
 
+  @State() _renderStudent: Boolean = false;
+
   imageHandler: ImageHandler = null;
 
   configureSchemaJSON: Object = null;
@@ -202,8 +197,6 @@ export class PieDemo {
   textAreaContentRef2: any;
   cachedJsonConfig1: Object = null;
   cachedJsonConfig2: Object = null;
-  authoringHeader: any;
-  studentHeader: any;
   rootEl: any = null;
   elementParent2: any;
   pieAuthor: JSX.PieAuthor;
@@ -259,8 +252,6 @@ export class PieDemo {
     };
 
     this.handleRootEl = this.handleRootEl.bind(this);
-    this.handleAuthoringHeader = this.handleAuthoringHeader.bind(this);
-    this.handleStudentHeader = this.handleStudentHeader.bind(this);
 
     this.handleInsertImage = (e: InsertImageEvent) => {
       log("[handleInsertImage] fileInput:", this.fileInput);
@@ -271,10 +262,6 @@ export class PieDemo {
     this.handleDeleteImage = (e: DeleteImageEvent) => {
       e.detail.done();
     };
-  }
-
-  componentShouldUpdate(a, b, c) {
-    console.log(a, b, c);
   }
 
   componentDidUpdate() {
@@ -327,14 +314,6 @@ export class PieDemo {
         "model.updated",
         this.handleSetConfigElement
       );
-    }
-
-    if (this.studentHeader) {
-      this.studentHeaderResizeObserver.unobserve(this.studentHeader);
-    }
-
-    if (this.authoringHeader) {
-      this.authoringHeaderResizeObserver.unobserve(this.authoringHeader);
     }
 
     if (this.rootEl) {
@@ -444,32 +423,6 @@ export class PieDemo {
     }
   }
 
-  handleStudentHeader(current) {
-    if (current) {
-      this.studentHeader = current;
-      this.studentHeaderResizeObserver.observe(current);
-    } else {
-      if (this.studentHeader) {
-        this.studentHeaderResizeObserver.unobserve(this.studentHeader);
-      }
-
-      this.detachListeners();
-    }
-  }
-
-  handleAuthoringHeader(current) {
-    if (current) {
-      this.authoringHeader = current;
-      this.authoringHeaderResizeObserver.observe(current);
-    } else {
-      if (this.authoringHeader) {
-        this.authoringHeaderResizeObserver.unobserve(this.authoringHeader);
-      }
-
-      this.detachListeners();
-    }
-  }
-
   handleRootEl(current) {
     if (current) {
       this.rootEl = current;
@@ -487,23 +440,13 @@ export class PieDemo {
     log("component will load ... ");
     this.watchPie(this.pie);
 
-    this.studentHeaderResizeObserver = new (ResizeObserver as any)(() => {
-      if (this.studentHeader) {
-        this.studentHeaderWidth = this.studentHeader.offsetWidth;
-      }
-    });
-
-    this.authoringHeaderResizeObserver = new (ResizeObserver as any)(() => {
-      if (this.authoringHeader) {
-        this.authoringHeaderWidth = this.authoringHeader.offsetWidth;
-      }
-    });
-
-    this.rootResizeObserver = new (ResizeObserver as any)(() => {
+    const rootHandler = throttle(() => {
       if (this.rootEl) {
         this.rootElWidth = this.rootEl.offsetWidth;
       }
-    });
+    }, 1000, { leading: true });
+
+    this.rootResizeObserver = new (ResizeObserver as any)(rootHandler);
 
     if (this.model) {
       this.updateModel(this.model);
@@ -574,6 +517,13 @@ export class PieDemo {
       this.session,
       this.env
     );
+  }
+
+  @Listen("modelLoaded")
+  onModelLoaded() {
+    if (!this._renderStudent) {
+      this._renderStudent = true;
+    }
   }
 
   @Listen("session-changed")
@@ -776,7 +726,6 @@ export class PieDemo {
 
     return (
       <div
-        ref={this.handleAuthoringHeader}
         class={classnames("authoring-header", {
           collapsed: this.collapsed === "authoring",
           toggled: isToggled
@@ -954,7 +903,6 @@ export class PieDemo {
   renderStudentHeader(smallView = false) {
     return (
       <div
-        ref={this.handleStudentHeader}
         class={classnames("student-view-header", {
           collapsed: this.collapsed === "student",
           toggled: this.isToggled()
@@ -1100,6 +1048,10 @@ export class PieDemo {
         `
     };
     this._renderingStudent = true;
+
+    if (!this._renderStudent) {
+      return null;
+    }
 
     return (
       <div
