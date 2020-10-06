@@ -200,6 +200,7 @@ export class PieDemo {
   rootEl: any = null;
   elementParent2: any;
   pieAuthor: JSX.PieAuthor;
+  authorElement: any;
   piePlayer: JSX.PiePlayer;
   fileInput: any = null;
   elementParent1: any;
@@ -265,6 +266,26 @@ export class PieDemo {
   }
 
   componentDidUpdate() {
+    if (this.pieAuthor) {
+      const authorElName = `${Object.keys((this.pieAuthor.config as any).elements)[0]}-config`;
+
+      if (authorElName) {
+        let findEl;
+
+        if (!this.authorElement) {
+          findEl = true
+        } else {
+          const tagName = this.authorElement.tagName.toLowerCase();
+
+          findEl = tagName !== authorElName;
+        }
+
+        if (findEl) {
+          this.authorElement = document.querySelector(authorElName);
+        }
+      }
+    }
+
     if (this.fileInput) {
       this.fileInput.addEventListener("change", this.handleFileInputChange);
     }
@@ -711,7 +732,9 @@ export class PieDemo {
         {
           name: "Authoring View Settings",
           content: () => {
-            this.cachedJsonConfig2 = cloneDeep(this.configure);
+            const config = this.authorElement ? this.authorElement._configuration : this.configure;
+
+            this.cachedJsonConfig2 = cloneDeep(config);
 
             return this.renderJsonConfigPanel(this.cachedJsonConfig2, 2);
           }
