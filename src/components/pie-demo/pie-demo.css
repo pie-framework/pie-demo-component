@@ -67,6 +67,10 @@ body {
   display: flex;
 }
 
+mjx-container.MathJax *:not(mjx-math) {
+  font-family: inherit !important;
+}
+
 *:not(i) {
   font-family: Roboto, serif;
 }
