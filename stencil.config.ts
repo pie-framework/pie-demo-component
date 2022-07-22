@@ -1,6 +1,4 @@
 import { Config } from "@stencil/core";
-import builtins from "rollup-plugin-node-builtins";
-import globals from "rollup-plugin-node-globals";
 
 export const config: Config = {
   namespace: "pie-demo",
@@ -8,8 +6,8 @@ export const config: Config = {
     testRegex: "__tests__/.*.(spec|e2e).ts"
   },
   rollupPlugins: {
-    before: [], 
-    after: [ builtins(), globals() ] 
+    before: [],
+    after: []
   },
   copy: [
     { src: "../src/ebsr.html", dest: "ebsr.html" },
