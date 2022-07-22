@@ -15,7 +15,6 @@
     "dist/"
   ],
   "scripts": {
-    "preinstall": "pnpx --help || npm install -g pnpm",
     "build": "stencil build && git status",
     "prepublish": "npm run build",
     "release": "npm run build && ./node_modules/.bin/release-it --verbose",
@@ -40,6 +39,7 @@
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
+    "pnpm": "^6.33.1",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "24.0.21",
     "@types/puppeteer": "1.20.2",
@@ -49,8 +49,6 @@
     "jest-cli": "24.9.0",
     "puppeteer": "1.20.0",
     "release-it": "^12.3.6",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.4.0",
     "serve": "^10.0.2",
     "start-server-and-test": "^1.7.8"
   },
