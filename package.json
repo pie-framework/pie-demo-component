@@ -32,7 +32,7 @@
     "classnames": "^2.2.6",
     "debug": "^4.1.1",
     "docson": "git://github.com/pie-framework/docson.git#6a5780f26525236ad3a1968b53da1f7bef66f935",
-    "handlebars": "4.3.4",
+    "handlebars": "4.7.7",
     "json-beautify": "^1.1.0",
     "lodash": "^4.17.11",
     "parse-package-name": "^0.1.0",
