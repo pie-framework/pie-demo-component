@@ -4,7 +4,7 @@
     "access": "public"
   },
   "repository": "pie-framework/pie-demo-component",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
@@ -38,7 +38,6 @@
     "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
-    "pnpm": "^6.33.1",
     "@release-it/conventional-changelog": "^1.1.0",
     "@types/jest": "24.0.21",
     "@types/puppeteer": "1.20.2",
@@ -46,6 +45,7 @@
     "conventional-changelog-cli": "^2.0.23",
     "jest": "24.9.0",
     "jest-cli": "24.9.0",
+    "pnpm": "^6.33.1",
     "puppeteer": "1.20.0",
     "release-it": "^12.3.6",
     "serve": "^10.0.2",
