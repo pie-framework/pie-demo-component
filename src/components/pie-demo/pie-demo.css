@@ -68,7 +68,7 @@ body {
 }
 
 mjx-container.MathJax *:not(mjx-math) {
-  font-family: inherit !important;
+  font-family: inherit;
 }
 
 *:not(i) {
