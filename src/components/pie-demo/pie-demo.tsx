@@ -8,6 +8,7 @@ import { getPackageWithoutVersion, packageToElementName } from "../../util/utils
 import classnames from "classnames";
 import docson from "docson";
 import range from "lodash/range";
+import isEqual from "lodash/isEqual";
 import cloneDeep from "lodash/cloneDeep";
 import merge from 'lodash/merge'
 import throttle from 'lodash/throttle'
@@ -423,6 +424,11 @@ export class PieDemo {
           <${ConfigTag} id='1'></${ConfigTag}>
         `
         };
+
+        // if the model changed, we need to reset session (to avoid the possibility of having a non-valid session)
+        if (!isEqual(this.piePlayer.config, config)) {
+          this.piePlayer.session.data = [];
+        }
 
         this.piePlayer.config = config;
       }
