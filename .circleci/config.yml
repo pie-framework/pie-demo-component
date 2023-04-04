@@ -1,0 +1,41 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/repo
+  docker:
+    - image: circleci/node:11.10.0
+
+restore_cache: &restore_cache
+  keys:
+    - v1-dependencies-{{ checksum "package.json" }}
+    # fallback to using the latest cache if no exact match is found
+    - v1-dependencies-
+
+save_cache: &save_cache
+  paths:
+    - node_modules
+  key: v1-dependencies-{{ checksum "package.json" }}
+
+jobs:
+  release:
+    <<: *defaults
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache: *restore_cache
+      - run: npm install
+      - save_cache: *save_cache
+      - run:
+          name: Releasing
+          command: npm run release
+
+workflows:
+  version: 2
+
+  build:
+    jobs:
+      - release:
+          filters:
+            branches:
+              only:
+                - master
