@@ -45,6 +45,10 @@ type PieController = {
     session: Object,
     env: Object
   ) => Promise<ScoringObject>;
+    validate?: (
+        model: Object,
+        config: Object,
+    ) => Promise<Object>;
 };
 
 interface PieElement extends HTMLElement {
@@ -317,6 +321,22 @@ export class PieDemo {
   toggleAuthoringSettings() {
     this.authSettVisible = !this.authSettVisible;
   }
+
+    async validateItem() {
+        if (this.pieController && this.pieController.model) {
+            try {
+                const errors = await this.pieController.validate(this.configModel, this.configure);
+                console.warn('errors = ', errors);
+
+                this.updateModel({
+                    ...this.configModel,
+                    errors
+                });
+            } catch (e) {
+                console.error(e.toString());
+            }
+        }
+    }
 
   toggleStudentSettings() {
     this.studSettVisible = !this.studSettVisible;
@@ -769,6 +789,10 @@ export class PieDemo {
           })}
           {!isToggled && (
             <div class="buttons-container">
+                            <div class="toggle-container"
+                                 onClick={() => this.validateItem()}>
+                                <span class="toggle-text">Validate</span>
+                            </div>
               <div
                 class={classnames("toggle-container", {
                   toggled: this.isToggled("authoring")
