@@ -1,120 +1,111 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8"/>
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0"
     />
     <title>pie-demo</title>
-    <link type="text/css" rel="stylesheet" href="/assets/docson.css" />
+    <link type="text/css" rel="stylesheet" href="/assets/docson.css"/>
     <script type="module" src="/build/pie-demo.esm.js"></script>
     <script nomodule src="/build/pie-demo.js"></script>
-  </head>
+</head>
 
-  <body>
-    <pie-demo
-      id="demo"
-      editor="true"
-      pie="@pie-element/math-inline@latest"
-    ></pie-demo>
+<body>
+<pie-demo
+        id="demo"
+        editor="true"
+></pie-demo>
 
-    <script>
-      const model = (id, element) => ({
-        id,
-        element,
-        customKeys: [
-          '<',
-          '\\le',
-          '\\ge',
-          '>',
-          '\\frac{}{}',
-          'x^{}',
-          '\\left(\\right)',
-          '\\abs{}',
-          '\\sqrt{}',
-          '\\sqrt[n]{}',
-          '\\pi',
-          '\\iota',
-          '\\sin',
-          '\\cos',
-          '\\tan',
-          '\\arcsin',
-          '\\arccos',
-          '\\arctan',
-          'r',
-          'V_uppercase',
-          '\\fract'
-        ],
-        equationEditor: 'geometry',
-        responseType: 'Advanced Multi',
-        expression: '{{response}}',
-        responses: [
-          {
-            allowSpaces: true,
-            answer: 'r=\\sqrt{\\frac{V}{7\\pi}}',
-            id: '1',
-            alternates: {},
-            validation: 'symbolic'
-          }
-        ],
-        rationale:
-                '<p>The correct answer is:</p><ul><li><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>r</mi><mo>=</mo><msqrt><mfrac><mi>V</mi><mrow><mn>7</mn><mi>&#960;</mi></mrow></mfrac></msqrt></math></li></ul>',
-      });
-      const configure = {
-        answerChoiceCount: 4,
-        addChoiceButton: {
-          settings: true,
-          label: 'Add Choice'
-        },
-        choiceMode: {
-          settings: false,
-          label: 'Response Type'
-        },
-        lockChoiceOrder: {
-          settings: true,
-          label: 'Lock Choice Order'
-        },
-        partialScoring: {
-          settings: false,
-          label: 'Allow Partial Scoring'
-        },
-        choicePrefix: {
-          settings: true,
-          label: 'Choice Labels'
-        },
-        deleteChoice: {
-          settings: true
-        },
-        feedback: {
-          settings: false,
-          label: 'Student Feedback'
-        },
-        prompt: {
-          settings: true,
-          label: 'Item Stem'
-        },
-        rationale: {
-          settings: true,
-          label: 'Rationale'
-        },
-        studentInstructions: {
-          settings: false,
-          label: 'Student Instructions'
-        },
-        teacherInstructions: {
-          settings: true,
-          label: 'Teacher Instructions'
-        }
-      };
-      const pieDemo = document.querySelector("pie-demo");
-      pieDemo.model = model("1", "pie-element-multiple-choice");
+<script>
+  const model = (id, element) => ({
+    id,
+    element,
+    equationEditor: 'geometry',
+    responseType: 'Advanced Multi',
+    expression: '{{response}}',
+    responses: [
+      {
+        allowSpaces: true,
+        answer: 1,
+        id: '1',
+        alternates: {},
+        validation: 'symbolic'
+      }
+    ],
+    prompt: "andreea"
+  });
+  const configure = {
+    prompt: {
+      settings: true,
+      label: 'Item Stem Andreea'
+    },
+    withRubric: {
+      settings: true,
+      label: 'rubric'
+    }
+  };
+  const pieDemo = document.querySelector("pie-demo");
 
-      pieDemo.configure = configure;
-      pieDemo.configureSchemaJSONURI =
-        "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json";
-      pieDemo.modelSchemaJSONURI =
-        "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json";
-    </script>
-  </body>
+  pieDemo.pie = "@pie-element/math-inline"
+  pieDemo.model = model("1", "pie-element-multiple-choice");
+
+  pieDemo.configure = configure;
+  pieDemo.configureSchemaJSONURI =
+    "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/config-schema.json";
+  pieDemo.modelSchemaJSONURI =
+    "https://raw.githubusercontent.com/pie-framework/pie-elements/develop/packages/categorize/docs/pie-schema.json";
+
+
+  // pieDemo.configSettings = {
+  //   "@pie-element/math-inline": {
+  //     "prompt": {
+  //       "settings": true,
+  //       "label": "Item Stem Andreea"
+  //     }
+  //   }
+  // };
+
+
+  <!--pieDemo.config = {-->
+  <!--  "id": "1",-->
+  <!--  "elements": {-->
+  <!--    "pp-pie-element-math-inline": "@pie-element/math-inline",-->
+  <!--    "pp-pie-element-complex-rubric": "@pie-element/complex-rubric"-->
+  <!--  },-->
+  <!--  "models": [-->
+  <!--    {-->
+  <!--      ...model('1', 'pie-element-math-inline'),-->
+  <!--      rubricEnabled: true-->
+  <!--    },-->
+  <!--    {-->
+  <!--      "id": "p-0cf92abf",-->
+  <!--      "element": "pp-pie-element-complex-rubric",-->
+  <!--      "rubrics": {-->
+  <!--        "simpleRubric": {-->
+  <!--          "points": [-->
+  <!--            "<div>d</div>",-->
+  <!--            "<div>c</div>",-->
+  <!--            "<div>b</div>",-->
+  <!--            "<div>a</div>"-->
+  <!--          ],-->
+  <!--          "sampleAnswers": [-->
+  <!--            null,-->
+  <!--            null,-->
+  <!--            null,-->
+  <!--            null-->
+  <!--          ],-->
+  <!--          "maxPoints": 4,-->
+  <!--          "excludeZero": false,-->
+  <!--          "excludeZeroEnabled": true,-->
+  <!--          "maxPointsEnabled": true-->
+  <!--        },-->
+  <!--        "multiTraitRubric": {}-->
+  <!--      }-->
+  <!--    }-->
+  <!--  ],-->
+  <!--  "markup": "<pp-pie-element-math-inline id='1'></pp-pie-element-math-inline><div style=\"width: 75%\">\n      <pp-pie-element-complex-rubric id=\"p-0cf92abf\"></pp-pie-element-complex-rubric></div>"-->
+  <!--}</script>-->
+</body>
 </html>

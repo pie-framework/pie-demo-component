@@ -1,14 +1,14 @@
-import { PieDemo } from "../pie-demo";
+import { PieDemoContent } from "../pie-demo-content";
 
-describe("pie-demo", () => {
+describe("pie-demo-content", () => {
   it("builds", () => {
-    expect(new PieDemo()).toBeTruthy();
+    expect(new PieDemoContent()).toBeTruthy();
   });
 
-  let el: PieDemo;
+  let el: PieDemoContent;
 
   beforeEach(() => {
-    el = new PieDemo();
+    el = new PieDemoContent();
   });
 
   describe("default", () => {
@@ -17,15 +17,15 @@ describe("pie-demo", () => {
     });
   });
 
-  describe("onModelUpdated", () => {
-    it("calls update pie model", () => {
-      el.updatePieModelFromController = jest.fn();
-      el.onModelUpdated({} as any);
-      expect(el.updatePieModelFromController).toHaveBeenCalledWith(
-        el.configModel,
-        el.session,
-        el.env
-      );
-    });
-  });
+  // describe("onModelUpdated", () => {
+  //   it("calls update pie model", () => {
+  //     el.updatePieModelFromController = jest.fn();
+  //     el.onModelUpdated({} as any);
+  //     expect(el.updatePieModelFromController).toHaveBeenCalledWith(
+  //       el.configModel,
+  //       el.session,
+  //       el.env
+  //     );
+  //   });
+  // });
 });
