@@ -8,6 +8,17 @@ A Custom Element for demonstrating a PIE interaction designed for use with the p
 <pie-demo editor="true" pie="@pie-element/multiple-choice"> </pie-demo>
 ```
 
+## Installation
+
+Install nvm, or at least make sure you have the 16.13.0 version installed (node --version)
+
+https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
+
+1. nvm use
+2. nvm install 16.13.0
+3. npm install -g pnpm@6.35.1
+4. yarn install
+
 ## Commands
 
 | `yarn ...` | description                    |
