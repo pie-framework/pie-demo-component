@@ -2,7 +2,7 @@ import {Component, h, Prop, Watch, State, Listen} from "@stencil/core";
 import "@pie-framework/pie-player-components";
 
 @Component({
-    tag: "pie-demo",
+    tag: "pie-demo-2",
     styleUrl: "pie-demo.css",
     shadow: false // TODO - css doesn't work if you use shadow-dom. Investigate.
 })

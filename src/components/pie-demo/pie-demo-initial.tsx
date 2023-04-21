@@ -76,7 +76,7 @@ const defaultController = {
 };
 
 @Component({
-  tag: "pie-demo-initial",
+  tag: "pie-demo",
   styleUrl: "pie-demo.css",
   shadow: false // TODO - css doesn't work if you use shadow-dom. Investigate.
 })

@@ -140,6 +140,10 @@ export class PieDemoContent {
         [key: string]: Object;
     };
 
+    @State() configureObject: {
+        [key: string]: Object;
+    };
+
     @Prop() config: ItemConfig;
 
     @State() state: ViewState = ViewState.LOADING;
@@ -507,9 +511,9 @@ export class PieDemoContent {
         //     this.updateModel(this.model);
         // }
 
-        // if (this.configure) {
-        //     this.updateConfigure(this.configure);
-        // }
+        if (this.configSettings) {
+            this.configureObject = cloneDeep(this.configSettings);
+        }
 
         if (this.modelSchemaJSONURI) {
             this.watchModelSchemaJSONURI(this.modelSchemaJSONURI);
@@ -734,7 +738,7 @@ export class PieDemoContent {
                                     if (index === 1) {
                                         this.config = this[`cachedJsonConfig${index}`];
                                     } else {
-                                        this.configSettings = this[`cachedJsonConfig${index}`];
+                                        this.configureObject = this[`cachedJsonConfig${index}`];
                                     }
                                 }
                             }}
@@ -754,7 +758,7 @@ export class PieDemoContent {
                         if (index === 1) {
                             this.config = JSON.parse(target.value);
                         } else {
-                            this.configSettings = JSON.parse(target.value);
+                            this.configureObject = JSON.parse(target.value);
                         }
                     }}
                 ></textarea>
@@ -776,7 +780,10 @@ export class PieDemoContent {
                 {
                     name: "Authoring View Settings",
                     content: () => {
-                        this.cachedJsonConfig2 = cloneDeep(this.authorElement ? this.authorElement._configuration : this.configSettings);
+                        console.log('this.authorElement._configuration = ', this.authorElement._configuration);
+                        console.log('this.configSettings =', this.authorElement._configuration);
+                        // this.cachedJsonConfig2 = cloneDeep(this.authorElement ? this.authorElement._configuration : this.configSettings);
+                        this.cachedJsonConfig2 = cloneDeep(this.configureObject);
 
                         return this.renderJsonConfigPanel(this.cachedJsonConfig2, 2);
                     }
@@ -1073,7 +1080,7 @@ export class PieDemoContent {
                                 class="pie-author"
                                 ref={el => el && (this.pieAuthor = el as JSX.PieAuthor)}
                                 config={this.config}
-                                configSettings={this.configSettings}
+                                configSettings={this.configureObject}
                             >
                                 {" "}
                             </pie-author>
