@@ -30,53 +30,6 @@ export namespace Components {
         /**
           * The model for the pie.
          */
-        "model": Object;
-        /**
-          * Link to the pie-schema markdown file
-          * @type {boolean}
-         */
-        "modelSchemaJSONURI": string;
-        /**
-          * Makes the element have 50% height
-          * @type {boolean}
-         */
-        "multiplePies": boolean;
-        /**
-          * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
-         */
-        "pie": string;
-        /**
-          * Include control panel for adjusting player settings.
-         */
-        "playerControls": boolean;
-        /**
-          * Include an item preview in the view
-         */
-        "preview": boolean;
-    }
-    interface PieDemo2 {
-        "configure": Object;
-        /**
-          * Link to the pie-schema markdown file
-          * @type {boolean}
-         */
-        "configureSchemaJSONURI": string;
-        /**
-          * Include an editor in the view
-         */
-        "editor": boolean;
-        /**
-          * Removes control bar if true
-          * @type {boolean}
-         */
-        "justElement": boolean;
-        /**
-          * Tells the component if it needs to load the elements or not
-         */
-        "load": boolean;
-        /**
-          * The model for the pie.
-         */
         "model": any;
         /**
           * Link to the pie-schema markdown file
@@ -151,6 +104,53 @@ export namespace Components {
          */
         "preview": boolean;
     }
+    interface PieDemoInitial {
+        "configure": Object;
+        /**
+          * Link to the pie-schema markdown file
+          * @type {boolean}
+         */
+        "configureSchemaJSONURI": string;
+        /**
+          * Include an editor in the view
+         */
+        "editor": boolean;
+        /**
+          * Removes control bar if true
+          * @type {boolean}
+         */
+        "justElement": boolean;
+        /**
+          * Tells the component if it needs to load the elements or not
+         */
+        "load": boolean;
+        /**
+          * The model for the pie.
+         */
+        "model": Object;
+        /**
+          * Link to the pie-schema markdown file
+          * @type {boolean}
+         */
+        "modelSchemaJSONURI": string;
+        /**
+          * Makes the element have 50% height
+          * @type {boolean}
+         */
+        "multiplePies": boolean;
+        /**
+          * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
+         */
+        "pie": string;
+        /**
+          * Include control panel for adjusting player settings.
+         */
+        "playerControls": boolean;
+        /**
+          * Include an item preview in the view
+         */
+        "preview": boolean;
+    }
 }
 declare global {
     interface HTMLPieDemoElement extends Components.PieDemo, HTMLStencilElement {
@@ -159,73 +159,26 @@ declare global {
         prototype: HTMLPieDemoElement;
         new (): HTMLPieDemoElement;
     };
-    interface HTMLPieDemo2Element extends Components.PieDemo2, HTMLStencilElement {
-    }
-    var HTMLPieDemo2Element: {
-        prototype: HTMLPieDemo2Element;
-        new (): HTMLPieDemo2Element;
-    };
     interface HTMLPieDemoContentElement extends Components.PieDemoContent, HTMLStencilElement {
     }
     var HTMLPieDemoContentElement: {
         prototype: HTMLPieDemoContentElement;
         new (): HTMLPieDemoContentElement;
     };
+    interface HTMLPieDemoInitialElement extends Components.PieDemoInitial, HTMLStencilElement {
+    }
+    var HTMLPieDemoInitialElement: {
+        prototype: HTMLPieDemoInitialElement;
+        new (): HTMLPieDemoInitialElement;
+    };
     interface HTMLElementTagNameMap {
         "pie-demo": HTMLPieDemoElement;
-        "pie-demo-2": HTMLPieDemo2Element;
         "pie-demo-content": HTMLPieDemoContentElement;
+        "pie-demo-initial": HTMLPieDemoInitialElement;
     }
 }
 declare namespace LocalJSX {
     interface PieDemo {
-        "configure"?: Object;
-        /**
-          * Link to the pie-schema markdown file
-          * @type {boolean}
-         */
-        "configureSchemaJSONURI"?: string;
-        /**
-          * Include an editor in the view
-         */
-        "editor"?: boolean;
-        /**
-          * Removes control bar if true
-          * @type {boolean}
-         */
-        "justElement"?: boolean;
-        /**
-          * Tells the component if it needs to load the elements or not
-         */
-        "load"?: boolean;
-        /**
-          * The model for the pie.
-         */
-        "model"?: Object;
-        /**
-          * Link to the pie-schema markdown file
-          * @type {boolean}
-         */
-        "modelSchemaJSONURI"?: string;
-        /**
-          * Makes the element have 50% height
-          * @type {boolean}
-         */
-        "multiplePies"?: boolean;
-        /**
-          * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
-         */
-        "pie"?: string;
-        /**
-          * Include control panel for adjusting player settings.
-         */
-        "playerControls"?: boolean;
-        /**
-          * Include an item preview in the view
-         */
-        "preview"?: boolean;
-    }
-    interface PieDemo2 {
         "configure"?: Object;
         /**
           * Link to the pie-schema markdown file
@@ -322,10 +275,57 @@ declare namespace LocalJSX {
          */
         "preview"?: boolean;
     }
+    interface PieDemoInitial {
+        "configure"?: Object;
+        /**
+          * Link to the pie-schema markdown file
+          * @type {boolean}
+         */
+        "configureSchemaJSONURI"?: string;
+        /**
+          * Include an editor in the view
+         */
+        "editor"?: boolean;
+        /**
+          * Removes control bar if true
+          * @type {boolean}
+         */
+        "justElement"?: boolean;
+        /**
+          * Tells the component if it needs to load the elements or not
+         */
+        "load"?: boolean;
+        /**
+          * The model for the pie.
+         */
+        "model"?: Object;
+        /**
+          * Link to the pie-schema markdown file
+          * @type {boolean}
+         */
+        "modelSchemaJSONURI"?: string;
+        /**
+          * Makes the element have 50% height
+          * @type {boolean}
+         */
+        "multiplePies"?: boolean;
+        /**
+          * The PIE npm package to demo. e.g. `@pie-element/multiple-choice`
+         */
+        "pie"?: string;
+        /**
+          * Include control panel for adjusting player settings.
+         */
+        "playerControls"?: boolean;
+        /**
+          * Include an item preview in the view
+         */
+        "preview"?: boolean;
+    }
     interface IntrinsicElements {
         "pie-demo": PieDemo;
-        "pie-demo-2": PieDemo2;
         "pie-demo-content": PieDemoContent;
+        "pie-demo-initial": PieDemoInitial;
     }
 }
 export { LocalJSX as JSX };
@@ -333,8 +333,8 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "pie-demo": LocalJSX.PieDemo & JSXBase.HTMLAttributes<HTMLPieDemoElement>;
-            "pie-demo-2": LocalJSX.PieDemo2 & JSXBase.HTMLAttributes<HTMLPieDemo2Element>;
             "pie-demo-content": LocalJSX.PieDemoContent & JSXBase.HTMLAttributes<HTMLPieDemoContentElement>;
+            "pie-demo-initial": LocalJSX.PieDemoInitial & JSXBase.HTMLAttributes<HTMLPieDemoInitialElement>;
         }
     }
 }
