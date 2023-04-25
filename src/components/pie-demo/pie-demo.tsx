@@ -8,7 +8,6 @@ import { getPackageWithoutVersion, packageToElementName } from "../../util/utils
 import classnames from "classnames";
 import docson from "docson";
 import range from "lodash/range";
-import isEqual from "lodash/isEqual";
 import cloneDeep from "lodash/cloneDeep";
 import merge from 'lodash/merge'
 import throttle from 'lodash/throttle'
