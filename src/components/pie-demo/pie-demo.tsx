@@ -405,10 +405,10 @@ export class PieDemo {
   @Watch("configModel")
   watchConfigModel(newModel) {
     if (this.configElement) this.configElement.model = newModel;
-    this.updatePieModelFromController(newModel, this.session, this.env);
+    this.updatePieModelFromController(newModel, this.session, this.env, true);
   }
 
-  async updatePieModelFromController(model, session, env) {
+  async updatePieModelFromController(model, session, env, shouldResetSession?: boolean) {
     if (this.pieController && this.pieController.model) {
       const newConfig = await this.pieController.model(
         model,
@@ -445,8 +445,8 @@ export class PieDemo {
         `
         };
 
-        // if the model changed, we need to reset session (to avoid the possibility of having a non-valid session)
-        if (!isEqual(this.piePlayer.config, config)) {
+        // if the model or config changes, we need to reset session (to avoid the possibility of having a non-valid session)
+        if (shouldResetSession) {
           this.piePlayer.session.data = [];
         }
 
@@ -562,7 +562,8 @@ export class PieDemo {
     this.updatePieModelFromController(
       event.detail.update,
       this.session,
-      this.env
+      this.env,
+        true
     );
   }
 
