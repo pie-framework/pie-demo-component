@@ -840,10 +840,10 @@
   resolved "https://registry.yarnpkg.com/@pie-framework/pie-configure-events/-/pie-configure-events-1.3.0.tgz#51c0a57868880ae09296736344fa31fb02619594"
   integrity sha512-H+lizaOPvgDEqTw+dmLwM/w8eDdxSaOV5tlK8OtPq5m7lt5iih6ZoQyg9V6FI9zgDdqUP3N8X5DyxHbzU9qTzQ==
 
-"@pie-framework/pie-player-components@^1.0.3":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-1.2.0.tgz#b7a3d6196e8ed46d990d06018a8fbf97303d0761"
-  integrity sha512-q+Id7ruLxHngBPbJ+X3EqDWAoOzmQNfyInoaUbLcVtT1HGnqLADpRlHJmQdXaRDrXbmEomvHGSX3XWddxQVk8w==
+"@pie-framework/pie-player-components@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-1.6.0.tgz#61ff6eef880f9cc64d6712e78cdb1a564d4eb0dd"
+  integrity sha512-Xd9USEUV4D09A6GJMYz5VjMcA2XG41w15xxVpLoPxqBhKpldyYxP7NIxHyS2ZzzhpNGNPBpBmRaLerL5HnB6mg==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
