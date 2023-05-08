@@ -4,7 +4,7 @@
     "access": "public"
   },
   "repository": "pie-framework/pie-demo-component",
-  "version": "3.3.0",
+  "version": "4.0.0-beta",
   "description": "Custom Element for Demoing PIE Framework Interactions",
   "module": "dist/esm/index.js",
   "main": "dist/pie-demo.js",
