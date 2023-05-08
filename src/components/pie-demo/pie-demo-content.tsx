@@ -657,7 +657,7 @@ export class PieDemoContent {
     return this.renderTabs(
         [
           {
-            name: "Item Model",
+            name: "Item Config",
             content: () => {
               this.cachedJsonConfig1 = cloneDeep(this.config);
 
