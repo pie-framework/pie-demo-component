@@ -252,6 +252,25 @@ export class PieDemoContent {
   }
 
   componentDidUpdate() {
+    if (this.config && "elements" in this.config && this.config.elements) {
+      const elements = this.config.elements;
+
+      Object.keys(elements).map(element => {
+        try {
+          const authorElName = `${element}-config`;
+          const authorElement = document.querySelector(authorElName);
+          const configKey = getPackageWithoutVersion(elements[element]);
+
+          if (authorElement) {
+            // @ts-ignore
+            this.configureObject[configKey] = authorElement._configuration;
+          }
+        } catch (e) {
+          console.log(e.toString());
+        }
+      })
+    }
+
     if (this.fileInput) {
       this.fileInput.addEventListener("change", this.handleFileInputChange);
     }
@@ -405,7 +424,7 @@ export class PieDemoContent {
 
           config.models[modelIndex] = newModel;
 
-          if (shouldResetSession) {
+          if (shouldResetSession && this.piePlayer.session) {
             // only reset that model's session
             this.piePlayer.session.data[this.piePlayer.session.data.findIndex(s => s.id === model.id)] = {};
           }
@@ -615,6 +634,7 @@ export class PieDemoContent {
                   class="reset-container"
                   onClick={() => {
                     if (this[`textAreaContentRef${index}`]) {
+                      if (index === 1) {
                       this[`textAreaContentRef${index}`].value = jsonBeautify(
                           this[`cachedJsonConfig${index}`],
                           null,
@@ -622,9 +642,15 @@ export class PieDemoContent {
                           98
                       );
 
-                      if (index === 1) {
                         this.config = this[`cachedJsonConfig${index}`];
                       } else {
+                        this[`textAreaContentRef${index}`].value = jsonBeautify(
+                            this.configSettings,
+                            null,
+                            2,
+                            98
+                        );
+
                         this.configureObject = this.configSettings;
                       }
                     }
