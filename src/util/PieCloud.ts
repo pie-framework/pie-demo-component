@@ -18,7 +18,7 @@ const getEmptyConfigure = () =>
 export function loadCloudPies(
   elements,
   doc,
-  baseUrl = "https://pits-dot-pie-dev-221718.appspot.com/bundles/"
+  baseUrl = "https://pits-dot-pie-prod-221718.appspot.com/bundles/"
 ) {
   log("[loadCloudPies] elements:", elements);
 
