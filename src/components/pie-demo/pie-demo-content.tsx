@@ -1,15 +1,15 @@
-import {Component, h, Prop, Watch, State, Listen} from "@stencil/core";
-import "@pie-framework/pie-player-components";
-import {ItemConfig} from "@pie-framework/pie-player-components/dist/types/interface";
-import {JSX} from "@pie-framework/pie-player-components/dist/types/components";
-import ResizeObserver from "resize-observer-polyfill";
-import jsonBeautify from "json-beautify";
-import {getPackageWithoutVersion, packageToElementName} from "../../util/utils";
-import classnames from "classnames";
-import docson from "docson";
-import range from "lodash/range";
-import isEqual from "lodash/isEqual";
-import cloneDeep from "lodash/cloneDeep";
+import { Component, h, Prop, Watch, State, Listen } from '@stencil/core';
+import '@pie-framework/pie-player-components';
+import { ItemConfig } from '@pie-framework/pie-player-components/dist/types/interface';
+import { JSX } from '@pie-framework/pie-player-components/dist/types/components';
+import ResizeObserver from 'resize-observer-polyfill';
+import jsonBeautify from 'json-beautify';
+import { getPackageWithoutVersion, packageToElementName } from '../../util/utils';
+import classnames from 'classnames';
+import docson from 'docson';
+import range from 'lodash/range';
+import isEqual from 'lodash/isEqual';
+import cloneDeep from 'lodash/cloneDeep';
 import merge from 'lodash/merge'
 import throttle from 'lodash/throttle'
 import {
@@ -17,10 +17,10 @@ import {
   InsertImageEvent,
   DeleteImageEvent,
   ImageHandler
-} from "@pie-framework/pie-configure-events";
-import debug from "debug";
+} from '@pie-framework/pie-configure-events';
+import debug from 'debug';
 
-const log = debug("pie-framework:pie-demo");
+const log = debug('pie-framework:pie-demo');
 
 enum ViewState {
   LOADING,
@@ -41,13 +41,13 @@ interface DisplayedScore extends Object {
 type PieController = {
   model: (config: Object, session: Object, env: Object) => Promise<Object>;
   outcome: (
-      config: Object,
-      session: Object,
-      env: Object
+    config: Object,
+    session: Object,
+    env: Object
   ) => Promise<ScoringObject>;
   validate?: (
-      model: Object,
-      config: Object,
+    model: Object,
+    config: Object,
   ) => Promise<Object>;
 };
 
@@ -68,8 +68,8 @@ const defaultController = {
 
 
 @Component({
-  tag: "pie-demo-content",
-  styleUrl: "pie-demo.css",
+  tag: 'pie-demo-content',
+  styleUrl: 'pie-demo.css',
   shadow: false // TODO - css doesn't work if you use shadow-dom. Investigate.
 })
 export class PieDemoContent {
@@ -137,9 +137,9 @@ export class PieDemoContent {
     [key: string]: Object;
   };
 
-  @State() minHeightAuthoring: any = "initial";
+  @State() minHeightAuthoring: any = 'initial';
 
-  @State() minHeightStudent: any = "initial";
+  @State() minHeightStudent: any = 'initial';
 
   @State() rootElWidth: number = 1250;
 
@@ -149,7 +149,7 @@ export class PieDemoContent {
 
   @State() mobileTabIndex: number = 0;
 
-  @State() currentOption: string = "student";
+  @State() currentOption: string = 'student';
 
   @State() collapsed: string;
 
@@ -159,7 +159,7 @@ export class PieDemoContent {
 
   @State() docHolderVisible: boolean = false;
 
-  @State() env: Object = {mode: "gather"};
+  @State() env: Object = { mode: 'gather' };
 
   @State() sessions: Object = {};
 
@@ -203,30 +203,30 @@ export class PieDemoContent {
       const input = e.target;
 
       if (!this.imageHandler) {
-        console.error("no image handler - but file input change triggered?");
+        console.error('no image handler - but file input change triggered?');
         return;
       }
 
-      log("[handleInputFiles] input.files: ", input);
+      log('[handleInputFiles] input.files: ', input);
       const files = (input as any).files;
       if (files.length < 1 || !files[0]) {
-        log("[handleInputFiles] = !!! no files.");
+        log('[handleInputFiles] = !!! no files.');
         this.imageHandler.cancel();
         this.imageHandler = null;
       } else {
         const file = files[0];
         this.imageHandler.fileChosen(file);
-        this.fileInput.value = "";
+        this.fileInput.value = '';
         const reader = new FileReader();
         reader.onload = () => {
-          log("[reader.onload]");
+          log('[reader.onload]');
           const dataURL = reader.result;
           setTimeout(() => {
             this.imageHandler.done(null, dataURL.toString());
             this.imageHandler = null;
           }, 2000);
         };
-        log("call readAsDataUrl...", file);
+        log('call readAsDataUrl...', file);
         let progress = 0;
         this.imageHandler.progress(progress, 0, 100);
         range(1, 100).forEach(n => {
@@ -241,7 +241,7 @@ export class PieDemoContent {
     this.handleRootEl = this.handleRootEl.bind(this);
 
     this.handleInsertImage = (e: InsertImageEvent) => {
-      log("[handleInsertImage] fileInput:", this.fileInput);
+      log('[handleInsertImage] fileInput:', this.fileInput);
       this.imageHandler = e.detail;
       this.fileInput.click();
     };
@@ -252,7 +252,7 @@ export class PieDemoContent {
   }
 
   componentDidUpdate() {
-    if (this.config && "elements" in this.config && this.config.elements) {
+    if (this.config && 'elements' in this.config && this.config.elements) {
       const elements = this.config.elements;
 
       Object.keys(elements).map(element => {
@@ -272,16 +272,16 @@ export class PieDemoContent {
     }
 
     if (this.fileInput) {
-      this.fileInput.addEventListener("change", this.handleFileInputChange);
+      this.fileInput.addEventListener('change', this.handleFileInputChange);
     }
 
-    const isAuthoringToggled = this.isToggled("authoring");
+    const isAuthoringToggled = this.isToggled('authoring');
 
     if (isAuthoringToggled) {
       let offset = 0;
 
       if (this.bottomContentRef) {
-        const ref = this.bottomContentRef.querySelector(".tabs");
+        const ref = this.bottomContentRef.querySelector('.tabs');
 
         if (ref) {
           const clientRect = ref.getBoundingClientRect();
@@ -305,7 +305,7 @@ export class PieDemoContent {
 
   getProperController = (model) => {
     const divA = document.createElement('div');
-    if ("markup" in this.config) {
+    if ('markup' in this.config) {
       divA.innerHTML = this.config.markup;
 
       const tag = Object.keys(this.config.elements).find(key => key === divA.querySelector(`[id="${model.id}"]`).tagName.toLowerCase())
@@ -322,17 +322,36 @@ export class PieDemoContent {
   }
 
   async validateItem() {
-    if ("models" in this.config) {
+    // get the authoring config for the element
+    if ('models' in this.config) {
       const models = this.config.models;
+      const elements = this.config.elements;
+      let authoringConfigure = {};
+
+      Object.keys(elements).map(element => {
+        try {
+          const authorElName = `${element}-config`;
+          const authorElement = document.querySelector(authorElName) as any;
+
+          if (authorElement) {
+            authoringConfigure = authorElement._configuration;
+          }
+        } catch (e) {
+          console.log(e.toString());
+        }
+      })
 
       for (const model of models) {
-        const {controller: properController, tag} = this.getProperController(model);
+        const { controller: properController, tag } = this.getProperController(model);
         const modelIndex = models.findIndex(m => m.id === model.id);
+
         const properConfigure = this.configSettings[getPackageWithoutVersion(tag)];
+        // this is required in case properConfigure is undefined
+        const configure = properConfigure || authoringConfigure;
 
         if (properController && properController.validate) {
           try {
-            const errors = await properController.validate(model, properConfigure);
+            const errors = await properController.validate(model, configure);
             const config = cloneDeep(this.config);
 
             config.models[modelIndex].errors = errors;
@@ -352,12 +371,12 @@ export class PieDemoContent {
     this.studSettVisible = !this.studSettVisible;
   }
 
-  isToggled(type = "student") {
-    if (type === "student") {
-      return this.studSettVisible && this.collapsed !== "student";
+  isToggled(type = 'student') {
+    if (type === 'student') {
+      return this.studSettVisible && this.collapsed !== 'student';
     }
 
-    return this.authSettVisible && this.collapsed !== "authoring";
+    return this.authSettVisible && this.collapsed !== 'authoring';
   }
 
   detachListeners() {
@@ -366,7 +385,7 @@ export class PieDemoContent {
     }
   }
 
-  @Watch("config")
+  @Watch('config')
   watchConfig(newConfig) {
     Object.values(newConfig.elements || {}).map((packageNAME: string) => {
       let packageCopy = packageNAME;
@@ -376,8 +395,8 @@ export class PieDemoContent {
         const packageWithoutVersion = getPackageWithoutVersion(packageCopy);
 
         // todo for some reason, the previous components are no longer on window.pie.default, not sure why
-        if (window["pie"].default[packageWithoutVersion].controller || defaultController) {
-          this.pieControllers[packageWithoutVersion] = window["pie"].default[packageWithoutVersion].controller || defaultController
+        if (window['pie'].default[packageWithoutVersion].controller || defaultController) {
+          this.pieControllers[packageWithoutVersion] = window['pie'].default[packageWithoutVersion].controller || defaultController
         }
 
         // if (this.model) {
@@ -394,23 +413,23 @@ export class PieDemoContent {
   }
 
   async updatePieModelUsingController(model, env, shouldResetSession?: boolean) {
-    if ("elements" in this.config && "markup" in this.config) {
+    if ('elements' in this.config && 'markup' in this.config) {
       const properController = this.getProperController(model).controller;
       const modelIndex = this.config.models.findIndex(m => m.id === model.id);
       const session = this.sessions[model.id];
 
       if (properController && properController.model) {
         const newConfig = await properController.model(
-            model,
-            session,
-            env
+          model,
+          session,
+          env
         );
 
-        if (this.env["mode"] === "evaluate") {
+        if (this.env['mode'] === 'evaluate') {
           const scoring = await properController.outcome(
-              this.config.models.find(m => m.id === model.id),
-              session,
-              this.env
+            this.config.models.find(m => m.id === model.id),
+            session,
+            this.env
           );
           this.scores[model.id] = {
             score: scoring.score,
@@ -419,6 +438,7 @@ export class PieDemoContent {
         }
 
         if (this.piePlayer) {
+          //@ts-ignore
           const newModel = merge(cloneDeep(this.config.models.find(m => m.id === model.id), newConfig));
           const config = cloneDeep(this.config);
 
@@ -449,14 +469,14 @@ export class PieDemoContent {
   }
 
   componentWillLoad() {
-    log("component will load ... ");
+    log('component will load ... ');
     this.watchConfig(this.config);
 
     const rootHandler = throttle(() => {
       if (this.rootEl) {
         this.rootElWidth = this.rootEl.offsetWidth;
       }
-    }, 1000, {leading: true});
+    }, 1000, { leading: true });
 
     this.rootResizeObserver = new (ResizeObserver as any)(rootHandler);
 
@@ -473,14 +493,14 @@ export class PieDemoContent {
     }
 
     (window as any).global = window;
-    docson.templateBaseUrl = "/assets/html";
+    docson.templateBaseUrl = '/assets/html';
   }
 
   /**
    * Pick up @pie-framework/pie-configure-events and trigger an update.
    * TODO: Why cant i use ModelUpdatedEvent.TYPE in the decorator?
    */
-  @Listen("model.updated")
+  @Listen('model.updated')
   onModelUpdated(event: ModelUpdatedEvent) {
     if (this._renderingAuthor || this._renderingStudent) {
       this._renderingAuthor = false;
@@ -492,52 +512,52 @@ export class PieDemoContent {
       this.config = this.pieAuthor.config;
     }
 
-    log("MODEL UPDATED: target:", event.target, event.detail);
+    log('MODEL UPDATED: target:', event.target, event.detail);
     this.updatePieModelUsingController(
-        event.detail.update,
-        this.env,
-        true
+      event.detail.update,
+      this.env,
+      true
     );
   }
 
-  @Listen("modelLoaded")
+  @Listen('modelLoaded')
   onModelLoaded() {
     if (!this._renderStudent) {
       this._renderStudent = true;
     }
   }
 
-  @Listen("session-changed")
+  @Listen('session-changed')
   onSessionChanged(event: ModelUpdatedEvent) {
-    log("MODEL UPDATED: target:", event.target, event.detail);
+    log('MODEL UPDATED: target:', event.target, event.detail);
     if (event.target) {
       this.sessions[(event.target as any).session.id] = (event.target as any).session;
     }
   }
 
-  @Watch("modelSchemaJSONURI")
+  @Watch('modelSchemaJSONURI')
   watchModelSchemaJSONURI(newUrl) {
     if (newUrl) {
       fetch(newUrl, {
-        mode: "cors"
+        mode: 'cors'
       })
-          .then((response: Response) => response.json())
-          .then(response => {
-            this.modelSchemaJSON = response;
-          });
+        .then((response: Response) => response.json())
+        .then(response => {
+          this.modelSchemaJSON = response;
+        });
     }
   }
 
-  @Watch("configureSchemaJSONURI")
+  @Watch('configureSchemaJSONURI')
   watchConfigureSchemaJSONURI(newUrl) {
     if (newUrl) {
       fetch(newUrl, {
-        mode: "cors"
+        mode: 'cors'
       })
-          .then((response: Response) => response.json())
-          .then(response => {
-            this.configureSchemaJSON = response;
-          });
+        .then((response: Response) => response.json())
+        .then(response => {
+          this.configureSchemaJSON = response;
+        });
     }
   }
 
@@ -548,10 +568,10 @@ export class PieDemoContent {
     };
 
     if (this.piePlayer) {
-      this.piePlayer.env = {mode: mode, role: this.currentOption};
+      this.piePlayer.env = { mode: mode, role: this.currentOption };
     }
 
-    if ("models" in this.config) {
+    if ('models' in this.config) {
       this.config.models.forEach(model => {
         this.updatePieModelUsingController(model, this.env);
       });
@@ -562,323 +582,323 @@ export class PieDemoContent {
     this.currentOption = option;
 
     if (this.piePlayer) {
-      this.piePlayer.env = {mode: this.env['mode'], role: this.currentOption};
+      this.piePlayer.env = { mode: this.env['mode'], role: this.currentOption };
     }
   }
 
-  customCheckBox({label, checked, value, action = undefined}) {
+  customCheckBox({ label, checked, value, action = undefined }) {
     return (
-        <label class="custom-checkbox" onClick={() => action.call(this, value)}>
-          <i class="material-icons">
-            {checked ? "radio_button_checked" : "radio_button_unchecked"}
-          </i>
-          <span>{label}</span>
-        </label>
+      <label class="custom-checkbox" onClick={() => action.call(this, value)}>
+        <i class="material-icons">
+          {checked ? 'radio_button_checked' : 'radio_button_unchecked'}
+        </i>
+        <span>{label}</span>
+      </label>
     );
   }
 
-  renderHeaderTitleInfo({title, description, options = undefined}) {
+  renderHeaderTitleInfo({ title, description, options = undefined }) {
     return (
-        <div class="header-title">
-          <div class="title-info">
-            <h4>{title}</h4>
-            {options &&
-                options.map(opt => (
-                    <span class="option">
+      <div class="header-title">
+        <div class="title-info">
+          <h4>{title}</h4>
+          {options &&
+            options.map(opt => (
+              <span class="option">
                 <i class="fa fa-circle"></i>
-                      {opt}
+                {opt}
               </span>
-                ))}
-          </div>
-          <span>{description}</span>
+            ))}
         </div>
+        <span>{description}</span>
+      </div>
     );
   }
 
   viewDocumentation = tabIndex => {
-    log("Tab Index", tabIndex);
+    log('Tab Index', tabIndex);
 
     const currentContent =
-        tabIndex === 1 ? this.modelSchemaJSON : this.configureSchemaJSON;
+      tabIndex === 1 ? this.modelSchemaJSON : this.configureSchemaJSON;
 
     this.docHolderVisible = true;
-    docson.doc("schema-holder", currentContent);
+    docson.doc('schema-holder', currentContent);
   };
 
   renderJsonConfigPanel = (jsonData, index) => {
     log(jsonData);
 
     return (
-        <div class="json-config">
-          <div class="json-config-header">
-            <div
-                class="view-container"
-                onClick={() => this.viewDocumentation(index)}
-            >
-              <i class="fa fa-desktop"/>
-              <span>View Documentation</span>
-            </div>
-            <div class="right-content">
-              <div
-                  class="copy-container"
-                  onClick={() => {
-                    this[`textAreaContentRef${index}`].select();
-
-                    document.execCommand("copy");
-                  }}
-              >
-                <i class="fa fa-clone"/>
-                <span>Copy JSON</span>
-              </div>
-              <div
-                  class="reset-container"
-                  onClick={() => {
-                    if (this[`textAreaContentRef${index}`]) {
-                      if (index === 1) {
-                      this[`textAreaContentRef${index}`].value = jsonBeautify(
-                          this[`cachedJsonConfig${index}`],
-                          null,
-                          2,
-                          98
-                      );
-
-                        this.config = this[`cachedJsonConfig${index}`];
-                      } else {
-                        this[`textAreaContentRef${index}`].value = jsonBeautify(
-                            this.configSettings,
-                            null,
-                            2,
-                            98
-                        );
-
-                        this.configureObject = this.configSettings;
-                      }
-                    }
-                  }}
-              >
-                <i class="fa fa-undo"/>
-                <span>Reset</span>
-              </div>
-            </div>
+      <div class="json-config">
+        <div class="json-config-header">
+          <div
+            class="view-container"
+            onClick={() => this.viewDocumentation(index)}
+          >
+            <i class="fa fa-desktop"/>
+            <span>View Documentation</span>
           </div>
-          <textarea
-              ref={el => (this[`textAreaContentRef${index}`] = el as any)}
-              class="json-content"
-              value={jsonBeautify(jsonData, null, 2, 98)}
-              onChange={e => {
-                const target = e.target as any;
+          <div class="right-content">
+            <div
+              class="copy-container"
+              onClick={() => {
+                this[`textAreaContentRef${index}`].select();
 
-                if (index === 1) {
-                  this.config = JSON.parse(target.value);
-                } else {
-                  this.configureObject = JSON.parse(target.value);
+                document.execCommand('copy');
+              }}
+            >
+              <i class="fa fa-clone"/>
+              <span>Copy JSON</span>
+            </div>
+            <div
+              class="reset-container"
+              onClick={() => {
+                if (this[`textAreaContentRef${index}`]) {
+                  if (index === 1) {
+                    this[`textAreaContentRef${index}`].value = jsonBeautify(
+                      this[`cachedJsonConfig${index}`],
+                      null,
+                      2,
+                      98
+                    );
+
+                    this.config = this[`cachedJsonConfig${index}`];
+                  } else {
+                    this[`textAreaContentRef${index}`].value = jsonBeautify(
+                      this.configSettings,
+                      null,
+                      2,
+                      98
+                    );
+
+                    this.configureObject = this.configSettings;
+                  }
                 }
               }}
-          ></textarea>
+            >
+              <i class="fa fa-undo"/>
+              <span>Reset</span>
+            </div>
+          </div>
         </div>
+        <textarea
+          ref={el => (this[`textAreaContentRef${index}`] = el as any)}
+          class="json-content"
+          value={jsonBeautify(jsonData, null, 2, 98)}
+          onChange={e => {
+            const target = e.target as any;
+
+            if (index === 1) {
+              this.config = JSON.parse(target.value);
+            } else {
+              this.configureObject = JSON.parse(target.value);
+            }
+          }}
+        ></textarea>
+      </div>
     );
   };
 
   renderAuthoringBottomContent() {
     return this.renderTabs(
-        [
-          {
-            name: "Item Config",
-            content: () => {
-              this.cachedJsonConfig1 = cloneDeep(this.config);
+      [
+        {
+          name: 'Item Config',
+          content: () => {
+            this.cachedJsonConfig1 = cloneDeep(this.config);
 
-              return this.renderJsonConfigPanel(this.cachedJsonConfig1, 1);
-            }
-          },
-          {
-            name: "Authoring View Settings",
-            content: () => {
-              return this.renderJsonConfigPanel(this.configureObject, 2);
-            }
+            return this.renderJsonConfigPanel(this.cachedJsonConfig1, 1);
           }
-        ],
-        200
+        },
+        {
+          name: 'Authoring View Settings',
+          content: () => {
+            return this.renderJsonConfigPanel(this.configureObject, 2);
+          }
+        }
+      ],
+      200
     );
   }
 
   renderAuthoringHeader(smallView = false) {
-    const isToggled = this.isToggled("authoring");
+    const isToggled = this.isToggled('authoring');
 
     return (
-        <div
-            class={classnames("authoring-header", {
-              collapsed: this.collapsed === "authoring",
-              toggled: isToggled
-            })}
-        >
-          <div class="topContent">
-            {this.renderHeaderTitleInfo({
-              title: isToggled ? "Dev Options" : "Authoring View",
-              description: isToggled
-                  ? "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
-                  : "The view an author sees when configuring this interaction."
-            })}
-            {!isToggled && (
-                <div class="buttons-container">
-                  <div class="toggle-container"
-                       onClick={() => this.validateItem()}>
-                    <span class="toggle-text">Validate</span>
-                  </div>
-                  <div
-                      class={classnames("toggle-container", {
-                        toggled: this.isToggled("authoring")
-                      })}
-                      onClick={() => this.toggleAuthoringSettings()}
-                  >
-                    <i class="material-icons toggle-icon">
-                      {this.authSettVisible ? "toggle_on" : "toggle_off"}
-                    </i>
-                    <span class="toggle-text">Dev Options</span>
-                  </div>
-                  {smallView && (
-                      <div
-                          class="mobile-button"
-                          onClick={() => (this.mobileTabIndex = 1)}
-                      >
-                        <span>STUDENT VIEW</span>
-                      </div>
-                  )}
-                </div>
-            )}
-            {!isToggled && !smallView && (
-                <i
-                    class={classnames("material-icons", "collapse-icon", {
-                      collapsed: this.collapsed === "student"
-                    })}
-                    onClick={() => this.collapsePanel("student")}
-                >
-                  {this.collapsed === "student"
-                      ? "format_indent_decrease"
-                      : "format_indent_increase"}
+      <div
+        class={classnames('authoring-header', {
+          collapsed: this.collapsed === 'authoring',
+          toggled: isToggled
+        })}
+      >
+        <div class="topContent">
+          {this.renderHeaderTitleInfo({
+            title: isToggled ? 'Dev Options' : 'Authoring View',
+            description: isToggled
+              ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+              : 'The view an author sees when configuring this interaction.'
+          })}
+          {!isToggled && (
+            <div class="buttons-container">
+              <div class="toggle-container"
+                   onClick={() => this.validateItem()}>
+                <span class="toggle-text">Validate</span>
+              </div>
+              <div
+                class={classnames('toggle-container', {
+                  toggled: this.isToggled('authoring')
+                })}
+                onClick={() => this.toggleAuthoringSettings()}
+              >
+                <i class="material-icons toggle-icon">
+                  {this.authSettVisible ? 'toggle_on' : 'toggle_off'}
                 </i>
-            )}
-            {isToggled && (
-                <span
-                    class="close-icon"
-                    onClick={() => this.toggleAuthoringSettings()}
+                <span class="toggle-text">Dev Options</span>
+              </div>
+              {smallView && (
+                <div
+                  class="mobile-button"
+                  onClick={() => (this.mobileTabIndex = 1)}
                 >
+                  <span>STUDENT VIEW</span>
+                </div>
+              )}
+            </div>
+          )}
+          {!isToggled && !smallView && (
+            <i
+              class={classnames('material-icons', 'collapse-icon', {
+                collapsed: this.collapsed === 'student'
+              })}
+              onClick={() => this.collapsePanel('student')}
+            >
+              {this.collapsed === 'student'
+                ? 'format_indent_decrease'
+                : 'format_indent_increase'}
+            </i>
+          )}
+          {isToggled && (
+            <span
+              class="close-icon"
+              onClick={() => this.toggleAuthoringSettings()}
+            >
               X
             </span>
-            )}
-          </div>
-          <div
-              ref={el => (this.bottomContentRef = el as any)}
-              style={{
-                height: '100vh'
-              }}
-              class="bottomContent authoring"
-          >
-            {isToggled && this.renderAuthoringBottomContent()}
-          </div>
+          )}
         </div>
+        <div
+          ref={el => (this.bottomContentRef = el as any)}
+          style={{
+            height: '100vh'
+          }}
+          class="bottomContent authoring"
+        >
+          {isToggled && this.renderAuthoringBottomContent()}
+        </div>
+      </div>
     );
   }
 
   renderRoleConfigContainer() {
     return (
-        <div class="roles-settings">
-          <h5>Role</h5>
-          <div class="roles-options">
-            {this.customCheckBox({
-              label: "Student",
-              checked: this.currentOption === "student",
-              value: "student",
-              action: this.setOption
-            })}
-            {this.customCheckBox({
-              label: "Instructor",
-              checked: this.currentOption === "instructor",
-              value: "instructor",
-              action: this.setOption
-            })}
-          </div>
+      <div class="roles-settings">
+        <h5>Role</h5>
+        <div class="roles-options">
+          {this.customCheckBox({
+            label: 'Student',
+            checked: this.currentOption === 'student',
+            value: 'student',
+            action: this.setOption
+          })}
+          {this.customCheckBox({
+            label: 'Instructor',
+            checked: this.currentOption === 'instructor',
+            value: 'instructor',
+            action: this.setOption
+          })}
         </div>
+      </div>
     );
   }
 
   renderModeConfigContainer() {
     return (
-        <div class="modes-settings">
-          <h5>Mode</h5>
-          <div class="modes-options">
-            {this.customCheckBox({
-              label: "Gather",
-              checked: this.env["mode"] === "gather",
-              value: "gather",
-              action: this.setMode
-            })}
-            {this.customCheckBox({
-              label: "View",
-              checked: this.env["mode"] === "view",
-              value: "view",
-              action: this.setMode
-            })}
-            {this.customCheckBox({
-              label: "Evaluate",
-              checked: this.env["mode"] === "evaluate",
-              value: "evaluate",
-              action: this.setMode
-            })}
-          </div>
+      <div class="modes-settings">
+        <h5>Mode</h5>
+        <div class="modes-options">
+          {this.customCheckBox({
+            label: 'Gather',
+            checked: this.env['mode'] === 'gather',
+            value: 'gather',
+            action: this.setMode
+          })}
+          {this.customCheckBox({
+            label: 'View',
+            checked: this.env['mode'] === 'view',
+            value: 'view',
+            action: this.setMode
+          })}
+          {this.customCheckBox({
+            label: 'Evaluate',
+            checked: this.env['mode'] === 'evaluate',
+            value: 'evaluate',
+            action: this.setMode
+          })}
         </div>
+      </div>
     );
   }
 
   renderSettingsContainer() {
     return (
-        <div class="settings-tab-container">
-          {this.renderModeConfigContainer()}
-          {this.renderRoleConfigContainer()}
-        </div>
+      <div class="settings-tab-container">
+        {this.renderModeConfigContainer()}
+        {this.renderRoleConfigContainer()}
+      </div>
     );
   }
 
   renderTabs = (tabs, tabWidth = 100) => {
     const content = tabs[this.tabIndex] ? tabs[this.tabIndex].content : null;
-    const contentValue = typeof content === "function" ? content() : content;
+    const contentValue = typeof content === 'function' ? content() : content;
 
     return (
-        <div class="tabs-container">
-          <div class="tabs">
-            {tabs.map((tab, index) => (
-                <div
-                    style={{
-                      width: `${tabWidth}px`
-                    }}
-                    class={classnames("tab", {
-                      selected: this.tabIndex === index
-                    })}
-                    onClick={() => (this.tabIndex = index)}
-                >
-                  {tab.name}
-                </div>
-            ))}
-          </div>
-          <span
-              class="selected-line"
+      <div class="tabs-container">
+        <div class="tabs">
+          {tabs.map((tab, index) => (
+            <div
               style={{
-                left: `${this.tabIndex * tabWidth}px`,
                 width: `${tabWidth}px`
               }}
-          ></span>
-          <div class="tab-content">{contentValue}</div>
+              class={classnames('tab', {
+                selected: this.tabIndex === index
+              })}
+              onClick={() => (this.tabIndex = index)}
+            >
+              {tab.name}
+            </div>
+          ))}
         </div>
+        <span
+          class="selected-line"
+          style={{
+            left: `${this.tabIndex * tabWidth}px`,
+            width: `${tabWidth}px`
+          }}
+        ></span>
+        <div class="tab-content">{contentValue}</div>
+      </div>
     );
   };
 
   renderBottomContent() {
     return this.renderTabs([
       {
-        name: "Settings",
+        name: 'Settings',
         content: this.renderSettingsContainer()
       },
       {
-        name: "Embed",
+        name: 'Embed',
         content: null
       }
     ]);
@@ -886,123 +906,123 @@ export class PieDemoContent {
 
   renderStudentHeader(smallView = false) {
     return (
-        <div
-            class={classnames("student-view-header", {
-              collapsed: this.collapsed === "student",
-              toggled: this.isToggled()
-            })}
-        >
-          <div class="topContent">
-            {this.renderHeaderTitleInfo({
-              title: "Student view",
-              description:
-                  "The view a student (or instructor) sees when entering or reviewing the interaction.",
-              options: [this.env["mode"], this.currentOption]
-            })}
+      <div
+        class={classnames('student-view-header', {
+          collapsed: this.collapsed === 'student',
+          toggled: this.isToggled()
+        })}
+      >
+        <div class="topContent">
+          {this.renderHeaderTitleInfo({
+            title: 'Student view',
+            description:
+              'The view a student (or instructor) sees when entering or reviewing the interaction.',
+            options: [this.env['mode'], this.currentOption]
+          })}
 
-            <div class="buttons-container">
-              <div
-                  class={classnames("toggle-container", "student", {
-                    toggled: this.isToggled()
-                  })}
-                  onClick={() => this.toggleStudentSettings()}
-              >
-                <i class="material-icons toggle-icon">
-                  {this.studSettVisible ? "toggle_on" : "toggle_off"}
-                </i>
-                <span class="toggle-text">Options</span>
-              </div>
+          <div class="buttons-container">
+            <div
+              class={classnames('toggle-container', 'student', {
+                toggled: this.isToggled()
+              })}
+              onClick={() => this.toggleStudentSettings()}
+            >
+              <i class="material-icons toggle-icon">
+                {this.studSettVisible ? 'toggle_on' : 'toggle_off'}
+              </i>
+              <span class="toggle-text">Options</span>
             </div>
-            {!smallView && (
-                <i
-                    class={classnames("material-icons", "collapse-icon", {
-                      collapsed: this.collapsed === "authoring"
-                    })}
-                    onClick={() => this.collapsePanel("authoring")}
-                >
-                  {this.collapsed === "authoring"
-                      ? "format_indent_increase"
-                      : "format_indent_decrease"}
-                </i>
-            )}
-            {smallView && (
-                <div
-                    class="mobile-button"
-                    onClick={() => (this.mobileTabIndex = 0)}
-                >
-                  <span>AUTHORING VIEW</span>
-                </div>
-            )}
           </div>
-          <div class="bottomContent">{this.renderBottomContent()}</div>
+          {!smallView && (
+            <i
+              class={classnames('material-icons', 'collapse-icon', {
+                collapsed: this.collapsed === 'authoring'
+              })}
+              onClick={() => this.collapsePanel('authoring')}
+            >
+              {this.collapsed === 'authoring'
+                ? 'format_indent_increase'
+                : 'format_indent_decrease'}
+            </i>
+          )}
+          {smallView && (
+            <div
+              class="mobile-button"
+              onClick={() => (this.mobileTabIndex = 0)}
+            >
+              <span>AUTHORING VIEW</span>
+            </div>
+          )}
         </div>
+        <div class="bottomContent">{this.renderBottomContent()}</div>
+      </div>
     );
   }
 
   renderCollapsedPanel(title, toggled = undefined) {
     return (
-        <div
-            class={classnames("collapsed-panel", {
-              toggled: toggled
-            })}
-        >
-          <span>{title}</span>
-        </div>
+      <div
+        class={classnames('collapsed-panel', {
+          toggled: toggled
+        })}
+      >
+        <span>{title}</span>
+      </div>
     );
   }
 
   renderAuthoringHolder = (smallView = false) => {
-    const isCollapsed = this.collapsed === "authoring";
+    const isCollapsed = this.collapsed === 'authoring';
     this._renderingAuthor = true;
 
     return (
+      <div
+        class={classnames('authoring-holder', {
+          collapsed: this.collapsed === 'authoring',
+          toggled: this.isToggled()
+        })}
+      >
         <div
-            class={classnames("authoring-holder", {
-              collapsed: this.collapsed === "authoring",
-              toggled: this.isToggled()
-            })}
+          class={classnames('control-bar', {
+            justElement: this.justElement
+          })}
         >
-          <div
-              class={classnames("control-bar", {
-                justElement: this.justElement
-              })}
-          >
-            {this.renderAuthoringHeader(smallView)}
-          </div>
-          {isCollapsed &&
-              this.renderCollapsedPanel("Authoring View", this.isToggled())}
-          {!isCollapsed && (
-              <div
-                  ref={el => el && (this.elementParent1 = el as any)}
-                  class={classnames("element-holder", {
-                    justElement: this.justElement
-                  })}
-              >
-                <div
-                    class="element-parent"
-                    style={{
-                      minHeight: `${this.minHeightAuthoring}px`
-                    }}
-                >
-                  <pie-author
-                      class="pie-author"
-                      ref={el => el && (this.pieAuthor = el as JSX.PieAuthor)}
-                      config={this.config}
-                      configSettings={this.configureObject}
-                      canWatchConfigSettings={true}
-                  >
-                    {" "}
-                  </pie-author>
-                </div>
-              </div>
-          )}
-          <input type="file" hidden ref={r => (this.fileInput = r)}/>
+          {this.renderAuthoringHeader(smallView)}
         </div>
+        {isCollapsed &&
+          this.renderCollapsedPanel('Authoring View', this.isToggled())}
+        {!isCollapsed && (
+          <div
+            ref={el => el && (this.elementParent1 = el as any)}
+            class={classnames('element-holder', {
+              justElement: this.justElement
+            })}
+          >
+            <div
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightAuthoring}px`
+              }}
+            >
+              <pie-author
+                class="pie-author"
+                ref={el => el && (this.pieAuthor = el as JSX.PieAuthor)}
+                config={this.config}
+                configSettings={this.configureObject}
+                canWatchConfigSettings={true}
+              >
+                {' '}
+              </pie-author>
+            </div>
+          </div>
+        )}
+        <input type="file" hidden ref={r => (this.fileInput = r)}/>
+      </div>
     );
   };
 
   renderStudentHolder = (smallView = false) => {
-    const isCollapsed = this.collapsed === "student";
+    const isCollapsed = this.collapsed === 'student';
     this._renderingStudent = true;
 
     if (!this._renderStudent) {
@@ -1010,102 +1030,102 @@ export class PieDemoContent {
     }
 
     return (
+      <div
+        class={classnames('student-view-holder', {
+          collapsed: this.collapsed === 'student',
+          toggled: this.isToggled()
+        })}
+      >
         <div
-            class={classnames("student-view-holder", {
-              collapsed: this.collapsed === "student",
-              toggled: this.isToggled()
-            })}
+          class={classnames('control-bar', {
+            justElement: this.justElement
+          })}
         >
-          <div
-              class={classnames("control-bar", {
-                justElement: this.justElement
-              })}
-          >
-            {this.renderStudentHeader(smallView)}
-          </div>
-          {isCollapsed && this.renderCollapsedPanel("Student View")}
-          {!isCollapsed && (
-              <div
-                  class={classnames("element-holder", {
-                    toggled: this.studSettVisible,
-                    justElement: this.justElement
-                  })}
-              >
-                  <div class={classnames("score-holder", {visible: this.env["mode"] === "evaluate"})}>
-                      <span>Scores:</span>
-
-                      {Object.keys(this.scores).map((scoreKey, index) => (
-                          <div class="score">
-                              <span>Item {index + 1}: </span> {this.scores[scoreKey].score}
-                              {this.scores[scoreKey].json && <pre>{this.scores[scoreKey].json}</pre>}
-                          </div>
-                      ))}
-                  </div>
-
-                <div
-                    ref={el => el && (this.elementParent2 = el as any)}
-                    class="element-parent"
-                    style={{
-                      minHeight: `${this.minHeightStudent}px`
-                    }}
-                >
-                  <pie-player
-                      class="pie-player"
-                      ref={el => el && (this.piePlayer = el as JSX.PiePlayer)}
-                      config={this.config}
-                  >
-                    {" "}
-                  </pie-player>
-                </div>
-              </div>
-          )}
+          {this.renderStudentHeader(smallView)}
         </div>
+        {isCollapsed && this.renderCollapsedPanel('Student View')}
+        {!isCollapsed && (
+          <div
+            class={classnames('element-holder', {
+              toggled: this.studSettVisible,
+              justElement: this.justElement
+            })}
+          >
+            <div class={classnames('score-holder', { visible: this.env['mode'] === 'evaluate' })}>
+              <span>Scores:</span>
+
+              {Object.keys(this.scores).map((scoreKey, index) => (
+                <div class="score">
+                  <span>Item {index + 1}: </span> {this.scores[scoreKey].score}
+                  {this.scores[scoreKey].json && <pre>{this.scores[scoreKey].json}</pre>}
+                </div>
+              ))}
+            </div>
+
+            <div
+              ref={el => el && (this.elementParent2 = el as any)}
+              class="element-parent"
+              style={{
+                minHeight: `${this.minHeightStudent}px`
+              }}
+            >
+              <pie-player
+                class="pie-player"
+                ref={el => el && (this.piePlayer = el as JSX.PiePlayer)}
+                config={this.config}
+              >
+                {' '}
+              </pie-player>
+            </div>
+          </div>
+        )}
+      </div>
     );
   };
 
   renderContent = () => {
     if (this.rootElWidth >= 1200) {
       return (
-          <div class="config-holder">
-            {this.renderAuthoringHolder()}
-            <span
-                class={classnames("divider", {
-                  larger: this.studSettVisible && this.authSettVisible
-                })}
-            />
-            {this.renderStudentHolder()}
-          </div>
+        <div class="config-holder">
+          {this.renderAuthoringHolder()}
+          <span
+            class={classnames('divider', {
+              larger: this.studSettVisible && this.authSettVisible
+            })}
+          />
+          {this.renderStudentHolder()}
+        </div>
       );
     }
 
     return (
-        <div
-            class={classnames("smaller-view", {
-              mobile: this.rootElWidth <= 700
-            })}
-        >
-          {this.mobileTabIndex === 0 && this.renderAuthoringHolder(true)}
-          {this.mobileTabIndex === 1 && this.renderStudentHolder(true)}
-        </div>
+      <div
+        class={classnames('smaller-view', {
+          mobile: this.rootElWidth <= 700
+        })}
+      >
+        {this.mobileTabIndex === 0 && this.renderAuthoringHolder(true)}
+        {this.mobileTabIndex === 1 && this.renderStudentHolder(true)}
+      </div>
     );
   };
 
   renderDocHolder = () => {
     return (
-        <div
-            class={classnames("doc-holder", {
-              visible: this.docHolderVisible,
-              mobile: this.rootElWidth <= 700
-            })}
-        >
+      <div
+        class={classnames('doc-holder', {
+          visible: this.docHolderVisible,
+          mobile: this.rootElWidth <= 700
+        })}
+      >
         <span
-            class="close-icon"
-            onClick={() => (this.docHolderVisible = false)}
+          class="close-icon"
+          onClick={() => (this.docHolderVisible = false)}
         >
           X
         </span>
-          <div id="schema-holder"/>
-        </div>
+        <div id="schema-holder"/>
+      </div>
     );
   };
 
@@ -1113,23 +1133,23 @@ export class PieDemoContent {
     switch (this.state) {
       case ViewState.LOADING:
         return (
-            <div class="root loading">
-              <div class="lmask"/>
-            </div>
+          <div class="root loading">
+            <div class="lmask"/>
+          </div>
         );
       case ViewState.ERROR:
         return <div id="error">Error...</div>;
       case ViewState.READY:
         return (
-            <div
-                class={classnames("root", {
-                  multiplePies: this.multiplePies
-                })}
-                ref={this.handleRootEl}
-            >
-              {this.renderDocHolder()}
-              {this.renderContent()}
-            </div>
+          <div
+            class={classnames('root', {
+              multiplePies: this.multiplePies
+            })}
+            ref={this.handleRootEl}
+          >
+            {this.renderDocHolder()}
+            {this.renderContent()}
+          </div>
         );
     }
   }
