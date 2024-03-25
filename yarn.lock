@@ -848,10 +848,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-configure-events/-/pie-configure-events-1.4.1.tgz"
   integrity sha512-lpVYLltoNqzafqGHiFovx6VBiT7TGUFf7QzccHogc0hkTuOQvqTA1nfqnjw0LVSJ9umJXXDBo6pTxTm5iXBR5w==
 
-"@pie-framework/pie-player-components@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.npmjs.org/@pie-framework/pie-player-components/-/pie-player-components-2.0.3.tgz"
-  integrity sha512-WVI6qYFo6KcLjZhdy0Kn2Bj3N/DYhdcOyuywvL+Wq1y5C0E36rtz29+oyWJaZK5Gjs6tb7iHNHWw7s8RPqp6lQ==
+"@pie-framework/pie-player-components@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-2.7.0.tgz#f46021d4e9dd729f1689317d78c013a67f39851e"
+  integrity sha512-didbivaQx4jvOF54o671WSrcBHB+lwjb/PhxkYEQIwSrbu/TetXNgqbJ1vX0VZ/dPsqT9hrrwWSmt8h6QzPmbw==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
@@ -859,7 +859,7 @@
     "@material/tab-bar" "^2.2.0"
     "@pie-framework/pie-configure-events" "^1.4.1"
     "@pie-framework/pie-player-events" "^0.1.0"
-    "@pie-lib/math-rendering" "^2.5.0"
+    "@pie-lib/pie-toolbox-math-rendering-module" "1.0.8"
     async-retry "^1.2.3"
     lodash "^4.17.15"
     parse-package-name "^0.1.0"
@@ -869,14 +869,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-player-events/-/pie-player-events-0.1.0.tgz"
   integrity sha512-6H1tlRGmcZ3Wt+8HMqu5KugVcwwyNrMylfI5rIpvOSt0T82QDmjRj+2sPgQG5zos/w6MtwUqn/QZ+8Rq2EXSOA==
 
-"@pie-lib/math-rendering@^2.5.0":
-  version "2.5.1"
-  resolved "https://registry.npmjs.org/@pie-lib/math-rendering/-/math-rendering-2.5.1.tgz"
-  integrity sha512-CvIHJzFDpex9xqp/XSF8JWlvDE8jWkWBlRkZZircRzu+rgFI6YvlqCG5d3fzKwUqqCW/Aa2Tht9Z4ycxGrFPOA==
-  dependencies:
-    debug "^4.1.1"
-    lodash "^4.17.11"
-    mathjax-full "3.2.0"
+"@pie-lib/pie-toolbox-math-rendering-module@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@pie-lib/pie-toolbox-math-rendering-module/-/pie-toolbox-math-rendering-module-1.0.8.tgz#2459fa799687c5be9bc9cf8bcf722ef998fb184e"
+  integrity sha512-C2HfM+5FZ7QGYlcdT8B1rBKdDqe5tkE+ikxI3j3v34MJABLvzEtqSp90L7zmxL5ldto9zadvko95cXNvZkUxzA==
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.4"
@@ -1969,11 +1965,6 @@ combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@>=7.0.0:
-  version "9.4.1"
-  resolved "https://registry.npmjs.org/commander/-/commander-9.4.1.tgz"
-  integrity sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==
-
 commander@^2.15.1:
   version "2.20.3"
   resolved "https://registry.npmjs.org/commander/-/commander-2.20.3.tgz"
@@ -2736,11 +2727,6 @@ escodegen@^1.9.1:
     optionator "^0.8.1"
   optionalDependencies:
     source-map "~0.6.1"
-
-esm@^3.2.25:
-  version "3.2.25"
-  resolved "https://registry.npmjs.org/esm/-/esm-3.2.25.tgz"
-  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 esprima@^4.0.0, esprima@^4.0.1:
   version "4.0.1"
@@ -5004,16 +4990,6 @@ marked@^0.3.14:
   resolved "https://registry.npmjs.org/marked/-/marked-0.3.19.tgz"
   integrity sha512-ea2eGWOqNxPcXv8dyERdSr/6FmzvWwzjMxpfGB/sbMccXoct+xY+YukPD+QTUZwyvK7BZwcr4m21WBOW41pAkg==
 
-mathjax-full@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.npmjs.org/mathjax-full/-/mathjax-full-3.2.0.tgz"
-  integrity sha512-D2EBNvUG+mJyhn+M1C858k0f2Fc4KxXvbEX2WCMXroV10212JwfYqaBJ336ECBSz5X9L5LRoamxb7AJtg3KaJA==
-  dependencies:
-    esm "^3.2.25"
-    mhchemparser "^4.1.0"
-    mj-context-menu "^0.6.1"
-    speech-rule-engine "^3.3.3"
-
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
@@ -5055,11 +5031,6 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/methods/-/methods-1.1.2.tgz"
   integrity sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w==
-
-mhchemparser@^4.1.0:
-  version "4.1.1"
-  resolved "https://registry.npmjs.org/mhchemparser/-/mhchemparser-4.1.1.tgz"
-  integrity sha512-R75CUN6O6e1t8bgailrF1qPq+HhVeFTM3XQ0uzI+mXTybmphy3b6h4NbLOYhemViQ3lUs+6CKRkC3Ws1TlYREA==
 
 micromatch@^3.1.10, micromatch@^3.1.4:
   version "3.1.10"
@@ -5206,11 +5177,6 @@ mixin-deep@^1.2.0:
   dependencies:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
-
-mj-context-menu@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.npmjs.org/mj-context-menu/-/mj-context-menu-0.6.1.tgz"
-  integrity sha512-7NO5s6n10TIV96d4g2uDpG7ZDpIhMh0QNfGdJw/W47JswFcosz457wqz/b5sAKvl12sxINGFCn80NZHKwxQEXA==
 
 mkdirp@^0.5.1, mkdirp@^0.5.4:
   version "0.5.6"
@@ -6794,15 +6760,6 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.npmjs.org/spdx-license-ids/-/spdx-license-ids-3.0.12.tgz"
   integrity sha512-rr+VVSXtRhO4OHbXUiAF7xW3Bo9DuuF6C5jH+q/x15j2jniycgKbxU09Hr0WqlSLUs4i4ltHGXqTe7VHclYWyA==
 
-speech-rule-engine@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.npmjs.org/speech-rule-engine/-/speech-rule-engine-3.3.3.tgz"
-  integrity sha512-0exWw+0XauLjat+f/aFeo5T8SiDsO1JtwpY3qgJE4cWt+yL/Stl0WP4VNDWdh7lzGkubUD9lWP4J1ASnORXfyQ==
-  dependencies:
-    commander ">=7.0.0"
-    wicked-good-xpath "^1.3.0"
-    xmldom-sre "^0.1.31"
-
 split-on-first@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/split-on-first/-/split-on-first-1.1.0.tgz"
@@ -7626,11 +7583,6 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-wicked-good-xpath@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/wicked-good-xpath/-/wicked-good-xpath-1.3.0.tgz"
-  integrity sha512-Gd9+TUn5nXdwj/hFsPVx5cuHHiF5Bwuc30jZ4+ronF1qHK5O7HD0sgmXWSEgwKquT3ClLoKPVbO6qGwVwLzvAw==
-
 widest-line@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/widest-line/-/widest-line-2.0.1.tgz"
@@ -7757,11 +7709,6 @@ xml-name-validator@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-3.0.0.tgz"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
-
-xmldom-sre@^0.1.31:
-  version "0.1.31"
-  resolved "https://registry.npmjs.org/xmldom-sre/-/xmldom-sre-0.1.31.tgz"
-  integrity sha512-f9s+fUkX04BxQf+7mMWAp5zk61pciie+fFLC9hX9UVvCeJQfNHRHXpeo5MPcR0EUf57PYLdt+ZO4f3Ipk2oZUw==
 
 xtend@~4.0.1:
   version "4.0.2"
