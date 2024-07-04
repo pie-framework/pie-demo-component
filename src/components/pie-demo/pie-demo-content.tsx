@@ -322,49 +322,9 @@ export class PieDemoContent {
   }
 
   async validateItem() {
-    // get the authoring config for the element
-    if ('models' in this.config) {
-      const models = this.config.models;
-      const elements = this.config.elements;
-      let authoringConfigure = {};
-
-      Object.keys(elements).map(element => {
-        try {
-          const authorElName = `${element}-config`;
-          const authorElement = document.querySelector(authorElName) as any;
-
-          if (authorElement) {
-            authoringConfigure = authorElement._configuration;
-          }
-        } catch (e) {
-          console.log(e.toString());
-        }
-      })
-
-      for (const model of models) {
-        const { controller: properController, tag } = this.getProperController(model);
-        const modelIndex = models.findIndex(m => m.id === model.id);
-
-        const properConfigure = this.configSettings[getPackageWithoutVersion(tag)];
-        // this is required in case properConfigure is undefined
-        const configure = properConfigure || authoringConfigure;
-
-        if (properController && properController.validate) {
-          try {
-            const errors = await properController.validate(model, configure);
-            const config = cloneDeep(this.config);
-
-            config.models[modelIndex].errors = errors;
-
-            this.config = config;
-          } catch (e) {
-            console.error(e.toString());
-          }
-        }
-
-      }
-    }
-
+    // Just call the validation method from pie-author, it will do everything that needs to be done
+    // @ts-ignore
+    await this.pieAuthor.validateModels();
   }
 
   toggleStudentSettings() {
