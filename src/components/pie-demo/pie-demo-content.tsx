@@ -308,14 +308,18 @@ export class PieDemoContent {
     if ('markup' in this.config) {
       divA.innerHTML = this.config.markup;
 
-      const tag = Object.keys(this.config.elements).find(key => key === divA.querySelector(`[id="${model.id}"]`).tagName.toLowerCase())
-      const packageWithoutVersion = getPackageWithoutVersion(this.config.elements[tag]);
-      const controller = this.pieControllers[packageWithoutVersion];
+      if (model.id) {
+        const tag = Object.keys(this.config.elements).find(key => key === divA.querySelector(`[id="${model.id}"]`).tagName.toLowerCase())
+        const packageWithoutVersion = getPackageWithoutVersion(this.config.elements[tag]);
+        const controller = this.pieControllers[packageWithoutVersion];
 
-      return {
-        controller,
-        tag
+        return {
+          controller,
+          tag
+        }
       }
+
+      return {};
     }
 
     return {};
