@@ -848,10 +848,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-configure-events/-/pie-configure-events-1.4.1.tgz"
   integrity sha512-lpVYLltoNqzafqGHiFovx6VBiT7TGUFf7QzccHogc0hkTuOQvqTA1nfqnjw0LVSJ9umJXXDBo6pTxTm5iXBR5w==
 
-"@pie-framework/pie-player-components@2.11.2":
-  version "2.11.2"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-2.11.2.tgz#a7fc45b13594284760b441a63855f4f7c196bd97"
-  integrity sha512-w6Ns5PPDsDxbrT69DElzCIzEGbhf5oELQ2aeFVG8I5Hh/pKkIg7IVR8Exr9meNat+Y/ETVvDRoCn/5S/DTEHwA==
+"@pie-framework/pie-player-components@2.11.6":
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-2.11.6.tgz#3f74b2ba121c6eae13cdc0dae971a51d7d3691aa"
+  integrity sha512-hPMnBNpXyUBWE4WkDEUtU244fHyxUJ4mNlfyUBBnSWN7oJ1XCSVIX7c3qqx6H/tqqFu1gfWkPxrMZJD5xt8+GQ==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
