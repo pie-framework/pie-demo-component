@@ -1074,6 +1074,7 @@ export class PieDemo {
                 ref={el => el && (this.pieAuthor = el as JSX.PieAuthor)}
                 config={config}
                 configSettings={configSettings}
+                reFetchBundle={true}
               >
                 {" "}
               </pie-author>
@@ -1149,6 +1150,7 @@ export class PieDemo {
                 class="pie-player"
                 ref={el => el && (this.piePlayer = el as JSX.PiePlayer)}
                 config={config}
+                reFetchBundle={true}
               >
                 {" "}
               </pie-player>
