@@ -974,6 +974,7 @@ export class PieDemoContent {
                 config={this.config}
                 configSettings={this.configureObject}
                 canWatchConfigSettings={true}
+                reFetchBundle={true}
               >
                 {' '}
               </pie-author>
@@ -1037,6 +1038,7 @@ export class PieDemoContent {
                 class="pie-player"
                 ref={el => el && (this.piePlayer = el as JSX.PiePlayer)}
                 config={this.config}
+                reFetchBundle={true}
               >
                 {' '}
               </pie-player>
