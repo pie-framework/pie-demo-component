@@ -18,6 +18,7 @@ https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/
 2. nvm install 16.13.0
 3. npm install -g pnpm@6.35.1
 4. yarn install
+5. (npm run build and yarn publish)
 
 ## Commands
 
