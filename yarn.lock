@@ -848,10 +848,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-configure-events/-/pie-configure-events-1.4.1.tgz"
   integrity sha512-lpVYLltoNqzafqGHiFovx6VBiT7TGUFf7QzccHogc0hkTuOQvqTA1nfqnjw0LVSJ9umJXXDBo6pTxTm5iXBR5w==
 
-"@pie-framework/pie-player-components@3.1.4":
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.1.4.tgz#923bb3278da46b38d713886b3aeac678d00671d9"
-  integrity sha512-97OcCEoL8/6HGumKeidkaQWNMWEH48rWUAczT3kW2kAmbUpAYlJD1RnBAz8r3rU1+aZkPLcOpx5pCJmyklN8PA==
+"@pie-framework/pie-player-components@3.8.2":
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.8.2.tgz#21f4167c7e88c9ce3e8b22c6957467fa385cffa3"
+  integrity sha512-HJMnXvxNCgB7i3lRijgF3w8qQYFmqr045ZPFypIgA+Yp2DRObDL7pjlG51lBJS6/A8Z3lQD4ZFr7tT/uJ0T4GQ==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
@@ -859,7 +859,7 @@
     "@material/tab-bar" "^2.2.0"
     "@pie-framework/pie-configure-events" "^1.4.1"
     "@pie-framework/pie-player-events" "^0.1.0"
-    "@pie-lib/pie-toolbox-math-rendering-module" "2.2.0"
+    "@pie-lib/pie-toolbox-math-rendering-module" "5.0.3"
     async-retry "^1.2.3"
     lodash "^4.17.15"
     parse-package-name "^0.1.0"
@@ -869,10 +869,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-player-events/-/pie-player-events-0.1.0.tgz"
   integrity sha512-6H1tlRGmcZ3Wt+8HMqu5KugVcwwyNrMylfI5rIpvOSt0T82QDmjRj+2sPgQG5zos/w6MtwUqn/QZ+8Rq2EXSOA==
 
-"@pie-lib/pie-toolbox-math-rendering-module@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@pie-lib/pie-toolbox-math-rendering-module/-/pie-toolbox-math-rendering-module-2.2.0.tgz#9c0f5937d4efa0798005b279a1acf9791c56ca43"
-  integrity sha512-5Jaisl7OkJ0zDqbQfsj9W44nogiAnRc84ccND0845//FhaR22XGpehpoMtNdcvrDk5s4aNjPHVzo1XBs6I0Mvg==
+"@pie-lib/pie-toolbox-math-rendering-module@5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@pie-lib/pie-toolbox-math-rendering-module/-/pie-toolbox-math-rendering-module-5.0.3.tgz#6c79b395197e1039bbbc9c1f0813fc08ceab36a8"
+  integrity sha512-ocv/TS/mT0CHZdBsxnMdU9vn3nKX3BTlFGMbm0IUL21GVu6/vjfGW5CmRysNowhSu75lh4G9hNjplB88JUHHLw==
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.4"
