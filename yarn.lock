@@ -848,10 +848,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-configure-events/-/pie-configure-events-1.4.1.tgz"
   integrity sha512-lpVYLltoNqzafqGHiFovx6VBiT7TGUFf7QzccHogc0hkTuOQvqTA1nfqnjw0LVSJ9umJXXDBo6pTxTm5iXBR5w==
 
-"@pie-framework/pie-player-components@3.8.3":
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.8.3.tgz#6e9466360b3f74a3db44d61d65b54d8c8626f5c1"
-  integrity sha512-KM87bTm5A6xR4RGlZyjEUZKFoms/6pTn1qwGNY2GsBY+XvA8rD/2gt2b7r5OI7U7UEFMti4YYcjBBJuyapYlvw==
+"@pie-framework/pie-player-components@3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.12.1.tgz#43095d61dd55030dffa5dd87f3a81120b37c77a0"
+  integrity sha512-6EwlSG6aqYd4AEdFmmqW12aEpBo8vS2a8WLtsQ63/L5zMvSSJX3VSTyO4qMeWyOJdo7Po11dxa5qJReJyRmHyg==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
@@ -859,7 +859,7 @@
     "@material/tab-bar" "^2.2.0"
     "@pie-framework/pie-configure-events" "^1.4.1"
     "@pie-framework/pie-player-events" "^0.1.0"
-    "@pie-lib/pie-toolbox-math-rendering-module" "5.0.3"
+    "@pie-lib/math-rendering-module" "2.7.0"
     async-retry "^1.2.3"
     lodash "^4.17.15"
     parse-package-name "^0.1.0"
@@ -869,10 +869,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-player-events/-/pie-player-events-0.1.0.tgz"
   integrity sha512-6H1tlRGmcZ3Wt+8HMqu5KugVcwwyNrMylfI5rIpvOSt0T82QDmjRj+2sPgQG5zos/w6MtwUqn/QZ+8Rq2EXSOA==
 
-"@pie-lib/pie-toolbox-math-rendering-module@5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@pie-lib/pie-toolbox-math-rendering-module/-/pie-toolbox-math-rendering-module-5.0.3.tgz#6c79b395197e1039bbbc9c1f0813fc08ceab36a8"
-  integrity sha512-ocv/TS/mT0CHZdBsxnMdU9vn3nKX3BTlFGMbm0IUL21GVu6/vjfGW5CmRysNowhSu75lh4G9hNjplB88JUHHLw==
+"@pie-lib/math-rendering-module@2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@pie-lib/math-rendering-module/-/math-rendering-module-2.7.0.tgz#29d01cd0d9415187b94c7b187b0c23d07377fcaf"
+  integrity sha512-qZEKj02AJCXs6ZI2C0Z5SHkbnQ7W+Zz4amkclO/qD4wEhpKCxe4MaKUGbGNb4zvLjwzrdGHfxF5tG7fz5SUtQA==
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.4"
