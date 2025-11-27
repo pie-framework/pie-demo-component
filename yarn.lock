@@ -848,10 +848,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-configure-events/-/pie-configure-events-1.4.1.tgz"
   integrity sha512-lpVYLltoNqzafqGHiFovx6VBiT7TGUFf7QzccHogc0hkTuOQvqTA1nfqnjw0LVSJ9umJXXDBo6pTxTm5iXBR5w==
 
-"@pie-framework/pie-player-components@3.12.1":
-  version "3.12.1"
-  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.12.1.tgz#43095d61dd55030dffa5dd87f3a81120b37c77a0"
-  integrity sha512-6EwlSG6aqYd4AEdFmmqW12aEpBo8vS2a8WLtsQ63/L5zMvSSJX3VSTyO4qMeWyOJdo7Po11dxa5qJReJyRmHyg==
+"@pie-framework/pie-player-components@3.14.1":
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/@pie-framework/pie-player-components/-/pie-player-components-3.14.1.tgz#3018ff94ce1ae095a54b5377ae5b2dc33241ff2b"
+  integrity sha512-0+Fv9Uft8mbkUC46xVIxvweJvOUuGBS7lDRh7+aXiFc7HwlqwFE5HjXAh92Jv5cgr/h/uI7U2NON42QhumQhug==
   dependencies:
     "@material/select" "^2.2.0"
     "@material/switch" "^2.1.1"
@@ -859,7 +859,7 @@
     "@material/tab-bar" "^2.2.0"
     "@pie-framework/pie-configure-events" "^1.4.1"
     "@pie-framework/pie-player-events" "^0.1.0"
-    "@pie-lib/math-rendering-module" "2.7.0"
+    "@pie-lib/math-rendering-module" "2.7.7"
     async-retry "^1.2.3"
     lodash "^4.17.15"
     parse-package-name "^0.1.0"
@@ -869,10 +869,10 @@
   resolved "https://registry.npmjs.org/@pie-framework/pie-player-events/-/pie-player-events-0.1.0.tgz"
   integrity sha512-6H1tlRGmcZ3Wt+8HMqu5KugVcwwyNrMylfI5rIpvOSt0T82QDmjRj+2sPgQG5zos/w6MtwUqn/QZ+8Rq2EXSOA==
 
-"@pie-lib/math-rendering-module@2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@pie-lib/math-rendering-module/-/math-rendering-module-2.7.0.tgz#29d01cd0d9415187b94c7b187b0c23d07377fcaf"
-  integrity sha512-qZEKj02AJCXs6ZI2C0Z5SHkbnQ7W+Zz4amkclO/qD4wEhpKCxe4MaKUGbGNb4zvLjwzrdGHfxF5tG7fz5SUtQA==
+"@pie-lib/math-rendering-module@2.7.7":
+  version "2.7.7"
+  resolved "https://registry.yarnpkg.com/@pie-lib/math-rendering-module/-/math-rendering-module-2.7.7.tgz#6f0f1b481d6bfa013c323bad1917db706caa481f"
+  integrity sha512-Fng8ceUeyak8qU9LU/jyDvrxOpd7YKKT8mjATjipOZsN9l+7u07dX9H3jKRTXeIddf/gme4ia6enZmLNi5e05g==
 
 "@release-it/conventional-changelog@^1.1.0":
   version "1.1.4"
